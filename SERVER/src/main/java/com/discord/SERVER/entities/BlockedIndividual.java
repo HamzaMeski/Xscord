@@ -3,7 +3,6 @@ package com.discord.SERVER.entities;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
@@ -12,29 +11,25 @@ import java.time.LocalDateTime;
 @Setter
 @Getter
 @Builder
-@Table(name = "groups")
-public class Group {
+@Table(name = "blocked_individuals")
+public class BlockedIndividual {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
     @ManyToOne()
-    @JoinColumn(name = "server_id")
-    private Server server;
+    @JoinColumn(name = "blocker_id")
+    private Individual blocker;
 
-    private String name;
-    private String description;
+    @ManyToOne()
+    @JoinColumn(name = "blocked_individual_id")
+    private Individual blockedIndividual;
+
+    private Boolean isBlocked;
     private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
 
     @PrePersist
     protected void onCreate() {
         createdAt  = LocalDateTime.now();
-        updatedAt = LocalDateTime.now();
-    }
-
-    @PreUpdate
-    protected void onUpdate() {
-        updatedAt = LocalDateTime.now();
     }
 }

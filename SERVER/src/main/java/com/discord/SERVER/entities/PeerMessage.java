@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Entity
 @AllArgsConstructor
@@ -12,27 +11,30 @@ import java.util.List;
 @Setter
 @Getter
 @Builder
-@Table(name = "servers")
-public class Server {
+@Table(name = "peer_messages")
+public class PeerMessage {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
     @ManyToOne()
-    @JoinColumn(name = "individual_id")
-    private Individual individual;
+    @JoinColumn(name = "sender_id")
+    private Individual sender;
 
-    @OneToMany(mappedBy = "server", fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
-    private List<Group> groups;
+    @ManyToOne()
+    @JoinColumn(name = "receiver_id")
+    private Individual receiver;
 
-    private String name;
-    private String description;
-    private LocalDateTime createAt;
+    @OneToOne(mappedBy = "peerMessage")
+    private MessageResource messageResource;
+
+    private String message;
+    private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
     @PrePersist
     protected void onCreate() {
-        createAt  = LocalDateTime.now();
+        createdAt  = LocalDateTime.now();
         updatedAt = LocalDateTime.now();
     }
 

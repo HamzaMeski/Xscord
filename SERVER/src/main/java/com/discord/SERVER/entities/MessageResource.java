@@ -1,10 +1,10 @@
 package com.discord.SERVER.entities;
 
+import com.discord.SERVER.enums.MessageMediaType;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Entity
 @AllArgsConstructor
@@ -12,21 +12,27 @@ import java.util.List;
 @Setter
 @Getter
 @Builder
-@Table(name = "servers")
-public class Server {
+@Table(name = "message_resources")
+public class MessageResource {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
-    @ManyToOne()
-    @JoinColumn(name = "individual_id")
-    private Individual individual;
+    @OneToOne()
+    @JoinColumn(name = "peer_message_id", referencedColumnName = "id")
+    private PeerMessage peerMessage;
 
-    @OneToMany(mappedBy = "server", fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
-    private List<Group> groups;
+    @OneToOne()
+    @JoinColumn(name = "group_message_id", referencedColumnName = "id")
+    private GroupMessage groupMessage;
 
-    private String name;
-    private String description;
+    private String path;
+    private String contentType;
+    private Long size;
+
+    @Enumerated(EnumType.STRING)
+    private MessageMediaType mediaType;
+
     private LocalDateTime createAt;
     private LocalDateTime updatedAt;
 

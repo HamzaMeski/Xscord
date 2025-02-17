@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Entity
 @AllArgsConstructor
@@ -12,27 +11,26 @@ import java.util.List;
 @Setter
 @Getter
 @Builder
-@Table(name = "servers")
-public class Server {
+@Table(name = "server_members")
+public class ServerMember {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @ManyToOne()
+    @ManyToOne
+    @JoinColumn(name = "server_id")
+    private Server server;
+
+    @ManyToOne
     @JoinColumn(name = "individual_id")
     private Individual individual;
 
-    @OneToMany(mappedBy = "server", fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
-    private List<Group> groups;
-
-    private String name;
-    private String description;
-    private LocalDateTime createAt;
+    private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
     @PrePersist
     protected void onCreate() {
-        createAt  = LocalDateTime.now();
+        createdAt  = LocalDateTime.now();
         updatedAt = LocalDateTime.now();
     }
 

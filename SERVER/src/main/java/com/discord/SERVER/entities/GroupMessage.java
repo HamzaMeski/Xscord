@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Entity
 @AllArgsConstructor
@@ -12,21 +11,23 @@ import java.util.List;
 @Setter
 @Getter
 @Builder
-@Table(name = "servers")
-public class Server {
+@Table(name = "group_messages")
+public class GroupMessage {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
     @ManyToOne()
-    @JoinColumn(name = "individual_id")
-    private Individual individual;
+    @JoinColumn(name = "group_id")
+    private Group group;
 
-    @OneToMany(mappedBy = "server", fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
-    private List<Group> groups;
+    @ManyToOne()
+    @JoinColumn(name = "sender_id")
+    private Individual sender;
 
-    private String name;
-    private String description;
+    @OneToOne(mappedBy = "groupMessage")
+    private MessageResource messageResource;
+
     private LocalDateTime createAt;
     private LocalDateTime updatedAt;
 
