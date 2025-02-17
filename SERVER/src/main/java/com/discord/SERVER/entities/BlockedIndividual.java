@@ -29,7 +29,7 @@ public class BlockedIndividual {
     private LocalDateTime createdAt;
 
     @PrePersist
-    protected void onCreate() {
+    private void onCreate() {
         createdAt  = LocalDateTime.now();
     }
 }

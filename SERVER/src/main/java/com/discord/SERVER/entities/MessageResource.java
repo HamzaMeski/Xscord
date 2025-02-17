@@ -33,17 +33,17 @@ public class MessageResource {
     @Enumerated(EnumType.STRING)
     private MessageMediaType mediaType;
 
-    private LocalDateTime createAt;
+    private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
     @PrePersist
-    protected void onCreate() {
-        createAt  = LocalDateTime.now();
+    private void onCreate() {
+        createdAt  = LocalDateTime.now();
         updatedAt = LocalDateTime.now();
     }
 
     @PreUpdate
-    protected void onUpdate() {
+    private void onUpdate() {
         updatedAt = LocalDateTime.now();
     }
 }

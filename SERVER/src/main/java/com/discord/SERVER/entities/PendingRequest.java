@@ -31,13 +31,13 @@ public class PendingRequest {
     private LocalDateTime updatedAt;
 
     @PrePersist
-    protected void onCreate() {
+    private void onCreate() {
         createdAt  = LocalDateTime.now();
         updatedAt = LocalDateTime.now();
     }
 
     @PreUpdate
-    protected void onUpdate() {
+    private void onUpdate() {
         updatedAt = LocalDateTime.now();
     }
 }
