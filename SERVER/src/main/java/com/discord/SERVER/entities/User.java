@@ -10,7 +10,6 @@ import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDateTime;
 
-@Entity
 @SuperBuilder
 @MappedSuperclass
 @NoArgsConstructor

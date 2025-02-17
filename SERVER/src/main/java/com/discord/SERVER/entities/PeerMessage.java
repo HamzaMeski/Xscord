@@ -33,13 +33,13 @@ public class PeerMessage {
     private LocalDateTime updatedAt;
 
     @PrePersist
-    private void onCreate() {
+    protected void onCreate() {
         createdAt  = LocalDateTime.now();
         updatedAt = LocalDateTime.now();
     }
 
     @PreUpdate
-    private void onUpdate() {
+    protected void onUpdate() {
         updatedAt = LocalDateTime.now();
     }
 }
