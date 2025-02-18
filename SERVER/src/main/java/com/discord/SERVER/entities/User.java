@@ -27,7 +27,7 @@ public abstract class User {
 
     private String password;
     private String firstName;
-    private String secondName;
+    private String lastName;
     private String phone;
     private String bio;
 
