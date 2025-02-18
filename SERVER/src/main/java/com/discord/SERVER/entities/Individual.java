@@ -10,7 +10,6 @@ import lombok.experimental.SuperBuilder;
 
 @Entity
 @SuperBuilder
-@AllArgsConstructor
 @NoArgsConstructor
 @Setter
 @Getter
