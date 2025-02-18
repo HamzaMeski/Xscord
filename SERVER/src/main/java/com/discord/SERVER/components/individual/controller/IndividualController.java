@@ -7,10 +7,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -26,5 +23,15 @@ public class IndividualController {
             IndividualRequestDTO requestDTO
     ) {
         return new ResponseEntity<>(individualService.register(requestDTO), HttpStatus.CREATED);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<IndividualResponseDTO> updateProfile(
+            @Valid
+            @RequestBody
+            IndividualRequestDTO requestDTO,
+            @PathVariable Long id
+    ) {
+        return ResponseEntity.ok(individualService.updateProfile(id, requestDTO));
     }
 }
