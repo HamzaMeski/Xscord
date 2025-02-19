@@ -25,6 +25,13 @@ public class IndividualController {
         return new ResponseEntity<>(individualService.register(requestDTO), HttpStatus.CREATED);
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<IndividualResponseDTO> getProfile(
+            @PathVariable Long id
+    ) {
+        return ResponseEntity.ok(individualService.getProfile(id));
+    }
+
     @PutMapping("/{id}")
     public ResponseEntity<IndividualResponseDTO> updateProfile(
             @Valid
@@ -33,5 +40,13 @@ public class IndividualController {
             @PathVariable Long id
     ) {
         return ResponseEntity.ok(individualService.updateProfile(id, requestDTO));
+    }
+
+    @DeleteMapping("{id}")
+    public ResponseEntity<Void> deleteProfile(
+            @PathVariable Long id
+    ) {
+        individualService.deleteProfile(id);
+        return ResponseEntity.noContent().build();
     }
 }
