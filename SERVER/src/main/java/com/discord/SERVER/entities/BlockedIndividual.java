@@ -25,7 +25,7 @@ public class BlockedIndividual {
     @JoinColumn(name = "blocked_individual_id")
     private Individual blockedIndividual;
 
-    private Boolean isBlocked;
+    private boolean isBlocked;
     private LocalDateTime createdAt;
 
     @PrePersist

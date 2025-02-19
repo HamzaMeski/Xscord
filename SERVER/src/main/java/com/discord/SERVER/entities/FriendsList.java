@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @Getter
 @Builder
 @Table(name = "friend_list")
-public class FriendList {
+public class FriendsList {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

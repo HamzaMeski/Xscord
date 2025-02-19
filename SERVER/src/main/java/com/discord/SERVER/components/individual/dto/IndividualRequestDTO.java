@@ -15,7 +15,7 @@ public record IndividualRequestDTO(
     String firstName,
 
     @NotBlank(message = "second name is required")
-    String secondName,
+    String lastName,
 
     @NotBlank(message = "display name is required")
     String displayName,

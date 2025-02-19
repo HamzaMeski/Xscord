@@ -7,7 +7,7 @@ public record IndividualResponseDTO(
         String email,
         String password,
         String firstName,
-        String secondName,
+        String lastName,
         String displayName,
         String phone,
         String bio,
