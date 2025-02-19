@@ -16,7 +16,6 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-@Slf4j
 public class FriendShipDemandServiceImpl implements FriendShipDemandService {
 
     private final FriendShipDemandRepository friendShipDemandRepository;
@@ -50,16 +49,13 @@ public class FriendShipDemandServiceImpl implements FriendShipDemandService {
 
     @Override
     public void ignoreRequest(Long requestId) {
-        log.info("starting...");
         FriendShipDemand friendShipDemand = friendShipDemandRepository.findById(requestId)
                 .orElseThrow(() -> new ResourceNotFoundException("friendship demand with that id doesn't exist."));
 
-        log.info("middle");
         if(friendShipDemand.isAccepted()) {
             throw new ValidationException("friendship demand already accepted can not be ignored.");
         }
 
-        log.info("ending...");
         friendShipDemandRepository.delete(friendShipDemand);
     }
 
