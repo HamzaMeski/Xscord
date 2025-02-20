@@ -6,10 +6,8 @@ import com.discord.SERVER.components.friendship.messaging.mapper.PeerMessageMapp
 import com.discord.SERVER.components.friendship.messaging.repository.PeerMessageRepository;
 import com.discord.SERVER.components.individual.repository.IndividualRepository;
 import com.discord.SERVER.entities.Individual;
-import com.discord.SERVER.entities.MessageResource;
 import com.discord.SERVER.entities.PeerMessage;
 import com.discord.SERVER.exception.ResourceNotFoundException;
-import com.discord.SERVER.exception.ValidationException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -49,11 +47,12 @@ public class PeerMessageServiceImpl implements PeerMessageService{
     }
 
     @Override
-    public void markAsRead(Long peerMessageId) {
+    public PeerMessageResponseDTO markAsRead(Long peerMessageId) {
         PeerMessage message = peerMessageRepository.findById(peerMessageId)
                 .orElseThrow(() -> new ResourceNotFoundException("message with that id doesn't exist"));
 
         message.setRead(true);
+        return peerMessageMapper.toResponse(peerMessageRepository.save(message));
     }
 
     @Override
