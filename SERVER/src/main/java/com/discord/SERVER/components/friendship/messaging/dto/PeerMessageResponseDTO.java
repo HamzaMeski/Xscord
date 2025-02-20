@@ -9,6 +9,7 @@ public record PeerMessageResponseDTO(
         Long id,
         Individual sender,
         Individual receiver,
+        String content,
         boolean isRead,
         MessageResource messageResource,
         LocalDateTime createdAt,

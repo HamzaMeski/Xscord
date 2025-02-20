@@ -1,5 +1,6 @@
 package com.discord.SERVER.components.friendship.messaging.repository;
 
+import com.discord.SERVER.entities.Individual;
 import com.discord.SERVER.entities.PeerMessage;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -17,9 +18,5 @@ public interface PeerMessageRepository extends JpaRepository<PeerMessage, Long> 
     """)
     List<PeerMessage> getChatHistory(Long individualId1, Long individualId2);
 
-    @Query("""
-        SELECT COUNT(pm) FROM PeerMessage pm
-        WHERE (pm.receiver.id = :id AND pm.isRead = false)
-    """)
-    Long getUnreadMessagesCount(Long receiverId);
+    Long countByReceiverAndIsReadFalse(Individual receiver);
 }

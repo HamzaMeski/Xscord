@@ -9,12 +9,14 @@ import com.discord.SERVER.entities.Individual;
 import com.discord.SERVER.entities.PeerMessage;
 import com.discord.SERVER.exception.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class PeerMessageServiceImpl implements PeerMessageService{
 
     private final PeerMessageRepository peerMessageRepository;
@@ -49,7 +51,7 @@ public class PeerMessageServiceImpl implements PeerMessageService{
     @Override
     public PeerMessageResponseDTO markAsRead(Long peerMessageId) {
         PeerMessage message = peerMessageRepository.findById(peerMessageId)
-                .orElseThrow(() -> new ResourceNotFoundException("message with that id doesn't exist"));
+                .orElseThrow(() -> new ResourceNotFoundException("message with that id doesn't exist."));
 
         message.setRead(true);
         return peerMessageMapper.toResponse(peerMessageRepository.save(message));
@@ -57,6 +59,9 @@ public class PeerMessageServiceImpl implements PeerMessageService{
 
     @Override
     public Long getUnreadMessagesCount(Long receiverId) {
-        return peerMessageRepository.getUnreadMessagesCount(receiverId);
+        Individual individual = individualRepository.findById(receiverId)
+                        .orElseThrow(() -> new ResourceNotFoundException("individual with that id doesn't exist."));
+
+        return peerMessageRepository.countByReceiverAndIsReadFalse(individual);
     }
 }
