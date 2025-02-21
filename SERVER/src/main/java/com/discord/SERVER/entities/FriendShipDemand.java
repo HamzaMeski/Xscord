@@ -11,8 +11,8 @@ import java.time.LocalDateTime;
 @Setter
 @Getter
 @Builder
-@Table(name = "pending_requests")
-public class PendingRequest {
+@Table(name = "friendship_demands")
+public class FriendShipDemand {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -25,19 +25,18 @@ public class PendingRequest {
     @JoinColumn(name = "receiver_id")
     private Individual receiver;
 
-    private Boolean accepted = false;
-    private Boolean ignored = false;
+    private boolean accepted = false;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
     @PrePersist
-    protected void onCreate() {
+    private void onCreate() {
         createdAt  = LocalDateTime.now();
         updatedAt = LocalDateTime.now();
     }
 
     @PreUpdate
-    protected void onUpdate() {
+    private void onUpdate() {
         updatedAt = LocalDateTime.now();
     }
 }

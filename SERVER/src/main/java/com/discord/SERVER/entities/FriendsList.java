@@ -11,8 +11,8 @@ import java.time.LocalDateTime;
 @Setter
 @Getter
 @Builder
-@Table(name = "friend_list")
-public class FriendList {
+@Table(name = "friends_list")
+public class FriendsList {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -29,13 +29,13 @@ public class FriendList {
     private LocalDateTime updatedAt;
 
     @PrePersist
-    protected void onCreate() {
+    private void onCreate() {
         createdAt  = LocalDateTime.now();
         updatedAt = LocalDateTime.now();
     }
 
     @PreUpdate
-    protected void onUpdate() {
+    private void onUpdate() {
         updatedAt = LocalDateTime.now();
     }
 }
