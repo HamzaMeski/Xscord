@@ -9,6 +9,8 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,8 +21,9 @@ import java.util.List;
 public class PeerMessageController {
 
     private final PeerMessageService peerMessageService;
+    private final SimpMessagingTemplate messagingTemplate;
 
-    @PostMapping("/sendMessage")
+    @MessageMapping("/chat.sendMessage")
     public ResponseEntity<PeerMessageResponseDTO> sendMessage(
             @CurrentUser
             UserPrincipal authUser,
@@ -28,7 +31,32 @@ public class PeerMessageController {
             @RequestBody
             PeerMessageRequestDTO requestDTO
     ) {
-        return new ResponseEntity<>(peerMessageService.sendMessage(authUser.getId(), requestDTO), HttpStatus.CREATED);
+        PeerMessageResponseDTO responseDTO = peerMessageService.sendMessage(authUser.getId(), requestDTO);
+
+        // send real time message through web socket
+        messagingTemplate.convertAndSendToUser(
+                requestDTO.receiverId().toString(),
+                "/queue/messages",
+                responseDTO
+        );
+
+        return new ResponseEntity<>(responseDTO, HttpStatus.CREATED);
+    }
+
+    @MessageMapping("/chat.markAsRead")
+    public ResponseEntity<PeerMessageResponseDTO> markAsRead(
+            @PathVariable
+            Long messageId
+    ) {
+        PeerMessageResponseDTO responseDTO = peerMessageService.markAsRead(messageId);
+
+        // notify sender that message was read
+        messagingTemplate.convertAndSendToUser(
+                responseDTO.sender().getId().toString(),
+                "/queue/read-receipts",
+                responseDTO
+        );
+        return ResponseEntity.ok(responseDTO);
     }
 
     @GetMapping("/getChatHistory/{individual2Id}")
@@ -40,15 +68,6 @@ public class PeerMessageController {
     ) {
         return ResponseEntity.ok(peerMessageService.getChatHistory(authUser.getId(), individual2Id));
     }
-
-    @PutMapping("/markAsRead/{messageId}")
-    public ResponseEntity<PeerMessageResponseDTO> markAsRead(
-            @PathVariable
-            Long messageId
-    ) {
-        return ResponseEntity.ok(peerMessageService.markAsRead(messageId));
-    }
-
 
     @GetMapping("/getUnreadMessagesCount")
     public ResponseEntity<Long> getUnreadMessagesCount(
