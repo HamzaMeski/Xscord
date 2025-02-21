@@ -28,7 +28,8 @@ public class PeerMessage {
     @OneToOne(mappedBy = "peerMessage")
     private MessageResource messageResource;
 
-    private String message;
+    private String content;
+    private boolean isRead = false;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
