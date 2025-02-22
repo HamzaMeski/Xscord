@@ -13,14 +13,14 @@ export class RegisterEffects {
 
 	constructor(
 		private actions$ : Actions,
-		private authService$: AuthService,
+		private authService: AuthService,
 		private router: Router
 	) {
 		this.register$ = createEffect(() =>
 			this.actions$.pipe(
 				ofType(register),
 				mergeMap(({request}) => {
-					return this.authService$.register(request).pipe(
+					return this.authService.register(request).pipe(
 						map(response => registerSuccess({response})),
 						catchError(err => {
 							const error: string = err?.error?.message || 'registration failed'

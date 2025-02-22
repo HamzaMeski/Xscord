@@ -1,14 +1,12 @@
-import {Component, OnInit} from '@angular/core';
+import {Component} from '@angular/core';
 import {RouterLink} from "@angular/router";
 import {FormControl, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
 import {CommonModule, NgClass} from "@angular/common";
 import {Observable} from "rxjs";
 import {Store} from "@ngrx/store";
-import {selectRegisterError, selectRegisterLoading} from "../../../ngrx/selectors/auth/register.selectors";
-import {RegisterRequest} from "../../../core/types/auth/register.types";
-import {register} from "../../../ngrx/actions/auth/register.actions";
 import {LoginRequest} from "../../../core/types/auth/login.types";
 import {login} from "../../../ngrx/actions/auth/login.actions";
+import {selectLoginError, selectLoginLoading} from "../../../ngrx/selectors/auth/login.selectors";
 
 @Component({
     standalone: true,
@@ -73,8 +71,8 @@ export class LoginComponent  {
     })
 
     constructor(private store: Store) {
-        this.loading$ = this.store.select(selectRegisterLoading)
-        this.error$ = this.store.select(selectRegisterError)
+        this.loading$ = this.store.select(selectLoginLoading)
+        this.error$ = this.store.select(selectLoginError)
     }
 
     onSubmit() {

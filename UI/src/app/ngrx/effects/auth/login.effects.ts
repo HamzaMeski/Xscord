@@ -13,14 +13,14 @@ export class LoginEffects {
 
 	constructor(
 		private actions$ : Actions,
-		private authService$ : AuthService,
+		private authService : AuthService,
 		private router : Router
 	) {
 		this.login$ = createEffect(() =>
 			this.actions$.pipe(
 				ofType(login),
 				mergeMap(({request}) =>
-					this.authService$.login(request).pipe(
+					this.authService.login(request).pipe(
 						map(response => {
 							console.log('login effect here...')
 							console.log(response)
