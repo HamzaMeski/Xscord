@@ -2,6 +2,11 @@ import {Component, OnInit} from '@angular/core';
 import {RouterLink} from "@angular/router";
 import {FormControl, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
 import {CommonModule, NgClass} from "@angular/common";
+import {Store} from "@ngrx/store";
+import {selectRegisterError, selectRegisterLoading} from "../../../ngrx/selectors/auth/register.selectors";
+import {Observable, of} from "rxjs";
+import {RegisterRequest} from "../../../core/types/auth/register.types";
+import {register} from "../../../ngrx/actions/auth/register.actions";
 
 @Component({
     standalone: true,
@@ -15,6 +20,11 @@ import {CommonModule, NgClass} from "@angular/common";
     template: `
         <form [formGroup]="myForm" (ngSubmit)="onSubmit()" class="flex flex-col gap-8 bg-purple-400 p-2">
             <h1 class="text-3xl font-bold underline">  Register!</h1>
+            
+            <div>
+                <div *ngIf="loading$ | async" class="text-lg">...</div>
+                <div *ngIf="error$ | async" class="text-red-500">error...</div>
+            </div>
             
             <div class="flex flex-col">
                 <label for="">first name:</label>
@@ -45,7 +55,7 @@ import {CommonModule, NgClass} from "@angular/common";
 
             <div class="flex flex-col">
                 <label for="">password:</label>
-                <input type="text" formControlName="password" class="bg-gray-100">
+                <input type="password" formControlName="password" class="bg-gray-100">
                 <div *ngIf="myForm.get('password')?.invalid && myForm.get('password')?.touched">
                     <small *ngIf="myForm.get('password')?.errors?.['required']" class="text-red-500">password is required</small>
                     <small *ngIf="myForm.get('password')?.errors?.['minlength']" class="text-red-500">min length is 3</small>
@@ -93,6 +103,8 @@ import {CommonModule, NgClass} from "@angular/common";
     `
 })
 export class RegisterComponent {
+    loading$: Observable<boolean>;
+    error$: Observable<string | null>;
 
     myForm = new FormGroup({
         firstName: new FormControl('', [Validators.required, Validators.minLength(3)]),
@@ -101,14 +113,18 @@ export class RegisterComponent {
         password: new FormControl('', [Validators.required, Validators.minLength(8)]),
         displayName: new FormControl('', [Validators.required, Validators.minLength(3)]),
         phone: new FormControl('', [Validators.required, Validators.minLength(10)]),
-        bio: new FormControl('', [Validators.required, Validators.minLength(10)]),
+        bio: new FormControl('', []),
     })
+
+    constructor(private store: Store) {
+        this.loading$ = this.store.select(selectRegisterLoading)
+        this.error$ = this.store.select(selectRegisterError)
+    }
 
     onSubmit() {
         if(this.myForm.valid) {
-            console.log(this.myForm.value)
-        }else {
-            console.log('form invalid')
+            const request: RegisterRequest = this.myForm.value as RegisterRequest
+            this.store.dispatch(register({request}))
         }
     }
 }

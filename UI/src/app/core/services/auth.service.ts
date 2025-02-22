@@ -18,6 +18,8 @@ export class AuthService {
 	}
 
 	register(request: RegisterRequest): Observable<RegisterResponse> {
+		console.log('auth.service.ts')
+		console.log(request)
 		return this.http.post<RegisterResponse>(`${this.API_URL}/individuals/register`, request)
 	}
 }

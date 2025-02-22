@@ -12,14 +12,16 @@ export class RegisterEffects {
 	register$ = createEffect(() =>
 		this.actions$.pipe(
 			ofType(register),
-			mergeMap(({request}) =>
-				this.authService.register(request).pipe(
+			mergeMap(({request}) => {
+				console.log('effect staring here...')
+				console.log(request)
+				return this.authService.register(request).pipe(
 					map(response => registerSuccess({response})),
 					catchError(error =>
 						of(registerFailure({error}))
 					)
 				)
-			)
+			})
 		)
 	)
 

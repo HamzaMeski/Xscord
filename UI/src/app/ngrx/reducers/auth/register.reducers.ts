@@ -6,12 +6,16 @@ import {register, registerFailure, registerSuccess} from "../../actions/auth/reg
 export const registerReducers = createReducer(
 	initialRegisterState,
 
-	on(register, (state) => ({
-		...state,
-		user: null,
-		loading: true,
-		error: null
-	})),
+	on(register, (state) => {
+		console.log('register reducer listening here...')
+		console.log(state)
+		return ({
+			...state,
+			user: null,
+			loading: true,
+			error: null
+		})
+	}),
 
 	on(registerSuccess, (state, {response}) => ({
 		...state,
