@@ -17,17 +17,17 @@ export const registerReducers = createReducer(
 		})
 	}),
 
-	on(registerSuccess, (state, {response}) => ({
+	on(registerSuccess, (state, action) => ({
 		...state,
-		user: response,
+		user: action.response,
 		loading: false,
 		error: null
 	})),
 
-	on(registerFailure, (state, {error}) => ({
+	on(registerFailure, (state, action) => ({
 		...state,
 		user: null,
 		loading: false,
-		error: error
+		error: action.error
 	}))
 )

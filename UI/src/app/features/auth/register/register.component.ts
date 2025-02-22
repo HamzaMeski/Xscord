@@ -23,7 +23,7 @@ import {register} from "../../../ngrx/actions/auth/register.actions";
             
             <div>
                 <div *ngIf="loading$ | async" class="text-lg">...</div>
-                <div *ngIf="error$ | async" class="text-red-500">error...</div>
+                <div *ngIf="error$ | async as error" class="text-red-500">{{ error }}</div>
             </div>
             
             <div class="flex flex-col">
@@ -104,7 +104,7 @@ import {register} from "../../../ngrx/actions/auth/register.actions";
 })
 export class RegisterComponent {
     loading$: Observable<boolean>;
-    error$: Observable<string | null>;
+    error$: Observable<any>;
 
     myForm = new FormGroup({
         firstName: new FormControl('', [Validators.required, Validators.minLength(3)]),

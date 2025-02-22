@@ -24,9 +24,11 @@ export class RegisterEffects {
 					console.log(request)
 					return this.authService.register(request).pipe(
 						map(response => registerSuccess({response})),
-						catchError(error =>
-							of(registerFailure({error}))
-						)
+						catchError(err => {
+							console.log(err.error.message)
+							const error: string = err?.error?.message || 'registration failed'
+							return of(registerFailure({error}))
+						})
 					)
 				})
 			)
