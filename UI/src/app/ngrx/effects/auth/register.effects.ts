@@ -8,13 +8,11 @@ import {catchError, map, mergeMap, of, tap} from "rxjs";
 
 @Injectable()
 export class RegisterEffects {
-
 	register$
-
 	registerSuccess$
 
 	constructor(
-		private readonly actions$ : Actions,
+		private actions$ : Actions,
 		private authService: AuthService,
 		private router: Router
 	) {
@@ -38,7 +36,8 @@ export class RegisterEffects {
 				this.actions$.pipe(
 					ofType(registerSuccess),
 					tap(() => this.router.navigate(['/auth/login']))
-				)
+				),
+			{dispatch: false}
 		)
 	}
 }
