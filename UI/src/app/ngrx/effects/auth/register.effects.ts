@@ -13,19 +13,16 @@ export class RegisterEffects {
 
 	constructor(
 		private actions$ : Actions,
-		private authService: AuthService,
+		private authService$: AuthService,
 		private router: Router
 	) {
 		this.register$ = createEffect(() =>
 			this.actions$.pipe(
 				ofType(register),
 				mergeMap(({request}) => {
-					console.log('effect staring here...')
-					console.log(request)
-					return this.authService.register(request).pipe(
+					return this.authService$.register(request).pipe(
 						map(response => registerSuccess({response})),
 						catchError(err => {
-							console.log(err.error.message)
 							const error: string = err?.error?.message || 'registration failed'
 							return of(registerFailure({error}))
 						})

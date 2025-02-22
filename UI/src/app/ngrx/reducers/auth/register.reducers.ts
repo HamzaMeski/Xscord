@@ -7,8 +7,6 @@ export const registerReducers = createReducer(
 	initialRegisterState,
 
 	on(register, (state) => {
-		console.log('register reducer listening here...')
-		console.log(state)
 		return ({
 			...state,
 			user: null,

@@ -8,6 +8,8 @@ import { provideEffects } from '@ngrx/effects';
 import {registerReducers} from "./ngrx/reducers/auth/register.reducers";
 import {RegisterEffects} from "./ngrx/effects/auth/register.effects";
 import {provideHttpClient} from "@angular/common/http";
+import {loginReducers} from "./ngrx/reducers/auth/login.reducers";
+import {LoginEffects} from "./ngrx/effects/auth/login.effects";
 
 
 export const appConfig: ApplicationConfig = {
@@ -16,9 +18,13 @@ export const appConfig: ApplicationConfig = {
         provideRouter(routes),
         provideHttpClient(),
         provideStore({
-          register: registerReducers
+            register: registerReducers,
+            login: loginReducers
         }),
         provideStoreDevtools({ maxAge: 25, logOnly: !isDevMode() }),
-        provideEffects([RegisterEffects])
+        provideEffects([
+            RegisterEffects,
+            LoginEffects
+        ])
     ]
 };
