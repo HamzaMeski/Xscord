@@ -9,33 +9,36 @@ import {catchError, map, mergeMap, of, tap} from "rxjs";
 @Injectable()
 export class RegisterEffects {
 
-	register$ = createEffect(() =>
-		this.actions$.pipe(
-			ofType(register),
-			mergeMap(({request}) => {
-				console.log('effect staring here...')
-				console.log(request)
-				return this.authService.register(request).pipe(
-					map(response => registerSuccess({response})),
-					catchError(error =>
-						of(registerFailure({error}))
-					)
-				)
-			})
-		)
-	)
+	register$
 
-	registerSuccess$ = createEffect(() =>
-		this.actions$.pipe(
-			ofType(registerSuccess),
-			tap(() => this.router.navigate(['/auth/login']))
-		)
-	)
+	registerSuccess$
 
 	constructor(
-		private actions$ : Actions,
+		private readonly actions$ : Actions,
 		private authService: AuthService,
 		private router: Router
-	) {}
+	) {
+		this.register$ = createEffect(() =>
+			this.actions$.pipe(
+				ofType(register),
+				mergeMap(({request}) => {
+					console.log('effect staring here...')
+					console.log(request)
+					return this.authService.register(request).pipe(
+						map(response => registerSuccess({response})),
+						catchError(error =>
+							of(registerFailure({error}))
+						)
+					)
+				})
+			)
+		)
 
+		this.registerSuccess$ = createEffect(() =>
+				this.actions$.pipe(
+					ofType(registerSuccess),
+					tap(() => this.router.navigate(['/auth/login']))
+				)
+		)
+	}
 }
