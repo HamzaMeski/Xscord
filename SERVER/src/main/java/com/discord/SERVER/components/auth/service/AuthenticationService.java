@@ -6,12 +6,17 @@ import com.discord.SERVER.components.admin.repository.AdminRepository;
 import com.discord.SERVER.components.individual.repository.IndividualRepository;
 import com.discord.SERVER.entities.Admin;
 import com.discord.SERVER.entities.Individual;
+import com.discord.SERVER.entities.User;
 import com.discord.SERVER.exception.AuthenticationException;
 import com.discord.SERVER.security.JwtService;
+import com.discord.SERVER.security.UserPrincipal;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -81,5 +86,41 @@ public class AuthenticationService {
                 .lastName(individual.getLastName())
                 .role("ROLE_INDIVIDUAL")
                 .build();
+    }
+
+
+    public AuthenticationResponse getAuthenticatedUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
+        Long userId = userPrincipal.getId();
+
+        String role = authentication.getAuthorities()
+                .stream()
+                .findFirst()
+                .map(GrantedAuthority::getAuthority)
+                .orElse(null);
+
+        AuthenticationResponse authenticationResponse = new AuthenticationResponse();
+
+        if (role.equals("ROLE_ADMIN")) {
+            Admin admin = adminRepository.findById(userId)
+                            .orElseThrow();
+            authenticationResponse.setUserId(admin.getId());
+            authenticationResponse.setFirstName(admin.getFirstName());
+            authenticationResponse.setLastName(admin.getLastName());
+            authenticationResponse.setEmail(admin.getEmail());
+            authenticationResponse.setRole("ROLE_ADMIN");
+        } else if (role.equals("ROLE_INDIVIDUAL")) {
+            Individual individual = individualRepository.findById(userId)
+                    .orElseThrow();
+            authenticationResponse.setUserId(individual.getId());
+            authenticationResponse.setFirstName(individual.getFirstName());
+            authenticationResponse.setLastName(individual.getLastName());
+            authenticationResponse.setEmail(individual.getEmail());
+            authenticationResponse.setRole("ROLE_INDIVIDUAL");
+        }
+
+        return  authenticationResponse;
     }
 }
