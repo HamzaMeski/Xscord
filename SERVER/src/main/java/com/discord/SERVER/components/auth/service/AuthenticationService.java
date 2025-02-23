@@ -67,6 +67,7 @@ public class AuthenticationService {
                 .email(admin.getEmail())
                 .firstName(admin.getFirstName())
                 .lastName(admin.getLastName())
+                .role("ROLE_ADMIN")
                 .build();
     }
 
@@ -78,6 +79,7 @@ public class AuthenticationService {
                 .email(individual.getEmail())
                 .firstName(individual.getFirstName())
                 .lastName(individual.getLastName())
+                .role("ROLE_INDIVIDUAL")
                 .build();
     }
 }
