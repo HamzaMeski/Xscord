@@ -42,7 +42,8 @@ export class UserProfileEffects {
 					console.log('profile loaded successfully')
 					console.log(response)
 				})
-			)
+			),
+			{dispatch: false}
 		)
 	}
 }

@@ -23,6 +23,6 @@ export class AuthService {
 	}
 
 	getAuthenticatedUser(): Observable<UserProfileResponse> {
-		return this.http.get<UserProfileResponse>(`${this.API_URL}/auth/getAuthenticatedUser`)
+		return this.http.get<UserProfileResponse>(`${this.API_URL}/auth/authenticatedUser`)
 	}
 }

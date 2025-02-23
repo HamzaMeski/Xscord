@@ -11,12 +11,20 @@ export class AuthInterceptor implements HttpInterceptor {
 		const token = localStorage.getItem("authUserToken");
 		if(token) {
 			req = req.clone({
-				headers: req.headers.set('Authorization', `Bearer ${token}`).set('Content-Type', 'application/json')
+				headers: req.headers
+					.set('Authorization', `Bearer ${token}`)
+					.set('Content-Type', 'application/json')
 			})
 		}else {
 			alert('there is no token')
 		}
-		console.log(req)
+
+
+
+		console.log(req.headers)
+
+
+
 		return next.handle(req).pipe(
 			catchError(err => {
 				if(err.status == 401) {
