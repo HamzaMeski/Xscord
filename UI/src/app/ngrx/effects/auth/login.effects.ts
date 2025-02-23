@@ -22,12 +22,10 @@ export class LoginEffects {
 				mergeMap(({request}) =>
 					this.authService.login(request).pipe(
 						map(response => {
-							console.log('login effect here...')
-							console.log(response)
 							return loginSuccess({response})
 						}),
 						catchError(err => {
-							const error: string = err?.error?.message || 'login failed'
+							const error: string = err.error.message || 'login failed'
 							return of(loginFailure({error}))
 						})
 					)
@@ -38,7 +36,10 @@ export class LoginEffects {
 		this.loginSuccess$ = createEffect(() =>
 			this.actions$.pipe(
 				ofType(loginSuccess),
-				tap(()=> console.log('logged in successfully'))
+				tap(({response})=> {
+					const authUserToken = response.token
+					localStorage.setItem('token', authUserToken)
+				})
 			),
 			{dispatch: false}
 		)
