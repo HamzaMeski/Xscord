@@ -3,10 +3,11 @@ package com.discord.SERVER.components.auth.service;
 import com.discord.SERVER.components.auth.dto.AuthenticationRequest;
 import com.discord.SERVER.components.auth.dto.AuthenticationResponse;
 import com.discord.SERVER.components.admin.repository.AdminRepository;
+import com.discord.SERVER.components.auth.dto.UserResponseDTO;
+import com.discord.SERVER.components.auth.mapper.AuthMapper;
 import com.discord.SERVER.components.individual.repository.IndividualRepository;
 import com.discord.SERVER.entities.Admin;
 import com.discord.SERVER.entities.Individual;
-import com.discord.SERVER.entities.User;
 import com.discord.SERVER.exception.AuthenticationException;
 import com.discord.SERVER.security.JwtService;
 import com.discord.SERVER.security.UserPrincipal;
@@ -28,6 +29,7 @@ public class AuthenticationService {
     private final JwtService jwtService;
     private final AdminRepository adminRepository;
     private final IndividualRepository individualRepository;
+    private final AuthMapper authMapper;
 
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
         log.info("Attempting authentication for email: {}", request.getEmail());
@@ -89,7 +91,7 @@ public class AuthenticationService {
     }
 
 
-    public AuthenticationResponse getAuthenticatedUser() {
+    public UserResponseDTO getAuthenticatedUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
@@ -101,26 +103,14 @@ public class AuthenticationService {
                 .map(GrantedAuthority::getAuthority)
                 .orElse(null);
 
-        AuthenticationResponse authenticationResponse = new AuthenticationResponse();
-
         if (role.equals("ROLE_ADMIN")) {
             Admin admin = adminRepository.findById(userId)
                             .orElseThrow();
-            authenticationResponse.setUserId(admin.getId());
-            authenticationResponse.setFirstName(admin.getFirstName());
-            authenticationResponse.setLastName(admin.getLastName());
-            authenticationResponse.setEmail(admin.getEmail());
-            authenticationResponse.setRole("ROLE_ADMIN");
-        } else if (role.equals("ROLE_INDIVIDUAL")) {
+            return authMapper.toResponse(admin);
+        } else {
             Individual individual = individualRepository.findById(userId)
                     .orElseThrow();
-            authenticationResponse.setUserId(individual.getId());
-            authenticationResponse.setFirstName(individual.getFirstName());
-            authenticationResponse.setLastName(individual.getLastName());
-            authenticationResponse.setEmail(individual.getEmail());
-            authenticationResponse.setRole("ROLE_INDIVIDUAL");
+            return authMapper.toResponse(individual);
         }
-
-        return  authenticationResponse;
     }
 }
