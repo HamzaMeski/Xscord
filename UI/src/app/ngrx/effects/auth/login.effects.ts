@@ -38,7 +38,8 @@ export class LoginEffects {
 				ofType(loginSuccess),
 				tap(({response})=> {
 					const authUserToken = response.token
-					localStorage.setItem('token', authUserToken)
+					localStorage.setItem('authUserToken', authUserToken)
+					this.router.navigate(['/dashboard'])
 				})
 			),
 			{dispatch: false}

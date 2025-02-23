@@ -34,7 +34,7 @@ export class UserProfileEffects {
 				)
 			)
 		)
-		
+
 		this.loadUserProfileSuccess$ = createEffect(() =>
 			this.actions$.pipe(
 				ofType(loadUserProfileSuccess),
