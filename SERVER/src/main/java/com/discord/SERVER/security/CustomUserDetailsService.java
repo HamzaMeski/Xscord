@@ -42,7 +42,7 @@ public class CustomUserDetailsService implements UserDetailsService {
                                     .id(individual.getId())
                                     .email(individual.getEmail())
                                     .password(individual.getPassword())
-                                    .authorities(Collections.singletonList(new SimpleGrantedAuthority("ROLE_COLLECTOR")))
+                                    .authorities(Collections.singletonList(new SimpleGrantedAuthority("ROLE_INDIVIDUAL")))
                                     .build();
                         })
                         // If not found, try household table

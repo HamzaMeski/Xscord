@@ -3,15 +3,21 @@ package com.discord.SERVER.components.auth.service;
 import com.discord.SERVER.components.auth.dto.AuthenticationRequest;
 import com.discord.SERVER.components.auth.dto.AuthenticationResponse;
 import com.discord.SERVER.components.admin.repository.AdminRepository;
+import com.discord.SERVER.components.auth.dto.UserResponseDTO;
+import com.discord.SERVER.components.auth.mapper.AuthMapper;
 import com.discord.SERVER.components.individual.repository.IndividualRepository;
 import com.discord.SERVER.entities.Admin;
 import com.discord.SERVER.entities.Individual;
 import com.discord.SERVER.exception.AuthenticationException;
 import com.discord.SERVER.security.JwtService;
+import com.discord.SERVER.security.UserPrincipal;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -23,6 +29,7 @@ public class AuthenticationService {
     private final JwtService jwtService;
     private final AdminRepository adminRepository;
     private final IndividualRepository individualRepository;
+    private final AuthMapper authMapper;
 
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
         log.info("Attempting authentication for email: {}", request.getEmail());
@@ -67,6 +74,7 @@ public class AuthenticationService {
                 .email(admin.getEmail())
                 .firstName(admin.getFirstName())
                 .lastName(admin.getLastName())
+                .role("ROLE_ADMIN")
                 .build();
     }
 
@@ -78,6 +86,31 @@ public class AuthenticationService {
                 .email(individual.getEmail())
                 .firstName(individual.getFirstName())
                 .lastName(individual.getLastName())
+                .role("ROLE_INDIVIDUAL")
                 .build();
+    }
+
+
+    public UserResponseDTO getAuthenticatedUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
+        Long userId = userPrincipal.getId();
+
+        String role = authentication.getAuthorities()
+                .stream()
+                .findFirst()
+                .map(GrantedAuthority::getAuthority)
+                .orElse(null);
+
+        if (role.equals("ROLE_ADMIN")) {
+            Admin admin = adminRepository.findById(userId)
+                            .orElseThrow();
+            return authMapper.toResponse(admin);
+        } else {
+            Individual individual = individualRepository.findById(userId)
+                    .orElseThrow();
+            return authMapper.toResponse(individual);
+        }
     }
 }
