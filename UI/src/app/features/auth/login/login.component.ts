@@ -18,47 +18,61 @@ import {selectLoginError, selectLoginLoading} from "../../../ngrx/selectors/auth
         CommonModule
     ],
     template: `
-        <form [formGroup]="myForm" (ngSubmit)="onSubmit()" class="flex flex-col gap-8 bg-purple-400 p-2">
-            <h1 class="text-3xl font-bold underline">  Login!</h1>
-      
-            <div>
-                <div *ngIf="loading$ | async" class="text-lg">...</div>
-                <div *ngIf="error$ | async as error" class="text-red-500">{{ error }}</div>
-            </div>
-            
-      
-            <div class="flex flex-col">
-                <label for="">email:</label>
-                <input type="text" formControlName="email" class="bg-gray-100">
-                <div *ngIf="myForm.get('email')?.invalid && myForm.get('email')?.touched">
-                    <small *ngIf="myForm.get('email')?.errors?.['required']" class="text-red-500">Email is required</small>
-                    <small *ngIf="myForm.get('email')?.errors?.['email']" class="text-red-500">Set a valid email</small>
+        <section class="flex h-dvh">
+            <div class="grow-6 self-center p-8 ">
+                <div class="p-2 border-1 rounded-lg">
+                    <form [formGroup]="myForm" (ngSubmit)="onSubmit()" class="flex flex-col p-2 gap-8">
+                        <h1 class="text-3xl font-bold text-center">LOGIN</h1>
+
+                        <div>
+                            <div *ngIf="loading$ | async" class="text-lg">...</div>
+                            <div *ngIf="error$ | async as error" class="text-red-500">{{ error }}</div>
+                        </div>
+
+
+                        <div class="flex flex-col">
+                            <label for="">email:</label>
+                            <input type="text" formControlName="email" class="bg-gray-200 text-black p-1 rounded-md">
+                            <div *ngIf="myForm.get('email')?.invalid && myForm.get('email')?.touched">
+                                <small *ngIf="myForm.get('email')?.errors?.['required']" class="text-red-500">Email is required</small>
+                                <small *ngIf="myForm.get('email')?.errors?.['email']" class="text-red-500">Set a valid email</small>
+                            </div>
+                        </div>
+
+                        <div class="flex flex-col">
+                            <label for="">password:</label>
+                            <input type="password" formControlName="password" class="bg-gray-200 text-black p-1 rounded-md">
+                            <div *ngIf="myForm.get('password')?.invalid && myForm.get('password')?.touched">
+                                <small *ngIf="myForm.get('password')?.errors?.['required']" class="text-red-500">password is required</small>
+                                <small *ngIf="myForm.get('password')?.errors?.['minlength']" class="text-red-500">min length is 3</small>
+                            </div>
+                        </div>
+
+                        <button
+                            type="submit"
+                            class="rounded-md py-2 px-8 self-center "
+                            [disabled]="myForm.invalid"
+                            [ngClass]="myForm.invalid ? 'bg-green-300 text-gray-600' : 'bg-green-400 cursor-pointer'"
+                        >
+                            submit
+                        </button>
+                    </form>
+
+                    <div class="underline">
+                        <a routerLink="/auth/register">Create account account</a>
+                        <br>
+                        <a routerLink="/">Back home</a>
+                    </div>
                 </div>
             </div>
-      
-            <div class="flex flex-col">
-                <label for="">password:</label>
-                <input type="password" formControlName="password" class="bg-gray-100">
-                <div *ngIf="myForm.get('password')?.invalid && myForm.get('password')?.touched">
-                    <small *ngIf="myForm.get('password')?.errors?.['required']" class="text-red-500">password is required</small>
-                    <small *ngIf="myForm.get('password')?.errors?.['minlength']" class="text-red-500">min length is 3</small>
-                </div>
-            </div>
-      
-            <button
-                type="submit" class=""
-                [disabled]="myForm.invalid"
-                [ngClass]="myForm.invalid ? 'bg-green-300 text-gray-600' : 'bg-green-400 cursor-pointer'"
+            <div
+                [style.background-image]="'url(authImages/dark_road.jpg)'"
+                [style.position]="'center'"
+                class="bg-red-500 grow-4"
             >
-              submit
-            </button>
-        </form>
-    
-        <div class="mt-20">
-            <a routerLink="/auth/register">create account account</a>
-            <br>
-            <a routerLink="/" class="text-sm">back home</a>
-        </div>
+            </div>
+        </section>
+ 
     `
 })
 export class LoginComponent  {
