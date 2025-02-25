@@ -1,7 +1,5 @@
 import {Injectable} from "@angular/core";
-import {AuthService} from "./auth.service";
-import {catchError, map, Observable, of, tap} from "rxjs";
-import {Router} from "@angular/router";
+import {RedirectionService} from "./redirection.service";
 
 
 @Injectable({
@@ -10,21 +8,17 @@ import {Router} from "@angular/router";
 export class AuthFacadeService {
 
 	constructor(
-		private authService: AuthService,
-		private router: Router
+		private redirectionService: RedirectionService
 	) {}
 
-	hasValidToken(): Observable<boolean> {
+	hasToken(): boolean {
 		const token = localStorage.getItem('authUserToken')
 		if(!token) {
-			this.router.navigate(['/auth/login'])
-			return of(false)
+			localStorage.removeItem("authUserToken")
+			this.redirectionService.toLogin()
+			return false
 		}
 
-		// check if that token is valid
-	    return this.authService.getAuthenticatedUser().pipe(
-			map(() => true),
-			catchError(() => of(false))
-		)
+		return true
 	}
 }
