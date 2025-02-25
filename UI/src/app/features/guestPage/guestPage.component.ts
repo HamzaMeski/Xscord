@@ -7,7 +7,6 @@ import {NgOptimizedImage} from "@angular/common";
   selector: 'guest-page',
   imports: [
     RouterLink,
-    NgOptimizedImage
   ],
   template: `
     <section>
