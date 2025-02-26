@@ -1,10 +1,10 @@
-import {Component, OnInit} from '@angular/core';
+import {Component} from '@angular/core';
 import {RouterLink} from "@angular/router";
 import {FormControl, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
-import {CommonModule, NgClass, NgOptimizedImage} from "@angular/common";
+import {CommonModule, NgClass} from "@angular/common";
 import {Store} from "@ngrx/store";
 import {selectRegisterError, selectRegisterLoading} from "../../../ngrx/selectors/auth/register.selectors";
-import {Observable, of} from "rxjs";
+import {Observable} from "rxjs";
 import {RegisterRequest} from "../../../core/types/auth/register.types";
 import {register} from "../../../ngrx/actions/auth/register.actions";
 
@@ -15,8 +15,7 @@ import {register} from "../../../ngrx/actions/auth/register.actions";
         RouterLink,
         ReactiveFormsModule,
         NgClass,
-        CommonModule,
-        NgOptimizedImage
+        CommonModule
     ],
     template: `
         <section class="flex h-dvh">

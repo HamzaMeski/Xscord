@@ -1,9 +1,9 @@
 import {Injectable} from "@angular/core";
 import {HttpClient} from "@angular/common/http";
-import {LoginRequest, LoginResponse} from "../types/auth/login.types";
+import {LoginRequest, LoginResponse} from "../../types/auth/login.types";
 import {Observable} from "rxjs";
-import {RegisterRequest, RegisterResponse} from "../types/auth/register.types";
-import {UserProfileResponse} from "../types/userProfile/userProfiles.types";
+import {RegisterRequest, RegisterResponse} from "../../types/auth/register.types";
+import {UserProfileResponse} from "../../types/userProfile/userProfiles.types";
 
 
 @Injectable({

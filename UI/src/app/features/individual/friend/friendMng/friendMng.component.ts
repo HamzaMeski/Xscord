@@ -16,8 +16,8 @@ import {RouterLink, RouterOutlet} from "@angular/router";
                 <a routerLink="/individual/friend/mng/pendingRequests" class="font-bold hover:bg-zinc-800 rounded-md px-2 py-1">Pending</a>
                 <a routerLink="/individual/friend/mng/addFriend" class="font-bold hover:bg-zinc-800 rounded-md px-2 py-1">Add Friend</a>
 		    </nav>
-		    <main>
-			    <router-outlet></router-outlet>
+		    <main class="flex-1">
+                <router-outlet></router-outlet>
 		    </main>
 	    </section>
   `

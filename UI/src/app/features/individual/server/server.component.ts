@@ -5,7 +5,7 @@ import {RouterLink} from "@angular/router";
 	standalone: true,
 	selector: 'server',
 	imports: [
-		RouterLink,
+
 	],
 	template: `
     <section>

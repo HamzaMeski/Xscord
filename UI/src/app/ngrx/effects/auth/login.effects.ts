@@ -1,6 +1,6 @@
 import {Injectable} from "@angular/core";
 import {Router} from "@angular/router";
-import {AuthService} from "../../../core/services/auth.service";
+import {AuthService} from "../../../core/services/fetch/auth.service";
 import {Actions, createEffect, ofType} from "@ngrx/effects";
 import {login, loginFailure, loginSuccess} from "../../actions/auth/login.actions";
 import {catchError, map, mergeMap, of, tap} from "rxjs";
@@ -37,7 +37,6 @@ export class LoginEffects {
 			this.actions$.pipe(
 				ofType(loginSuccess),
 				tap(({response})=> {
-					console.log('login effect: success')
 					const authUserToken = response.token
 					localStorage.setItem('authUserToken', authUserToken)
 					this.router.navigate(['/individual'])
