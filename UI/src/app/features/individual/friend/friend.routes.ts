@@ -1,5 +1,4 @@
 import {Routes} from "@angular/router";
-import {FriendMngComponent} from "./friendMng/friendMng.component";
 import {FriendChatComponent} from "./friendChat/friendChat.component";
 import {FriendComponent} from "./friend.component";
 
@@ -11,7 +10,8 @@ export const friendRoutes: Routes = [
 		children: [
 			{
 				path: 'mng',
-				component: FriendMngComponent
+				loadChildren: () => import('./friendMng/friendMng.routes')
+					.then(res => res.friendMngRoutes)
 			},
 			{
 				path: 'chat',
