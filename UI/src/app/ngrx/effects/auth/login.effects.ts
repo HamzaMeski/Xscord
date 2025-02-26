@@ -40,7 +40,7 @@ export class LoginEffects {
 					console.log('login effect: success')
 					const authUserToken = response.token
 					localStorage.setItem('authUserToken', authUserToken)
-					this.router.navigate(['/dashboard'])
+					this.router.navigate(['/individual'])
 				})
 			),
 			{dispatch: false}

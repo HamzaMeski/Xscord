@@ -1,8 +1,8 @@
 import { Routes } from '@angular/router';
 import {GuestPageComponent} from "./features/guestPage/guestPage.component";
-import {DashboardComponent} from "./features/dashboard/dashboard.component";
 import {AuthGuard} from "./core/guards/canActivate/auth.guard";
 import {ForbiddenComponent} from "./features/forbidden/forbidden.component";
+
 
 export const routes: Routes = [
 	{
@@ -15,13 +15,14 @@ export const routes: Routes = [
 			.then(res => res.authRoutes)
 	},
 	{
-		path: 'dashboard',
-		component: DashboardComponent,
+		path: 'forbidden',
+		component: ForbiddenComponent,
 		canActivate: [AuthGuard]
 	},
 	{
-		path: 'forbidden',
-		component: ForbiddenComponent,
+		path: 'individual',
+		loadChildren: () => import('./features/individual/individual.routes')
+			.then(res => res.individualRoutes),
 		canActivate: [AuthGuard]
 	}
 ];
