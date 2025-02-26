@@ -7,7 +7,7 @@ import {CommonModule} from "@angular/common";
   selector: 'app-root',
   imports: [CommonModule, RouterOutlet],
   template: `
-    <section class="bg-zinc-900 text-gray-100 min-h-dvh">
+    <section class="bg-zinc-900 text-gray-100 max-h-dvh">
       <router-outlet></router-outlet>
     </section>
   `
