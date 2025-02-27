@@ -14,4 +14,13 @@ public interface FriendShipDemandRepository extends JpaRepository<FriendShipDema
             WHERE fsd.receiver = :individual
     """)
     List<FriendShipDemand> getFriendShipRequestsForIndividual(Individual individual);
+
+    @Query("""
+            DELETE FROM FriendShipDemand fsd
+            WHERE
+            (fsd.receiver = :individual1 AND fsd.requester = :individual2)
+            OR
+            (fsd.receiver = :individual2 AND fsd.requester = :individual1)
+    """)
+    void deleteFriendShipDemand(Individual individual1, Individual individual2);
 }

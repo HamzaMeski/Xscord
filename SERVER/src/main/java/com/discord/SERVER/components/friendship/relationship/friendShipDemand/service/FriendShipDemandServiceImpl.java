@@ -58,6 +58,9 @@ public class FriendShipDemandServiceImpl implements FriendShipDemandService {
                 .individual2(individual2)
                 .build();
 
+        friendShipDemand.setAccepted(true);
+        friendShipDemandRepository.save(friendShipDemand);
+
         friendsListRepository.save(friendsList);
 
         return friendShipDemandMapper.toResponse(friendShipDemandRepository.save(friendShipDemand));
