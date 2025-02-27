@@ -23,4 +23,24 @@ public interface FriendShipDemandRepository extends JpaRepository<FriendShipDema
             (fsd.receiver = :individual2 AND fsd.requester = :individual1)
     """)
     void deleteFriendShipDemand(Individual individual1, Individual individual2);
+
+    @Query("""
+            SELECT CASE WHEN COUNT(fsd) > 0 THEN true ELSE false END
+            FROM FriendShipDemand fsd
+            WHERE
+            (fsd.receiver = :individual1 AND fsd.requester = :individual2 AND fsd.accepted = false)
+            OR
+            (fsd.receiver = :individual2 AND fsd.requester = :individual1 AND fsd.accepted = false)
+    """)
+    boolean isAlreadyExistsWithFalse(Individual individual1, Individual individual2);
+
+    @Query("""
+            SELECT CASE WHEN COUNT(fsd) > 0 THEN true ELSE false END
+            FROM FriendShipDemand fsd
+            WHERE
+            (fsd.receiver = :individual1 AND fsd.requester = :individual2 AND fsd.accepted = true)
+            OR
+            (fsd.receiver = :individual2 AND fsd.requester = :individual1 AND fsd.accepted = true)
+    """)
+    boolean isAlreadyExistsWithTrue(Individual individual1, Individual individual2);
 }

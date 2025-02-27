@@ -9,6 +9,7 @@ import com.discord.SERVER.components.individual.repository.IndividualRepository;
 import com.discord.SERVER.entities.FriendShipDemand;
 import com.discord.SERVER.entities.FriendsList;
 import com.discord.SERVER.entities.Individual;
+import com.discord.SERVER.exception.DuplicateResourceException;
 import com.discord.SERVER.exception.ResourceNotFoundException;
 import com.discord.SERVER.exception.ValidationException;
 import lombok.RequiredArgsConstructor;
@@ -32,6 +33,16 @@ public class FriendShipDemandServiceImpl implements FriendShipDemandService {
 
         Individual receiver = individualRepository.findById(receiverId)
                 .orElseThrow(() -> new ResourceNotFoundException("receiver with that id doesn't exist."));
+
+        // check if request already exists with false status
+        if(friendShipDemandRepository.isAlreadyExistsWithFalse(requester, receiver)) {
+            throw new DuplicateResourceException("You already send request to user with that ID waite until he accepted.");
+        }
+
+        // check if request already exists with true status
+        if(friendShipDemandRepository.isAlreadyExistsWithTrue(requester, receiver)) {
+            throw new DuplicateResourceException("You are already friend to user with that ID.");
+        }
 
         FriendShipDemand friendShipDemand = FriendShipDemand.builder()
                 .requester(requester)
