@@ -1,7 +1,8 @@
 import {createFeatureSelector, createSelector} from "@ngrx/store";
-import {FriendShipDemandState} from "../../state/friends/friends.state";
+import {FriendShipDemandState, PendingRequestsState} from "../../state/friends/friends.state";
 
 
+// send friend request
 export const selectFriendShipDemandState = createFeatureSelector<FriendShipDemandState>('friendShipDemand')
 
 export const selectFriendShipDemandResponse = createSelector(
@@ -17,4 +18,24 @@ export const selectFriendShipDemandLoading = createSelector(
 export const selectFriendShipDemandError = createSelector(
 	selectFriendShipDemandState,
 	(state: FriendShipDemandState)=> state.error
+)
+
+
+
+// get all pending requests
+export const selectPendingRequestsState = createFeatureSelector<PendingRequestsState>('pendingRequests')
+
+export const selectPendingRequestsResponse = createSelector(
+	selectPendingRequestsState,
+	(state: PendingRequestsState) => state.pendingRequests
+)
+
+export const selectPendingRequestsLoading = createSelector(
+	selectPendingRequestsState,
+	(state: PendingRequestsState) => state.loading
+)
+
+export const selectPendingRequestsError = createSelector(
+	selectPendingRequestsState,
+	(state: PendingRequestsState) => state.error
 )

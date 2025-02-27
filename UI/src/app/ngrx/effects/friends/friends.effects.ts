@@ -2,10 +2,9 @@ import {Injectable} from "@angular/core";
 import {
 	friendShipDemand,
 	friendShipDemandFailure,
-	friendShipDemandSuccess
+	friendShipDemandSuccess, getPendingRequests, getPendingRequestsFailure, getPendingRequestsSuccess
 } from "../../actions/friends/friends.actions";
 import {Actions, createEffect, ofType} from "@ngrx/effects";
-import {Router} from "@angular/router";
 import {FriendsService} from "../../../core/services/fetch/friends.service";
 import {catchError, map, mergeMap, of, tap} from "rxjs";
 
@@ -13,13 +12,15 @@ import {catchError, map, mergeMap, of, tap} from "rxjs";
 @Injectable()
 export class FriendsEffects {
 	friendShipDemand$
-	friendShipDemandSuccess$
+	// friendShipDemandSuccess$
+	pendingRequests$
+	// pendingRequestsSuccess$
 
 	constructor(
 		private actions$: Actions,
 		private friendsService: FriendsService,
-		private router: Router
 	) {
+		// send friend request
 		this.friendShipDemand$ = createEffect(() =>
 			this.actions$.pipe(
 				ofType(friendShipDemand),
@@ -37,7 +38,7 @@ export class FriendsEffects {
 			)
 		)
 
-		this.friendShipDemandSuccess$ = createEffect(() =>
+	/*	this.friendShipDemandSuccess$ = createEffect(() =>
 			this.actions$.pipe(
 				ofType(friendShipDemandSuccess),
 				tap(({response}) => {
@@ -46,6 +47,29 @@ export class FriendsEffects {
 				})
 			),
 			{dispatch: false}
+		)*/
+
+
+
+		// get all pending requests
+		this.pendingRequests$ = createEffect(() =>
+			this.actions$.pipe(
+				ofType(getPendingRequests),
+				mergeMap(() =>
+					this.friendsService.getPendingRequests().pipe(
+						map(response => {
+							return getPendingRequestsSuccess({response})
+						}),
+						catchError(err => {
+							const error: string = err.error.message
+							return of(getPendingRequestsFailure({error}))
+						})
+					)
+				)
+			)
 		)
+
+
+
 	}
 }

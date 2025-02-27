@@ -60,11 +60,8 @@ import {FormControl, FormGroup, ReactiveFormsModule, Validators} from "@angular/
 			    <div class="border-1 border-zinc-600"></div>
 		    </div>
 		    <div class="w-90 bg-zinc-500">
-			    Auth User Info
-			    <p *ngIf="authUser$ | async as authUser">
-                    current user email {{ authUser.email }}
-                    current user displayName {{ authUser.displayName }}
-			    </p>
+			    Active Now
+			    <p></p>
 		    </div>
 	    </section>
   `

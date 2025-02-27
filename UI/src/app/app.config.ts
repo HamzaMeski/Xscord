@@ -14,7 +14,7 @@ import {userProfileReducers} from "./ngrx/reducers/userProfile/userProfile.reduc
 import {UserProfileEffects} from "./ngrx/effects/userProfile/userProfile.effects";
 import {AuthInterceptor} from "./core/interceptors/auth.interceptor";
 import {FriendsEffects} from "./ngrx/effects/friends/friends.effects";
-import {friendShipDemandReducers} from "./ngrx/reducers/friends/friends.reducers";
+import {friendShipDemandReducers, pendingRequestsReducers} from "./ngrx/reducers/friends/friends.reducers";
 
 
 export const appConfig: ApplicationConfig = {
@@ -32,7 +32,8 @@ export const appConfig: ApplicationConfig = {
             register: registerReducers,
             login: loginReducers,
             userProfile: userProfileReducers,
-            friendShipDemand: friendShipDemandReducers
+            friendShipDemand: friendShipDemandReducers,
+            pendingRequests: pendingRequestsReducers
         }),
         provideStoreDevtools({ maxAge: 25, logOnly: !isDevMode() }),
         provideEffects([
