@@ -38,7 +38,6 @@ import {FormControl, FormGroup, ReactiveFormsModule, Validators} from "@angular/
                             [ngClass]="myForm.invalid ? '' : ''"
 	                        class="w-60 bg-blue-500 hover:bg-blue-400 p-2 rounded-md cursor-pointer text-[14px] flex items-center justify-center"
                             type="submit"
-                            (click)="dispatch()"
                         >
                             <div *ngIf="!(friendShipDemandLoading$ | async)" >Send Friend Request</div>
                             <div *ngIf="friendShipDemandLoading$ | async" class="w-6 h-6 flex items-center justify-center">
@@ -89,11 +88,6 @@ export class AddfriendComponent implements OnInit{
 
 	ngOnInit(): void {
 		this.store.dispatch(loadUserProfile())
-	}
-
-	dispatch() {
-		console.log('clicked')
-
 	}
 
 	onSubmit() {
