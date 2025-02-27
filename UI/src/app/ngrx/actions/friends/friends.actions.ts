@@ -6,7 +6,8 @@ import {createAction, props} from "@ngrx/store";
 import {FriendShipDemandResponse} from "../../../core/types/friends /friends.types";
 
 export const friendShipDemand = createAction(
-	'[Friends] Send Friend Request'
+	'[Friends] Send Friend Request',
+	props<{receiverId: number}>()
 )
 
 export const friendShipDemandSuccess = createAction(

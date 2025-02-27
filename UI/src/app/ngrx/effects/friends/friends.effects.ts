@@ -23,8 +23,8 @@ export class FriendsEffects {
 		this.friendShipDemand$ = createEffect(() =>
 			this.actions$.pipe(
 				ofType(friendShipDemand),
-				mergeMap(() =>
-					this.friendsService.sendFriendShipRequest(9).pipe(
+				mergeMap(({receiverId}) =>
+					this.friendsService.sendFriendShipRequest(receiverId).pipe(
 						map(response => {
 							return friendShipDemandSuccess({response})
 						}),

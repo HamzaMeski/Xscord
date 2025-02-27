@@ -92,7 +92,6 @@ export class LoginComponent  {
     onSubmit() {
         if(this.myForm.valid) {
             const request: LoginRequest = this.myForm.value as LoginRequest
-            console.log(request)
             this.store.dispatch(login({request}))
         }
     }
