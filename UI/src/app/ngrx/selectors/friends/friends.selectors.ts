@@ -11,10 +11,10 @@ export const selectFriendShipDemandResponse = createSelector(
 
 export const selectFriendShipDemandLoading = createSelector(
 	selectFriendShipDemandState,
-	(state: FriendShipDemandState)=> state.friendShipDemand
+	(state: FriendShipDemandState)=> state.loading
 )
 
 export const selectFriendShipDemandError = createSelector(
 	selectFriendShipDemandState,
-	(state: FriendShipDemandState)=> state.friendShipDemand
+	(state: FriendShipDemandState)=> state.error
 )

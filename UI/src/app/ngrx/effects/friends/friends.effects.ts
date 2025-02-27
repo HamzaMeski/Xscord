@@ -41,7 +41,7 @@ export class FriendsEffects {
 			this.actions$.pipe(
 				ofType(friendShipDemandSuccess),
 				tap(({response}) => {
-					console.log('effect of friendShipDemand:')
+					console.log('friendShipDemand done successfully (effect):')
 					console.log(response.requester)
 				})
 			),
