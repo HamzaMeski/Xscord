@@ -13,7 +13,7 @@ import {catchError, map, mergeMap, of, tap} from "rxjs";
 @Injectable()
 export class UserProfileEffects {
 	loadUserProfile$
-	loadUserProfileSuccess$
+	// loadUserProfileSuccess$
 
 	constructor(
 		private actions$ : Actions,
@@ -35,7 +35,7 @@ export class UserProfileEffects {
 			)
 		)
 
-		this.loadUserProfileSuccess$ = createEffect(() =>
+/*		this.loadUserProfileSuccess$ = createEffect(() =>
 			this.actions$.pipe(
 				ofType(loadUserProfileSuccess),
 				tap(({response}) => {
@@ -44,6 +44,6 @@ export class UserProfileEffects {
 				})
 			),
 			{dispatch: false}
-		)
+		)*/
 	}
 }
