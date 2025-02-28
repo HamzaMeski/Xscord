@@ -1,5 +1,6 @@
 import {Injectable} from "@angular/core";
 import {
+	acceptFriendShipReq, acceptFriendShipReqFailure, acceptFriendShipReqSuccess,
 	friendShipDemand,
 	friendShipDemandFailure,
 	friendShipDemandSuccess, getPendingRequests, getPendingRequestsFailure, getPendingRequestsSuccess
@@ -7,18 +8,21 @@ import {
 import {Actions, createEffect, ofType} from "@ngrx/effects";
 import {FriendsService} from "../../../core/services/fetch/friends.service";
 import {catchError, map, mergeMap, of, tap} from "rxjs";
+import {Store} from "@ngrx/store";
 
 
 @Injectable()
 export class FriendsEffects {
 	friendShipDemand$
-	// friendShipDemandSuccess$
 	pendingRequests$
-	// pendingRequestsSuccess$
+
+	acceptFriendShipReq$
+	refreshPendingRequests$
 
 	constructor(
 		private actions$: Actions,
 		private friendsService: FriendsService,
+		private store: Store
 	) {
 		// send friend request
 		this.friendShipDemand$ = createEffect(() =>
@@ -37,18 +41,6 @@ export class FriendsEffects {
 				)
 			)
 		)
-
-	/*	this.friendShipDemandSuccess$ = createEffect(() =>
-			this.actions$.pipe(
-				ofType(friendShipDemandSuccess),
-				tap(({response}) => {
-					console.log('friendShipDemand done successfully (effect):')
-					console.log(response.requester)
-				})
-			),
-			{dispatch: false}
-		)*/
-
 
 
 		// get all pending requests
@@ -69,7 +61,33 @@ export class FriendsEffects {
 			)
 		)
 
+		// accept friend request
+		this.acceptFriendShipReq$ = createEffect(() =>
+			this.actions$.pipe(
+				ofType(acceptFriendShipReq),
+				mergeMap(({requestId}) =>
+					this.friendsService.acceptRequest(requestId).pipe(
+						map(response => {
+							return acceptFriendShipReqSuccess({response})
+						}),
+						catchError(err => {
+							const error: string = err.error.message
+							return of(acceptFriendShipReqFailure({error}))
+						})
+					)
+				)
+			)
+		)
 
-
+		// refresh pending requests after success acceptation
+		this.refreshPendingRequests$ = createEffect(() =>
+			this.actions$.pipe(
+				ofType(acceptFriendShipReqSuccess),
+				tap(() => this.store.dispatch(getPendingRequests()))
+			),
+			{
+				dispatch: false
+			}
+		)
 	}
 }

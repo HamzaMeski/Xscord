@@ -11,7 +11,10 @@ public interface FriendShipDemandRepository extends JpaRepository<FriendShipDema
     @Query("""
             SELECT fsd
             FROM FriendShipDemand fsd
-            WHERE fsd.receiver = :individual
+            WHERE
+            (fsd.receiver = :individual)
+            AND
+            (fsd.accepted = false)
     """)
     List<FriendShipDemand> getFriendShipRequestsForIndividual(Individual individual);
 

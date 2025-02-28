@@ -35,11 +35,21 @@ export const getPendingRequestsFailure = createAction(
 
 
 
-
-
 // accept friend request
+export const acceptFriendShipReq =createAction(
+	'[Friends] Accept Pending Request',
+	props<{requestId: number}>()
+)
 
+export const acceptFriendShipReqSuccess =createAction(
+	'[Friends] Accept Pending Request Success',
+	props<{response: FriendShipDemandResponse}>()
+)
 
+export const acceptFriendShipReqFailure =createAction(
+	'[Friends] Accept Pending Request Failure',
+	props<{error: string}>()
+)
 
 
 // ignore friend request

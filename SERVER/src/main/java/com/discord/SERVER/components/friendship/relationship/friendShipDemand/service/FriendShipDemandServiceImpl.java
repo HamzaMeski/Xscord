@@ -4,7 +4,6 @@ import com.discord.SERVER.components.friendship.relationship.friendShipDemand.dt
 import com.discord.SERVER.components.friendship.relationship.friendShipDemand.mapper.FriendShipDemandMapper;
 import com.discord.SERVER.components.friendship.relationship.friendShipDemand.repository.FriendShipDemandRepository;
 import com.discord.SERVER.components.friendship.relationship.friendsList.repository.FriendsListRepository;
-import com.discord.SERVER.components.friendship.relationship.friendsList.service.FriendsListService;
 import com.discord.SERVER.components.individual.repository.IndividualRepository;
 import com.discord.SERVER.entities.FriendShipDemand;
 import com.discord.SERVER.entities.FriendsList;

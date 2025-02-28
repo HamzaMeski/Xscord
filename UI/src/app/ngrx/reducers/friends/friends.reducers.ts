@@ -1,6 +1,11 @@
-import {initialFriendShipDemandState, initialPendingRequestsState} from "../../state/friends/friends.state";
+import {
+	initialAcceptFriendShipReqState,
+	initialFriendShipDemandState,
+	initialPendingRequestsState
+} from "../../state/friends/friends.state";
 import {createReducer, on} from "@ngrx/store";
 import {
+	acceptFriendShipReq, acceptFriendShipReqFailure, acceptFriendShipReqSuccess,
 	friendShipDemand,
 	friendShipDemandFailure,
 	friendShipDemandSuccess, getPendingRequests, getPendingRequestsFailure, getPendingRequestsSuccess
@@ -49,7 +54,7 @@ export const pendingRequestsReducers = createReducer(
 	on(getPendingRequestsSuccess, (state, action) => ({
 		...state,
 		pendingRequests: action.response,
-		loading: true,
+		loading: false,
 		error: null
 	})),
 
@@ -59,4 +64,31 @@ export const pendingRequestsReducers = createReducer(
 		loading: false,
 		error: action.error
 	}))
+)
+
+
+// accept friend request
+export const acceptFriendShipReqReducers = createReducer(
+	initialAcceptFriendShipReqState,
+
+	on(acceptFriendShipReq, (state) => ({
+		...state,
+		friendShipDemand: null,
+		loading: true,
+		error: null
+	})),
+
+	on(acceptFriendShipReqSuccess, (state, action) => ({
+		...state,
+		friendShipDemand: action.response,
+		loading: false,
+		error: null
+	})),
+
+	on(acceptFriendShipReqFailure, (state, action) => ({
+		...state,
+		friendShipDemand: null,
+		loading: false,
+		error: action.error
+	})),
 )

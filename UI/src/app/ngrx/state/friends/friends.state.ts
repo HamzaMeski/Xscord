@@ -26,3 +26,12 @@ export const initialPendingRequestsState: PendingRequestsState ={
 	loading: false,
 	error: null
 }
+
+
+// accept friend request
+export const initialAcceptFriendShipReqState: FriendShipDemandState = {
+	friendShipDemand: null,
+	loading: false,
+	error: null
+}
+
