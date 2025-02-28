@@ -5,8 +5,11 @@ import {faCancel, faCheckCircle} from "@fortawesome/free-solid-svg-icons";
 import {Store} from "@ngrx/store";
 import {
 	selectAcceptFriendShipReqError,
-	selectAcceptFriendShipReqLoading, selectIgnoreFriendShipReqError, selectIgnoreFriendShipReqLoading,
-	selectPendingRequestsError, selectPendingRequestsLoading,
+	selectAcceptFriendShipReqLoading,
+	selectIgnoreFriendShipReqError,
+	selectIgnoreFriendShipReqLoading,
+	selectPendingRequestsError,
+	selectPendingRequestsLoading,
 	selectPendingRequestsResponse
 } from "../../../../../ngrx/selectors/friends/friends.selectors";
 import {
@@ -131,7 +134,6 @@ export class PendingRequestsComponent implements OnInit{
 	}
 
 	ngOnInit(): void {
-		console.log('ngOnInit dispatching...')
 		this.store.dispatch(getPendingRequests())
 	}
 
