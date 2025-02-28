@@ -1,5 +1,5 @@
 import {createAction, props} from "@ngrx/store";
-import {FriendShipDemandResponse} from "../../../core/types/friends /friends.types";
+import {FriendRowResponse, FriendShipDemandResponse} from "../../../core/types/friends /friends.types";
 
 // send friend request
 export const friendShipDemand = createAction(
@@ -64,5 +64,21 @@ export const ignoreFriendShipReqSuccess =createAction(
 
 export const ignoreFriendShipReqFailure =createAction(
 	'[Friends] Ignore Pending Request Failure',
+	props<{error: string}>()
+)
+
+
+// get all friends of individual
+export const getIndividualFriends = createAction(
+	'[Friends] Get Individual Friends'
+)
+
+export const getIndividualFriendsSuccess = createAction(
+	'[Friends] Get Individual Friends Success',
+	props<{response: FriendRowResponse[]}>()
+)
+
+export const getIndividualFriendsFailure = createAction(
+	'[Friends] Get Individual Friends Failure',
 	props<{error: string}>()
 )

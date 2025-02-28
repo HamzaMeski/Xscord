@@ -6,10 +6,15 @@ import {
 	friendShipDemand,
 	friendShipDemandFailure,
 	friendShipDemandSuccess,
+	getIndividualFriends,
+	getIndividualFriendsFailure,
+	getIndividualFriendsSuccess,
 	getPendingRequests,
 	getPendingRequestsFailure,
 	getPendingRequestsSuccess,
-	ignoreFriendShipReq, ignoreFriendShipReqFailure, ignoreFriendShipReqSuccess
+	ignoreFriendShipReq,
+	ignoreFriendShipReqFailure,
+	ignoreFriendShipReqSuccess
 } from "../../actions/friends/friends.actions";
 import {Actions, createEffect, ofType} from "@ngrx/effects";
 import {FriendsService} from "../../../core/services/fetch/friends.service";
@@ -21,11 +26,10 @@ import {Store} from "@ngrx/store";
 export class FriendsEffects {
 	friendShipDemand$
 	pendingRequests$
-
 	acceptFriendShipReq$
 	refreshPendingRequests$
-
 	ignoreFriendShipReq$
+	individualFriends$
 
 	constructor(
 		private actions$: Actions,
@@ -50,7 +54,6 @@ export class FriendsEffects {
 			)
 		)
 
-
 		// get all pending requests
 		this.pendingRequests$ = createEffect(() =>
 			this.actions$.pipe(
@@ -58,6 +61,8 @@ export class FriendsEffects {
 				mergeMap(() =>
 					this.friendsService.getPendingRequests().pipe(
 						map(response => {
+							console.log('pending requests (effects):')
+							console.log(response)
 							return getPendingRequestsSuccess({response})
 						}),
 						catchError(err => {
@@ -86,7 +91,6 @@ export class FriendsEffects {
 				)
 			)
 		)
-
 
 		// ignore friend request
 		this.ignoreFriendShipReq$ = createEffect(() =>
@@ -119,6 +123,26 @@ export class FriendsEffects {
 			{
 				dispatch: false
 			}
+		)
+
+
+		// get all friends of individual
+		this.individualFriends$ = createEffect(() =>
+			this.actions$.pipe(
+				ofType(getIndividualFriends),
+				mergeMap(() =>
+					this.friendsService.getIndividualFriends().pipe(
+						map(response => {
+							console.log('fetching friends done successfully!')
+							return getIndividualFriendsSuccess({response})
+						}),
+						catchError(err => {
+							const error: string = err.error.message
+							return of(getIndividualFriendsFailure({error}))
+						})
+					)
+				)
+			)
 		)
 	}
 }

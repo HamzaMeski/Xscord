@@ -10,7 +10,7 @@ import {RouterLink} from "@angular/router";
 	template: `
         <section class="h-full flex bg-green-300">
             <div class="flex-1">
-                f sec
+                all friends
             </div>
             <div class="w-90 bg-zinc-500">
                 s sec

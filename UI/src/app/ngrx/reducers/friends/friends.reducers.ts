@@ -1,6 +1,6 @@
 import {
 	initialAcceptFriendShipReqState,
-	initialFriendShipDemandState, initialIgnoreFriendShipReqState,
+	initialFriendShipDemandState, initialIgnoreFriendShipReqState, initialIndividualFriendsState,
 	initialPendingRequestsState
 } from "../../state/friends/friends.state";
 import {createReducer, on} from "@ngrx/store";
@@ -11,10 +11,15 @@ import {
 	friendShipDemand,
 	friendShipDemandFailure,
 	friendShipDemandSuccess,
+	getIndividualFriends,
+	getIndividualFriendsFailure,
+	getIndividualFriendsSuccess,
 	getPendingRequests,
 	getPendingRequestsFailure,
 	getPendingRequestsSuccess,
-	ignoreFriendShipReq, ignoreFriendShipReqFailure, ignoreFriendShipReqSuccess
+	ignoreFriendShipReq,
+	ignoreFriendShipReqFailure,
+	ignoreFriendShipReqSuccess
 } from "../../actions/friends/friends.actions";
 
 
@@ -126,3 +131,31 @@ export const ignoreFriendShipReqReducers = createReducer(
 		error: action.error
 	})),
 )
+
+
+// get all friends of individual
+export const getIndividualFriendsReducers = createReducer(
+	initialIndividualFriendsState,
+
+	on(getIndividualFriends, (state) => ({
+		...state,
+		friends: null,
+		loading: true,
+		error: null
+	})),
+
+	on(getIndividualFriendsSuccess, (state, action) => ({
+		...state,
+		friends: action.response,
+		loading: false,
+		error: null
+	})),
+
+	on(getIndividualFriendsFailure, (state, action) => ({
+		...state,
+		friends: null,
+		loading: false,
+		error: action.error
+	}))
+)
+

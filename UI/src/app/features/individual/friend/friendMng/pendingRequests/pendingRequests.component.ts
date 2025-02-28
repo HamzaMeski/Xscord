@@ -131,6 +131,7 @@ export class PendingRequestsComponent implements OnInit{
 	}
 
 	ngOnInit(): void {
+		console.log('ngOnInit dispatching...')
 		this.store.dispatch(getPendingRequests())
 	}
 

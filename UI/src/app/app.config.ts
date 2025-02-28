@@ -16,7 +16,9 @@ import {AuthInterceptor} from "./core/interceptors/auth.interceptor";
 import {FriendsEffects} from "./ngrx/effects/friends/friends.effects";
 import {
     acceptFriendShipReqReducers,
-    friendShipDemandReducers, ignoreFriendShipReqReducers,
+    friendShipDemandReducers,
+    getIndividualFriendsReducers,
+    ignoreFriendShipReqReducers,
     pendingRequestsReducers
 } from "./ngrx/reducers/friends/friends.reducers";
 
@@ -39,7 +41,8 @@ export const appConfig: ApplicationConfig = {
             friendShipDemand: friendShipDemandReducers,
             pendingRequests: pendingRequestsReducers,
             acceptFriendShipReq: acceptFriendShipReqReducers,
-            ignoreFriendShipReq: ignoreFriendShipReqReducers
+            ignoreFriendShipReq: ignoreFriendShipReqReducers,
+            getIndividualFriends: getIndividualFriendsReducers
         }),
         provideStoreDevtools({ maxAge: 25, logOnly: !isDevMode() }),
         provideEffects([

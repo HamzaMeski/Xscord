@@ -1,6 +1,6 @@
 import {createFeatureSelector, createSelector} from "@ngrx/store";
 import {
-	FriendShipDemandState,
+	FriendShipDemandState, IndividualFriendsState,
 	PendingRequestsState
 } from "../../state/friends/friends.state";
 
@@ -79,4 +79,24 @@ export const selectIgnoreFriendShipReqLoading = createSelector(
 export const selectIgnoreFriendShipReqError = createSelector(
 	selectIgnoreFriendShipReqState,
 	(state: FriendShipDemandState)=> state.error
+)
+
+
+
+// get all friends of individual
+export const selectIndividualFriendsState = createFeatureSelector<IndividualFriendsState>('getIndividualFriends')
+
+export const selectGetIndividualFriendsResponse = createSelector(
+	selectIndividualFriendsState,
+	(state: IndividualFriendsState)=> state.friends
+)
+
+export const selectGetIndividualFriendsLoading = createSelector(
+	selectIndividualFriendsState,
+	(state: IndividualFriendsState)=> state.loading
+)
+
+export const selectGetIndividualFriendsError = createSelector(
+	selectIndividualFriendsState,
+	(state: IndividualFriendsState)=> state.error
 )
