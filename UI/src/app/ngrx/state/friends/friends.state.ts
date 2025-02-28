@@ -35,3 +35,10 @@ export const initialAcceptFriendShipReqState: FriendShipDemandState = {
 	error: null
 }
 
+
+// ignore friend request
+export const initialIgnoreFriendShipReqState: FriendShipDemandState = {
+	friendShipDemand: null,
+	loading: false,
+	error: null
+}

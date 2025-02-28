@@ -1,9 +1,15 @@
 import {Injectable} from "@angular/core";
 import {
-	acceptFriendShipReq, acceptFriendShipReqFailure, acceptFriendShipReqSuccess,
+	acceptFriendShipReq,
+	acceptFriendShipReqFailure,
+	acceptFriendShipReqSuccess,
 	friendShipDemand,
 	friendShipDemandFailure,
-	friendShipDemandSuccess, getPendingRequests, getPendingRequestsFailure, getPendingRequestsSuccess
+	friendShipDemandSuccess,
+	getPendingRequests,
+	getPendingRequestsFailure,
+	getPendingRequestsSuccess,
+	ignoreFriendShipReq, ignoreFriendShipReqFailure, ignoreFriendShipReqSuccess
 } from "../../actions/friends/friends.actions";
 import {Actions, createEffect, ofType} from "@ngrx/effects";
 import {FriendsService} from "../../../core/services/fetch/friends.service";
@@ -18,6 +24,8 @@ export class FriendsEffects {
 
 	acceptFriendShipReq$
 	refreshPendingRequests$
+
+	ignoreFriendShipReq$
 
 	constructor(
 		private actions$: Actions,
@@ -79,12 +87,35 @@ export class FriendsEffects {
 			)
 		)
 
+
+		// ignore friend request
+		this.ignoreFriendShipReq$ = createEffect(() =>
+			this.actions$.pipe(
+				ofType(ignoreFriendShipReq),
+				mergeMap(({requestId}) =>
+					this.friendsService.ignoreRequest(requestId).pipe(
+						map(() => {
+							return ignoreFriendShipReqSuccess()
+						}),
+						catchError(err => {
+							const error: string = err.error.message
+							return of(ignoreFriendShipReqFailure({error}))
+						})
+					)
+				)
+			)
+		)
+
+
 		// refresh pending requests after success acceptation
 		this.refreshPendingRequests$ = createEffect(() =>
-			this.actions$.pipe(
-				ofType(acceptFriendShipReqSuccess),
-				tap(() => this.store.dispatch(getPendingRequests()))
-			),
+				this.actions$.pipe(
+					ofType(
+						acceptFriendShipReqSuccess,
+						ignoreFriendShipReqSuccess
+					),
+					tap(() => this.store.dispatch(getPendingRequests()))
+				),
 			{
 				dispatch: false
 			}

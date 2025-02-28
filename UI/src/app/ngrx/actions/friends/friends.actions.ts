@@ -53,3 +53,16 @@ export const acceptFriendShipReqFailure =createAction(
 
 
 // ignore friend request
+export const ignoreFriendShipReq =createAction(
+	'[Friends] Ignore Pending Request',
+	props<{requestId: number}>()
+)
+
+export const ignoreFriendShipReqSuccess =createAction(
+	'[Friends] Ignore Pending Request Success'
+)
+
+export const ignoreFriendShipReqFailure =createAction(
+	'[Friends] Ignore Pending Request Failure',
+	props<{error: string}>()
+)

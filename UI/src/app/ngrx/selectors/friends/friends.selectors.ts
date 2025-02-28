@@ -62,3 +62,21 @@ export const selectAcceptFriendShipReqError = createSelector(
 	(state: FriendShipDemandState)=> state.error
 )
 
+
+// ignore pending request
+export const selectIgnoreFriendShipReqState = createFeatureSelector<FriendShipDemandState>('ignoreFriendShipReq')
+
+export const selectIgnoreFriendShipReqResponse = createSelector(
+	selectIgnoreFriendShipReqState,
+	(state: FriendShipDemandState)=> state.friendShipDemand
+)
+
+export const selectIgnoreFriendShipReqLoading = createSelector(
+	selectIgnoreFriendShipReqState,
+	(state: FriendShipDemandState)=> state.loading
+)
+
+export const selectIgnoreFriendShipReqError = createSelector(
+	selectIgnoreFriendShipReqState,
+	(state: FriendShipDemandState)=> state.error
+)
