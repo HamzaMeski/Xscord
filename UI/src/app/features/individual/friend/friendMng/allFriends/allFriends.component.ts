@@ -1,5 +1,4 @@
 import {Component, OnInit} from "@angular/core";
-import {RouterLink} from "@angular/router";
 import {AsyncPipe, NgForOf, NgIf} from "@angular/common";
 import {FaIconComponent} from "@fortawesome/angular-fontawesome";
 import {faDiscord} from "@fortawesome/free-brands-svg-icons";
@@ -20,7 +19,6 @@ import {loadUserProfile} from "../../../../../ngrx/actions/userProfile/userProfi
 	standalone: true,
 	selector: 'all-friends',
 	imports: [
-		RouterLink,
 		AsyncPipe,
 		FaIconComponent,
 		NgForOf,
@@ -77,7 +75,7 @@ import {loadUserProfile} from "../../../../../ngrx/actions/userProfile/userProfi
         </section>
   `
 })
-export class AllFriendsComponent implements OnInit{
+export class AllFriendsComponent{
 	protected readonly faDiscord = faDiscord;
 
 	individualFriends$
@@ -100,8 +98,4 @@ export class AllFriendsComponent implements OnInit{
 		this.currentAuthUserError$ = store.select(selectUserProfileError)
 	}
 
-	ngOnInit(): void {
-		this.store.dispatch(loadUserProfile())
-		this.store.dispatch(getIndividualFriends())
-	}
 }
