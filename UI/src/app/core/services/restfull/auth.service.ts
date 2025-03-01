@@ -3,7 +3,7 @@ import {HttpClient} from "@angular/common/http";
 import {LoginRequest, LoginResponse} from "../../types/auth/login.types";
 import {Observable} from "rxjs";
 import {RegisterRequest, RegisterResponse} from "../../types/auth/register.types";
-import {IndividualResponse} from "../../types/individual/individual";
+import {IndividualResponse} from "../../types/individual/individual.types";
 
 
 @Injectable({

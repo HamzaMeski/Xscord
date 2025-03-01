@@ -1,5 +1,5 @@
 import {createAction, props} from "@ngrx/store";
-import {IndividualResponse} from "../../../core/types/individual/individual";
+import {IndividualResponse} from "../../../core/types/individual/individual.types";
 
 
 export const loadUserProfile = createAction(

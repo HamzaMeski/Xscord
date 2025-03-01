@@ -1,4 +1,4 @@
-import {IndividualResponse} from "../individual/individual";
+import {IndividualResponse} from "../individual/individual.types";
 
 export interface FriendShipDemandResponse {
 	id: number,

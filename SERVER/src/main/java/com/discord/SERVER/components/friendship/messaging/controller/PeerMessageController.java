@@ -7,9 +7,9 @@ import com.discord.SERVER.security.CurrentUser;
 import com.discord.SERVER.security.UserPrincipal;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,11 +24,11 @@ public class PeerMessageController {
     private final SimpMessagingTemplate messagingTemplate;
 
     @MessageMapping("/chat.sendMessage")
-    public ResponseEntity<PeerMessageResponseDTO> sendMessage(
+    public void sendMessage(
             @CurrentUser
             UserPrincipal authUser,
             @Valid
-            @RequestBody
+            @Payload
             PeerMessageRequestDTO requestDTO
     ) {
         PeerMessageResponseDTO responseDTO = peerMessageService.sendMessage(authUser.getId(), requestDTO);
@@ -39,13 +39,11 @@ public class PeerMessageController {
                 "/queue/messages",
                 responseDTO
         );
-
-        return new ResponseEntity<>(responseDTO, HttpStatus.CREATED);
     }
 
     @MessageMapping("/chat.markAsRead")
-    public ResponseEntity<PeerMessageResponseDTO> markAsRead(
-            @PathVariable
+    public void markAsRead(
+            @Payload
             Long messageId
     ) {
         PeerMessageResponseDTO responseDTO = peerMessageService.markAsRead(messageId);
@@ -56,7 +54,6 @@ public class PeerMessageController {
                 "/queue/read-receipts",
                 responseDTO
         );
-        return ResponseEntity.ok(responseDTO);
     }
 
     @GetMapping("/getChatHistory/{individual2Id}")

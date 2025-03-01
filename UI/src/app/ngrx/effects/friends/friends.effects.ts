@@ -14,7 +14,10 @@ import {
 	getPendingRequestsSuccess,
 	ignoreFriendShipReq,
 	ignoreFriendShipReqFailure,
-	ignoreFriendShipReqSuccess, loadSelectedFriend, loadSelectedFriendFailure, loadSelectedFriendSuccess
+	ignoreFriendShipReqSuccess,
+	loadSelectedFriend,
+	loadSelectedFriendFailure,
+	loadSelectedFriendSuccess
 } from "../../actions/friends/friends.actions";
 import {Actions, createEffect, ofType} from "@ngrx/effects";
 import {FriendsService} from "../../../core/services/restfull/friends.service";
@@ -65,8 +68,6 @@ export class FriendsEffects {
 				mergeMap(() =>
 					this.friendsService.getPendingRequests().pipe(
 						map(response => {
-							console.log('pending requests (effects):')
-							console.log(response)
 							return getPendingRequestsSuccess({response})
 						}),
 						catchError(err => {
@@ -139,7 +140,6 @@ export class FriendsEffects {
 				mergeMap(() =>
 					this.friendsService.getIndividualFriends().pipe(
 						map(response => {
-							console.log('fetching friends done successfully!')
 							return getIndividualFriendsSuccess({response})
 						}),
 						catchError(err => {
@@ -159,8 +159,6 @@ export class FriendsEffects {
 				mergeMap(({friendId}) =>
 					this.individualsService.getIndividual(friendId).pipe(
 						map(response => {
-							console.log('selected friend loaded successfully:')
-							console.log(response)
 							return loadSelectedFriendSuccess({response})
 						}),
 						catchError(err => {
@@ -171,6 +169,5 @@ export class FriendsEffects {
 				)
 			)
 		)
-
 	}
 }

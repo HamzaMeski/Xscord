@@ -1,4 +1,4 @@
-import {IndividualResponse} from "../../../core/types/individual/individual";
+import {IndividualResponse} from "../../../core/types/individual/individual.types";
 
 
 export interface UserProfileState {

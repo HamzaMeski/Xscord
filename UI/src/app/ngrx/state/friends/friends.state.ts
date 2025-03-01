@@ -2,7 +2,7 @@ import {
 	FriendRowResponse,
 	FriendShipDemandResponse
 } from "../../../core/types/friends /friends.types";
-import {IndividualResponse} from "../../../core/types/individual/individual";
+import {IndividualResponse} from "../../../core/types/individual/individual.types";
 
 // send friend request
 export interface FriendShipDemandState {
