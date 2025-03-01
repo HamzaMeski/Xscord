@@ -50,21 +50,7 @@ import {loadUserProfile} from "../../../../../ngrx/actions/userProfile/userProfi
                                         <div>
                                             {{ friend.createdAt }}
                                         </div>
-	                                    <!--if individual1 is authUser display individual2-->
-	                                    <div >
-                                            <div *ngIf="currentAuthUser.id == friend.individual1.id" class="flex gap-2">
-                                                <p>{{ friend.individual2.firstName }}</p>
-                                                <strong>{{ friend.individual2.displayName }}</strong>
-                                            </div>
-	                                    </div>
-	                                    
-                                        <!--if individual2 is authUser display individual1-->
-	                                    <div >
-                                            <div *ngIf="currentAuthUser.id == friend.individual2.id" class="flex gap-2">
-                                                <p>{{ friend.individual1.firstName }}</p>
-                                                <strong>{{ friend.individual1.displayName }}</strong>
-                                            </div>
-	                                    </div>
+	                                
                                     </div>
                                 </div>
 
@@ -118,6 +104,4 @@ export class AllFriendsComponent implements OnInit{
 		this.store.dispatch(loadUserProfile())
 		this.store.dispatch(getIndividualFriends())
 	}
-
-
 }
