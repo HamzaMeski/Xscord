@@ -14,7 +14,7 @@ export const friendRoutes: Routes = [
 					.then(res => res.friendMngRoutes)
 			},
 			{
-				path: 'chat',
+				path: 'chat/:friendId',
 				component: FriendChatComponent
 			}
 		]

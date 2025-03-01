@@ -51,24 +51,27 @@ import {AsyncPipe, NgForOf, NgIf} from "@angular/common";
                 <div *ngIf="!(individualFriendsLoading$ | async) && !(currentAuthUserLoading$ | async)">
                     <div *ngIf="currentAuthUser$ | async as currentAuthUser">
                         <div *ngIf="individualFriends$ | async as individualFriends">
-                            <a *ngFor="let friend of individualFriends" routerLink="/individual/friend/chat" class="cursor-pointer bg-blue-300 flex items-center gap-2 p-2 hover:bg-zinc-600">
-                                <div class="w-10 h-10 flex items-center justify-center bg-red-500 rounded-full">
-                                    <fa-icon [icon]="faDiscord"></fa-icon>
-                                </div>
+	                        <div *ngFor="let friend of individualFriends">
                                 <!--if individual1 is authUser display individual2-->
-                                <div >
-                                    <div *ngIf="currentAuthUser.id == friend.individual1.id" class="flex gap-2">
+		                        <div *ngIf="currentAuthUser.id == friend.individual1.id">
+                                    <a [routerLink]="['/individual/friend/chat', friend.individual2.id]" class="cursor-pointer bg-blue-300 flex items-center gap-2 p-2 hover:bg-zinc-600">
+                                        <div class="w-10 h-10 flex items-center justify-center bg-red-500 rounded-full">
+                                            <fa-icon [icon]="faDiscord"></fa-icon>
+                                        </div>
                                         <strong>{{ friend.individual2.displayName }}</strong>
-                                    </div>
-                                </div>
-
+                                    </a>
+		                        </div>
+		                        
                                 <!--if individual2 is authUser display individual1-->
-                                <div >
-                                    <div *ngIf="currentAuthUser.id == friend.individual2.id" class="flex gap-2">
+                                <div *ngIf="currentAuthUser.id == friend.individual2.id">
+                                    <a [routerLink]="['/individual/friend/chat', friend.individual1.id]" class="cursor-pointer bg-blue-300 flex items-center gap-2 p-2 hover:bg-zinc-600">
+                                        <div class="w-10 h-10 flex items-center justify-center bg-red-500 rounded-full">
+                                            <fa-icon [icon]="faDiscord"></fa-icon>
+                                        </div>
                                         <strong>{{ friend.individual1.displayName }}</strong>
-                                    </div>
+                                    </a>
                                 </div>
-                            </a>
+                            </div>
                         </div>
                     </div>
                 </div>

@@ -159,6 +159,8 @@ export class FriendsEffects {
 				mergeMap(({friendId}) =>
 					this.individualsService.getIndividual(friendId).pipe(
 						map(response => {
+							console.log('selected friend loaded successfully:')
+							console.log(response)
 							return loadSelectedFriendSuccess({response})
 						}),
 						catchError(err => {
@@ -169,8 +171,6 @@ export class FriendsEffects {
 				)
 			)
 		)
-
-
 
 	}
 }
