@@ -134,22 +134,25 @@ import {CommonModule} from "@angular/common";
                             </div>
                             <br>
                             <!--message container-->
-                            <div class="flex gap-2 mb-3">
-                                <div>
-                                    <div class="w-12 h-12 flex items-center justify-center bg-red-500 rounded-full">
-                                        <fa-icon [icon]="faDiscord" class="text-2xl"></fa-icon>
+	                        <div>
+                                <div class="flex gap-2 mb-3">
+                                    <div>
+                                        <div class="w-12 h-12 flex items-center justify-center bg-red-500 rounded-full">
+                                            <fa-icon [icon]="faDiscord" class="text-2xl"></fa-icon>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div class="flex">
+                                            <strong>hamza meski</strong>
+                                            <p>23/02/2025, 13:20</p>
+                                        </div>
+                                        <p>
+                                            Hello. hamza me ski I’m contacting the community members to see how their trading is going. Due to the market’s recent swings, I’ve been focusing on the Quantum Financing System (QFS) strategy on the blockchain Ledger. This low-risk management approach is designed for passive accumulation during predictable times. Have you had a chance to start your free demo trading yet?
+                                        </p>
                                     </div>
                                 </div>
-                                <div>
-                                    <div class="flex">
-                                        <strong>hamza meski</strong>
-                                        <p>23/02/2025, 13:20</p>
-                                    </div>
-                                    <p>
-                                        Hello. hamza me ski I’m contacting the community members to see how their trading is going. Due to the market’s recent swings, I’ve been focusing on the Quantum Financing System (QFS) strategy on the blockchain Ledger. This low-risk management approach is designed for passive accumulation during predictable times. Have you had a chance to start your free demo trading yet?
-                                    </p>
-                                </div>
-                            </div>
+	                        </div>
+                        
 
                         </div>
                         <!--set message section-->
