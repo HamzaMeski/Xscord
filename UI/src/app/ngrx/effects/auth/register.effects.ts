@@ -31,6 +31,7 @@ export class RegisterEffects {
 			)
 		)
 
+
 		this.registerSuccess$ = createEffect(() =>
 				this.actions$.pipe(
 					ofType(registerSuccess),

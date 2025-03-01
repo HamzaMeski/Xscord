@@ -34,16 +34,5 @@ export class UserProfileEffects {
 				)
 			)
 		)
-
-/*		this.loadUserProfileSuccess$ = createEffect(() =>
-			this.actions$.pipe(
-				ofType(loadUserProfileSuccess),
-				tap(({response}) => {
-					console.log('profile loaded successfully')
-					console.log(response)
-				})
-			),
-			{dispatch: false}
-		)*/
 	}
 }

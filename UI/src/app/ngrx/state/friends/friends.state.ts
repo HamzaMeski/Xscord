@@ -2,6 +2,7 @@ import {
 	FriendRowResponse,
 	FriendShipDemandResponse
 } from "../../../core/types/friends /friends.types";
+import {IndividualResponse} from "../../../core/types/individual/individual";
 
 // send friend request
 export interface FriendShipDemandState {
@@ -56,6 +57,20 @@ export interface IndividualFriendsState {
 
 export const initialIndividualFriendsState: IndividualFriendsState = {
 	friends: null,
+	loading: false,
+	error: null
+}
+
+
+// load selected friend
+export interface SelectedFriendState {
+	friend: IndividualResponse | null,
+	loading: boolean,
+	error: string | null
+}
+
+export const initialSelectedFriendState: SelectedFriendState = {
+	friend: null,
 	loading: false,
 	error: null
 }
