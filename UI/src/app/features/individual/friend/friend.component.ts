@@ -2,7 +2,7 @@ import {Component, OnInit} from "@angular/core";
 import {RouterLink, RouterOutlet} from "@angular/router";
 import {faDiscord} from "@fortawesome/free-brands-svg-icons";
 import {FontAwesomeModule} from "@fortawesome/angular-fontawesome";
-import {faUser, faUserGroup} from "@fortawesome/free-solid-svg-icons";
+import {faUser} from "@fortawesome/free-solid-svg-icons";
 import {Store} from "@ngrx/store";
 import {
 	selectGetIndividualFriendsError,

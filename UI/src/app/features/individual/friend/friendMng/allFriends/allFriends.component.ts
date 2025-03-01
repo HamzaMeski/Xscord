@@ -8,12 +8,10 @@ import {
 	selectGetIndividualFriendsLoading,
 	selectGetIndividualFriendsResponse
 } from "../../../../../ngrx/selectors/friends/friends.selectors";
-import {getIndividualFriends} from "../../../../../ngrx/actions/friends/friends.actions";
 import {
 	selectUserProfile, selectUserProfileError,
 	selectUserProfileLoading
 } from "../../../../../ngrx/selectors/userProfile/userProfile.selectors";
-import {loadUserProfile} from "../../../../../ngrx/actions/userProfile/userProfile.actions";
 
 @Component({
 	standalone: true,
@@ -48,7 +46,19 @@ import {loadUserProfile} from "../../../../../ngrx/actions/userProfile/userProfi
                                         <div>
                                             {{ friend.createdAt }}
                                         </div>
-	                                
+                                        <!--if individual1 is authUser display individual2-->
+                                        <div >
+                                            <div *ngIf="currentAuthUser.id == friend.individual1.id" class="flex gap-2">
+                                                <strong>{{ friend.individual2.displayName }}</strong>
+                                            </div>
+                                        </div>
+
+                                        <!--if individual2 is authUser display individual1-->
+                                        <div >
+                                            <div *ngIf="currentAuthUser.id == friend.individual2.id" class="flex gap-2">
+                                                <strong>{{ friend.individual1.displayName }}</strong>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
 
@@ -89,13 +99,13 @@ export class AllFriendsComponent{
 	constructor(
 		private store: Store
 	) {
-		this.individualFriends$ = store.select(selectGetIndividualFriendsResponse)
-		this.individualFriendsLoading$ = store.select(selectGetIndividualFriendsLoading)
-		this.individualFriendsError$ = store.select(selectGetIndividualFriendsError)
+		this.individualFriends$ = this.store.select(selectGetIndividualFriendsResponse)
+		this.individualFriendsLoading$ = this.store.select(selectGetIndividualFriendsLoading)
+		this.individualFriendsError$ = this.store.select(selectGetIndividualFriendsError)
 
-		this.currentAuthUser$ = store.select(selectUserProfile)
-		this.currentAuthUserLoading$ = store.select(selectUserProfileLoading)
-		this.currentAuthUserError$ = store.select(selectUserProfileError)
+		this.currentAuthUser$ = this.store.select(selectUserProfile)
+		this.currentAuthUserLoading$ = this.store.select(selectUserProfileLoading)
+		this.currentAuthUserError$ = this.store.select(selectUserProfileError)
 	}
 
 }
