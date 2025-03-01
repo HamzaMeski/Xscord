@@ -7,6 +7,13 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.socket.messaging.SessionConnectedEvent;
 import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 
+
+/*
+    .Connection monitoring
+    .User presence (online/offline)
+    .Connection cleanup
+    .Event logging
+*/
 @Component
 @Slf4j
 @RequiredArgsConstructor

@@ -1,5 +1,5 @@
 
-export interface UserProfileResponse {
+export interface IndividualResponse {
 	id: number,
 	email: string,
 	password: string,

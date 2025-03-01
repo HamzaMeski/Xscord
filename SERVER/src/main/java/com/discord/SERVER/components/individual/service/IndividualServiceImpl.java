@@ -34,7 +34,7 @@ public class IndividualServiceImpl implements IndividualService {
     }
 
     @Override
-    public IndividualResponseDTO getProfile(Long id) {
+    public IndividualResponseDTO getIndividual(Long id) {
         Individual individual = findIndividualById(id);
         return individualMapper.toResponse(individual);
     }

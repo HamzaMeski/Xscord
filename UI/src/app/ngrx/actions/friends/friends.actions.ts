@@ -82,3 +82,20 @@ export const getIndividualFriendsFailure = createAction(
 	'[Friends] Get Individual Friends Failure',
 	props<{error: string}>()
 )
+
+
+// load selected friend
+export const loadSelectedFriend = createAction(
+	'[Friend] Load Selected Friend',
+	props<{friendId: number}>()
+)
+
+export const loadSelectedFriendSuccess = createAction(
+	'[Friend] Load Selected Friend Success',
+	props<{friendId: number}>()
+)
+
+export const loadSelectedFriendFailure = createAction(
+	'[Friend] Load Selected Friend Failure',
+	props<{friendId: number}>()
+)

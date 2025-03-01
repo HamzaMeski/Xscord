@@ -26,10 +26,10 @@ public class IndividualController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<IndividualResponseDTO> getProfile(
+    public ResponseEntity<IndividualResponseDTO> getIndividual(
             @PathVariable Long id
     ) {
-        return ResponseEntity.ok(individualService.getProfile(id));
+        return ResponseEntity.ok(individualService.getIndividual(id));
     }
 
     @PutMapping("/{id}")
