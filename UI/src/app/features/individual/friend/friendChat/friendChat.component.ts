@@ -152,8 +152,7 @@ import {CommonModule} from "@angular/common";
                                     </div>
                                 </div>
 	                        </div>
-                        
-
+	                        
                         </div>
                         <!--set message section-->
                         <div class="bg-gray-400 flex items-center pl-2">
