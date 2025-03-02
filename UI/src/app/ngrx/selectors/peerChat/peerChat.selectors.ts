@@ -14,7 +14,7 @@ export const selectPeerChatLoading = createSelector(
 	(state: PeerChatState)=>state.loading
 )
 
-export const selectPeerChatError = createSelector(
+export const selectLoadChatHistoryError = createSelector(
 	selectPeerChatState,
 	(state: PeerChatState)=>state.error
 )
