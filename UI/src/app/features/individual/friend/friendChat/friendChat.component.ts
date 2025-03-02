@@ -153,42 +153,48 @@ import {FormsModule} from "@angular/forms";
                             <!--message container-->
 	                        <div *ngIf="conversation$ | async as messages">
 		                        <div *ngFor="let message of messages">
-			                        <!--if message of currentAuthUser-->
-                                    <div *ngIf="message.sender.id == currentAuthUserId" class="flex gap-2 mb-3">
-                                        <div>
-                                            <div class="w-12 h-12 flex items-center justify-center bg-red-500 rounded-full">
-                                                <fa-icon [icon]="faDiscord" class="text-2xl"></fa-icon>
+                                    <div *ngIf="!(messages.length)">
+                                        <!--if message of currentAuthUser-->
+                                        <div *ngIf="message.sender.id == currentAuthUserId" class="flex gap-2 mb-3">
+                                            <div>
+                                                <div class="w-12 h-12 flex items-center justify-center bg-red-500 rounded-full">
+                                                    <fa-icon [icon]="faDiscord" class="text-2xl"></fa-icon>
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <div class="flex">
+                                                    <strong>{{ message.sender.displayName }}</strong>
+                                                    <p>{{ message.createdAt }}</p>
+                                                </div>
+                                                <p>
+                                                    {{ message.content }}
+                                                </p>
                                             </div>
                                         </div>
-                                        <div>
-                                            <div class="flex">
-                                                <strong>{{ message.sender.displayName }}</strong>
-                                                <p>{{ message.createdAt }}</p>
+
+                                        <!--if message of selectedFriend-->
+                                        <div message.sender.id != currentAuthUserId class="flex gap-2 mb-3">
+                                            <div>
+                                                <div class="w-12 h-12 flex items-center justify-center bg-blue-500 rounded-full">
+                                                    <fa-icon [icon]="faDiscord" class="text-2xl"></fa-icon>
+                                                </div>
                                             </div>
-                                            <p>
-                                                {{ message.content }}
-                                            </p>
+                                            <div>
+                                                <div class="flex">
+                                                    <strong>{{ message.sender.displayName }}</strong>
+                                                    <p>{{ message.createdAt }}</p>
+                                                </div>
+                                                <p>
+                                                    {{ message.content }}
+                                                </p>
+                                            </div>
                                         </div>
                                     </div>
-
-                                    <!--if message of selectedFriend-->
-                                    <div message.sender.id != currentAuthUserId class="flex gap-2 mb-3">
-                                        <div>
-                                            <div class="w-12 h-12 flex items-center justify-center bg-blue-500 rounded-full">
-                                                <fa-icon [icon]="faDiscord" class="text-2xl"></fa-icon>
-                                            </div>
-                                        </div>
-                                        <div>
-                                            <div class="flex">
-                                                <strong>{{ message.sender.displayName }}</strong>
-                                                <p>{{ message.createdAt }}</p>
-                                            </div>
-                                            <p>
-                                                {{ message.content }}
-                                            </p>
-                                        </div>
+                                    <div *ngIf="messages.length">
+	                                    no messages yet, start conversation
                                     </div>
 		                        </div>
+		                      
 	                        </div>
                         </div>
                         <!--set message section-->
@@ -295,6 +301,10 @@ export class FriendChatComponent  implements OnInit{
 		this.store.dispatch(connectToChat())
 
 		this.store.dispatch(loadChatHistory({individual2Id: this.selectedFriendId}))
+
+		this.conversation$.subscribe(con => {
+			console.log('conversation',con)
+		})
 	}
 
 	sendMessage() {

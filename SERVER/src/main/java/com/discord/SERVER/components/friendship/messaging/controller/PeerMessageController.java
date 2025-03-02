@@ -8,9 +8,13 @@ import com.discord.SERVER.security.UserPrincipal;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.Message;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
+import org.springframework.messaging.support.MessageHeaderAccessor;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -25,12 +29,13 @@ public class PeerMessageController {
 
     @MessageMapping("/chat.sendMessage")
     public Integer sendMessage(
-            @CurrentUser
-            UserPrincipal authUser,
-            @Valid
             @Payload
-            PeerMessageRequestDTO requestDTO
+            PeerMessageRequestDTO requestDTO,
+            Message<?> message
     ) {
+        StompHeaderAccessor accessor = MessageHeaderAccessor.getAccessor(message, StompHeaderAccessor.class);
+        UsernamePasswordAuthenticationToken authentication = (UsernamePasswordAuthenticationToken)accessor.getUser();
+        UserPrincipal authUser = (UserPrincipal)authentication.getPrincipal();
         PeerMessageResponseDTO responseDTO = peerMessageService.sendMessage(authUser.getId(), requestDTO);
 
         // send real time message through web socket
