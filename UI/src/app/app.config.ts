@@ -19,8 +19,14 @@ import {
     friendShipDemandReducers,
     getIndividualFriendsReducers,
     ignoreFriendShipReqReducers,
+    loadSelectedFriendReducers,
     pendingRequestsReducers
 } from "./ngrx/reducers/friends/friends.reducers";
+import {
+    peerChatConnectionReducers,
+    peerChatHistoryReducers
+} from "./ngrx/reducers/peerChat/peerChat.reducers";
+import {PeerChatEffects} from "./ngrx/effects/peerChat/peerChat.effects";
 
 
 export const appConfig: ApplicationConfig = {
@@ -42,14 +48,18 @@ export const appConfig: ApplicationConfig = {
             pendingRequests: pendingRequestsReducers,
             acceptFriendShipReq: acceptFriendShipReqReducers,
             ignoreFriendShipReq: ignoreFriendShipReqReducers,
-            getIndividualFriends: getIndividualFriendsReducers
+            getIndividualFriends: getIndividualFriendsReducers,
+            loadSelectedFriend: loadSelectedFriendReducers,
+            peerChatConnection: peerChatConnectionReducers,
+            peerChatHistory:peerChatHistoryReducers
         }),
         provideStoreDevtools({ maxAge: 25, logOnly: !isDevMode() }),
         provideEffects([
             RegisterEffects,
             LoginEffects,
             UserProfileEffects,
-            FriendsEffects
+            FriendsEffects,
+            PeerChatEffects
         ])
     ]
 };

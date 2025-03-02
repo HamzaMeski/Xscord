@@ -1,5 +1,4 @@
 import {Component, OnInit} from "@angular/core";
-import {RouterLink} from "@angular/router";
 import {AsyncPipe, NgForOf, NgIf} from "@angular/common";
 import {FaIconComponent} from "@fortawesome/angular-fontawesome";
 import {faDiscord} from "@fortawesome/free-brands-svg-icons";
@@ -9,18 +8,15 @@ import {
 	selectGetIndividualFriendsLoading,
 	selectGetIndividualFriendsResponse
 } from "../../../../../ngrx/selectors/friends/friends.selectors";
-import {getIndividualFriends} from "../../../../../ngrx/actions/friends/friends.actions";
 import {
 	selectUserProfile, selectUserProfileError,
 	selectUserProfileLoading
 } from "../../../../../ngrx/selectors/userProfile/userProfile.selectors";
-import {loadUserProfile} from "../../../../../ngrx/actions/userProfile/userProfile.actions";
 
 @Component({
 	standalone: true,
 	selector: 'all-friends',
 	imports: [
-		RouterLink,
 		AsyncPipe,
 		FaIconComponent,
 		NgForOf,
@@ -50,21 +46,19 @@ import {loadUserProfile} from "../../../../../ngrx/actions/userProfile/userProfi
                                         <div>
                                             {{ friend.createdAt }}
                                         </div>
-	                                    <!--if individual1 is authUser display individual2-->
-	                                    <div >
+                                        <!--if individual1 is authUser display individual2-->
+                                        <div >
                                             <div *ngIf="currentAuthUser.id == friend.individual1.id" class="flex gap-2">
-                                                <p>{{ friend.individual2.firstName }}</p>
                                                 <strong>{{ friend.individual2.displayName }}</strong>
                                             </div>
-	                                    </div>
-	                                    
+                                        </div>
+
                                         <!--if individual2 is authUser display individual1-->
-	                                    <div >
+                                        <div >
                                             <div *ngIf="currentAuthUser.id == friend.individual2.id" class="flex gap-2">
-                                                <p>{{ friend.individual1.firstName }}</p>
                                                 <strong>{{ friend.individual1.displayName }}</strong>
                                             </div>
-	                                    </div>
+                                        </div>
                                     </div>
                                 </div>
 
@@ -91,7 +85,7 @@ import {loadUserProfile} from "../../../../../ngrx/actions/userProfile/userProfi
         </section>
   `
 })
-export class AllFriendsComponent implements OnInit{
+export class AllFriendsComponent{
 	protected readonly faDiscord = faDiscord;
 
 	individualFriends$
@@ -105,19 +99,13 @@ export class AllFriendsComponent implements OnInit{
 	constructor(
 		private store: Store
 	) {
-		this.individualFriends$ = store.select(selectGetIndividualFriendsResponse)
-		this.individualFriendsLoading$ = store.select(selectGetIndividualFriendsLoading)
-		this.individualFriendsError$ = store.select(selectGetIndividualFriendsError)
+		this.individualFriends$ = this.store.select(selectGetIndividualFriendsResponse)
+		this.individualFriendsLoading$ = this.store.select(selectGetIndividualFriendsLoading)
+		this.individualFriendsError$ = this.store.select(selectGetIndividualFriendsError)
 
-		this.currentAuthUser$ = store.select(selectUserProfile)
-		this.currentAuthUserLoading$ = store.select(selectUserProfileLoading)
-		this.currentAuthUserError$ = store.select(selectUserProfileError)
+		this.currentAuthUser$ = this.store.select(selectUserProfile)
+		this.currentAuthUserLoading$ = this.store.select(selectUserProfileLoading)
+		this.currentAuthUserError$ = this.store.select(selectUserProfileError)
 	}
-
-	ngOnInit(): void {
-		this.store.dispatch(loadUserProfile())
-		this.store.dispatch(getIndividualFriends())
-	}
-
 
 }

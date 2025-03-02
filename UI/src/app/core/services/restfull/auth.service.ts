@@ -3,7 +3,7 @@ import {HttpClient} from "@angular/common/http";
 import {LoginRequest, LoginResponse} from "../../types/auth/login.types";
 import {Observable} from "rxjs";
 import {RegisterRequest, RegisterResponse} from "../../types/auth/register.types";
-import {UserProfileResponse} from "../../types/userProfile/userProfiles.types";
+import {IndividualResponse} from "../../types/individual/individual.types";
 
 
 @Injectable({
@@ -22,7 +22,7 @@ export class AuthService {
 		return this.http.post<RegisterResponse>(`${this.API_URL}/individuals/register`, request)
 	}
 
-	getAuthenticatedUser(): Observable<UserProfileResponse> {
-		return this.http.get<UserProfileResponse>(`${this.API_URL}/auth/authenticatedUser`)
+	getAuthenticatedUser(): Observable<IndividualResponse> {
+		return this.http.get<IndividualResponse>(`${this.API_URL}/auth/authenticatedUser`)
 	}
 }

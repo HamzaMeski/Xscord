@@ -14,12 +14,16 @@ import {
 	getPendingRequestsSuccess,
 	ignoreFriendShipReq,
 	ignoreFriendShipReqFailure,
-	ignoreFriendShipReqSuccess
+	ignoreFriendShipReqSuccess,
+	loadSelectedFriend,
+	loadSelectedFriendFailure,
+	loadSelectedFriendSuccess
 } from "../../actions/friends/friends.actions";
 import {Actions, createEffect, ofType} from "@ngrx/effects";
-import {FriendsService} from "../../../core/services/fetch/friends.service";
+import {FriendsService} from "../../../core/services/restfull/friends.service";
 import {catchError, map, mergeMap, of, tap} from "rxjs";
 import {Store} from "@ngrx/store";
+import {IndividualsService} from "../../../core/services/restfull/individuals.service";
 
 
 @Injectable()
@@ -30,10 +34,12 @@ export class FriendsEffects {
 	refreshPendingRequests$
 	ignoreFriendShipReq$
 	individualFriends$
+	loadSelectedFriend$
 
 	constructor(
 		private actions$: Actions,
 		private friendsService: FriendsService,
+		private individualsService: IndividualsService,
 		private store: Store
 	) {
 		// send friend request
@@ -54,6 +60,7 @@ export class FriendsEffects {
 			)
 		)
 
+
 		// get all pending requests
 		this.pendingRequests$ = createEffect(() =>
 			this.actions$.pipe(
@@ -61,8 +68,6 @@ export class FriendsEffects {
 				mergeMap(() =>
 					this.friendsService.getPendingRequests().pipe(
 						map(response => {
-							console.log('pending requests (effects):')
-							console.log(response)
 							return getPendingRequestsSuccess({response})
 						}),
 						catchError(err => {
@@ -73,6 +78,7 @@ export class FriendsEffects {
 				)
 			)
 		)
+
 
 		// accept friend request
 		this.acceptFriendShipReq$ = createEffect(() =>
@@ -91,6 +97,7 @@ export class FriendsEffects {
 				)
 			)
 		)
+
 
 		// ignore friend request
 		this.ignoreFriendShipReq$ = createEffect(() =>
@@ -133,12 +140,30 @@ export class FriendsEffects {
 				mergeMap(() =>
 					this.friendsService.getIndividualFriends().pipe(
 						map(response => {
-							console.log('fetching friends done successfully!')
 							return getIndividualFriendsSuccess({response})
 						}),
 						catchError(err => {
 							const error: string = err.error.message
 							return of(getIndividualFriendsFailure({error}))
+						})
+					)
+				)
+			)
+		)
+
+
+		// load selected friend
+		this.loadSelectedFriend$ = createEffect(() =>
+			this.actions$.pipe(
+				ofType(loadSelectedFriend),
+				mergeMap(({friendId}) =>
+					this.individualsService.getIndividual(friendId).pipe(
+						map(response => {
+							return loadSelectedFriendSuccess({response})
+						}),
+						catchError(err => {
+							const error: string = err.error.message
+							return of(loadSelectedFriendFailure({error}))
 						})
 					)
 				)

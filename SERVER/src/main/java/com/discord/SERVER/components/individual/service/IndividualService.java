@@ -5,7 +5,7 @@ import com.discord.SERVER.components.individual.dto.IndividualResponseDTO;
 
 public interface IndividualService {
     IndividualResponseDTO register(IndividualRequestDTO requestDTO);
-    IndividualResponseDTO getProfile(Long id);
+    IndividualResponseDTO getIndividual(Long id);
     IndividualResponseDTO updateProfile(Long id, IndividualRequestDTO requestDTO);
     void deleteProfile(Long id);
 }

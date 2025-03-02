@@ -25,9 +25,6 @@ public class PeerMessage {
     @JoinColumn(name = "receiver_id")
     private Individual receiver;
 
-    @OneToOne(mappedBy = "peerMessage")
-    private MessageResource messageResource;
-
     private String content;
     private boolean isRead = false;
     private LocalDateTime createdAt;

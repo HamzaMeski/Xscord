@@ -1,7 +1,10 @@
 import {
 	initialAcceptFriendShipReqState,
-	initialFriendShipDemandState, initialIgnoreFriendShipReqState, initialIndividualFriendsState,
-	initialPendingRequestsState
+	initialFriendShipDemandState,
+	initialIgnoreFriendShipReqState,
+	initialIndividualFriendsState,
+	initialPendingRequestsState,
+	initialSelectedFriendState
 } from "../../state/friends/friends.state";
 import {createReducer, on} from "@ngrx/store";
 import {
@@ -19,7 +22,10 @@ import {
 	getPendingRequestsSuccess,
 	ignoreFriendShipReq,
 	ignoreFriendShipReqFailure,
-	ignoreFriendShipReqSuccess
+	ignoreFriendShipReqSuccess,
+	loadSelectedFriend,
+	loadSelectedFriendFailure,
+	loadSelectedFriendSuccess
 } from "../../actions/friends/friends.actions";
 
 
@@ -159,3 +165,29 @@ export const getIndividualFriendsReducers = createReducer(
 	}))
 )
 
+
+// load selected friend
+export const loadSelectedFriendReducers = createReducer(
+	initialSelectedFriendState,
+
+	on(loadSelectedFriend, (state) => ({
+		...state,
+		friend: null,
+		loading: true,
+		error: null
+	})),
+
+	on(loadSelectedFriendSuccess, (state, action) => ({
+		...state,
+		friend: action.response,
+		loading: false,
+		error: null
+	})),
+
+	on(loadSelectedFriendFailure, (state, action) => ({
+		...state,
+		friend: null,
+		loading: false,
+		error: action.error
+	}))
+)

@@ -1,14 +1,14 @@
-import {UserProfileResponse} from "../userProfile/userProfiles.types";
+import {IndividualResponse} from "../individual/individual.types";
 
 export interface FriendShipDemandResponse {
 	id: number,
-	requester: UserProfileResponse,
+	requester: IndividualResponse,
 	createdAt: Date
 }
 
 export interface FriendRowResponse {
 	 id: number,
-	 individual1: UserProfileResponse,
-	 individual2: UserProfileResponse,
+	 individual1: IndividualResponse,
+	 individual2: IndividualResponse,
 	 createdAt: Date
 }

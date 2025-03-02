@@ -1,6 +1,6 @@
 import {Injectable} from "@angular/core";
 import {Actions, createEffect, ofType} from "@ngrx/effects";
-import {AuthService} from "../../../core/services/fetch/auth.service";
+import {AuthService} from "../../../core/services/restfull/auth.service";
 import {Router} from "@angular/router";
 import {
 	loadUserProfile,
@@ -34,16 +34,5 @@ export class UserProfileEffects {
 				)
 			)
 		)
-
-/*		this.loadUserProfileSuccess$ = createEffect(() =>
-			this.actions$.pipe(
-				ofType(loadUserProfileSuccess),
-				tap(({response}) => {
-					console.log('profile loaded successfully')
-					console.log(response)
-				})
-			),
-			{dispatch: false}
-		)*/
 	}
 }

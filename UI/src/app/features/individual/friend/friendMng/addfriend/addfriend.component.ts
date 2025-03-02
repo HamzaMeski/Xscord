@@ -1,12 +1,8 @@
-import {Component, OnInit} from "@angular/core";
-import {RouterLink} from "@angular/router";
-import {FaIconComponent} from "@fortawesome/angular-fontawesome";
-import {faCirclePlus} from "@fortawesome/free-solid-svg-icons";
+import {Component} from "@angular/core";
 import {Observable} from "rxjs";
 import {Store} from "@ngrx/store";
 import {selectUserProfile} from "../../../../../ngrx/selectors/userProfile/userProfile.selectors";
 import {AsyncPipe, CommonModule} from "@angular/common";
-import {loadUserProfile} from "../../../../../ngrx/actions/userProfile/userProfile.actions";
 import {friendShipDemand} from "../../../../../ngrx/actions/friends/friends.actions";
 import {
 	selectFriendShipDemandError,
@@ -18,8 +14,6 @@ import {FormControl, FormGroup, ReactiveFormsModule, Validators} from "@angular/
 	standalone: true,
 	selector: 'add-friend',
 	imports: [
-		RouterLink,
-		FaIconComponent,
 		AsyncPipe,
 		CommonModule,
 		ReactiveFormsModule
@@ -66,9 +60,7 @@ import {FormControl, FormGroup, ReactiveFormsModule, Validators} from "@angular/
 	    </section>
   `
 })
-export class AddfriendComponent implements OnInit{
-	protected readonly faCirclePlus = faCirclePlus;
-
+export class AddfriendComponent {
 	authUser$:Observable<any>
 	friendShipDemandLoading$:Observable<any>
 	friendShipDemandError$:Observable<any>
@@ -81,10 +73,6 @@ export class AddfriendComponent implements OnInit{
 		this.authUser$ = this.store.select(selectUserProfile)
 		this.friendShipDemandLoading$ = this.store.select(selectFriendShipDemandLoading)
 		this.friendShipDemandError$ = this.store.select(selectFriendShipDemandError)
-	}
-
-	ngOnInit(): void {
-		this.store.dispatch(loadUserProfile())
 	}
 
 	onSubmit() {

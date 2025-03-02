@@ -1,6 +1,6 @@
 import {Injectable} from "@angular/core";
 import {HttpEvent, HttpHandler, HttpInterceptor, HttpRequest} from "@angular/common/http";
-import {catchError, map, Observable, switchMap, throwError} from "rxjs";
+import {catchError, Observable, throwError} from "rxjs";
 import {AuthFacadeService} from "../services/authFacade.service";
 import {RedirectionService} from "../services/redirection.service";
 
