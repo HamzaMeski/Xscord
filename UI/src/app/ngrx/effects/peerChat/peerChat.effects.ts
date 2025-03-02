@@ -1,9 +1,7 @@
 import {Injectable} from "@angular/core";
 import {Actions, createEffect, ofType} from "@ngrx/effects";
-import {Store} from "@ngrx/store";
-import {PeerChatSocketService} from "../../../core/services/socket/peerChat.service";
+import {PeerChatSocketService} from "../../../core/services/socket/peerChatSocket.service";
 import {
-	connectionEstablished,
 	connectToChat,
 	loadChatHistory,
 	loadChatHistoryFailure,
@@ -11,7 +9,7 @@ import {
 	sendMessage
 } from "../../actions/peerChat/peerChat.actions";
 import {catchError, map, mergeMap, of, tap} from "rxjs";
-import {PeerChatRestService} from "../../../core/services/restfull/peerChat.service";
+import {PeerChatRestService} from "../../../core/services/restfull/peerChatRest.service";
 
 
 @Injectable()
@@ -24,14 +22,12 @@ export class PeerChatEffects {
 		private actions$: Actions,
 		private peerChatSocketService: PeerChatSocketService,
 		private peerChatRestService: PeerChatRestService,
-		private store: Store
 	) {
 		this.connectToChat$ = createEffect(() =>
 			this.actions$.pipe(
 				ofType(connectToChat),
 				tap(()=> {
 					this.peerChatSocketService.connect()
-					this.store.dispatch(connectionEstablished())
 				})
 			),
 			{

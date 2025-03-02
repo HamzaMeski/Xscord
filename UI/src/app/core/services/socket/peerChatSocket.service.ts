@@ -2,7 +2,7 @@ import {Injectable} from "@angular/core";
 import {Client} from "@stomp/stompjs";
 import SockJS from "sockjs-client";
 import {Store} from "@ngrx/store";
-import {connectionEstablished, receiveMessage} from "../../../ngrx/actions/peerChat/peerChat.actions";
+import {connectionEstablished, connectionLost, receiveMessage} from "../../../ngrx/actions/peerChat/peerChat.actions";
 
 
 @Injectable({
@@ -25,10 +25,6 @@ export class PeerChatSocketService {
 
 	connect(): void {
 		this.stompClient.activate()
-	}
-
-	disconnect(): void {
-		this.stompClient.deactivate()
 	}
 
 	private subscribeToMessages(): void {

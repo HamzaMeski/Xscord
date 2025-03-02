@@ -220,7 +220,6 @@ export class FriendChatComponent  implements OnInit{
 
 	ngOnInit() {
 		this.route.params.subscribe(params => {
-			console.log('params: ', params)
 			const friendId = Number(params['friendId'])
 			this.store.dispatch(loadSelectedFriend({friendId}))
 		})
