@@ -153,7 +153,7 @@ import {FormsModule} from "@angular/forms";
                             <!--message container-->
 	                        <div *ngIf="conversation$ | async as messages">
 		                        <div *ngFor="let message of messages">
-                                    <div *ngIf="!(messages.length)">
+                                    <div *ngIf="messages.length">
                                         <!--if message of currentAuthUser-->
                                         <div *ngIf="message.sender.id == currentAuthUserId" class="flex gap-2 mb-3">
                                             <div>
@@ -173,7 +173,7 @@ import {FormsModule} from "@angular/forms";
                                         </div>
 
                                         <!--if message of selectedFriend-->
-                                        <div message.sender.id != currentAuthUserId class="flex gap-2 mb-3">
+                                        <div *ngIf="message.sender.id != currentAuthUserId" class="flex gap-2 mb-3">
                                             <div>
                                                 <div class="w-12 h-12 flex items-center justify-center bg-blue-500 rounded-full">
                                                     <fa-icon [icon]="faDiscord" class="text-2xl"></fa-icon>
@@ -190,7 +190,7 @@ import {FormsModule} from "@angular/forms";
                                             </div>
                                         </div>
                                     </div>
-                                    <div *ngIf="messages.length">
+                                    <div *ngIf="!(messages.length)">
 	                                    no messages yet, start conversation
                                     </div>
 		                        </div>
@@ -303,7 +303,7 @@ export class FriendChatComponent  implements OnInit{
 		this.store.dispatch(loadChatHistory({individual2Id: this.selectedFriendId}))
 
 		this.conversation$.subscribe(con => {
-			console.log('conversation',con)
+			// console.log('conversation',con)
 		})
 	}
 
@@ -315,7 +315,6 @@ export class FriendChatComponent  implements OnInit{
 					content: this.newMessage.trim()
 				}
 			}))
-
 			this.newMessage = ''
 		}
 	}

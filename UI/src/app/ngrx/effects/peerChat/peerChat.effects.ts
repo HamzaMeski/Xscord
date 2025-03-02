@@ -10,6 +10,7 @@ import {
 } from "../../actions/peerChat/peerChat.actions";
 import {catchError, map, mergeMap, of, tap} from "rxjs";
 import {PeerChatRestService} from "../../../core/services/restfull/peerChatRest.service";
+import {Store} from "@ngrx/store";
 
 
 @Injectable()
@@ -22,13 +23,13 @@ export class PeerChatEffects {
 		private actions$: Actions,
 		private peerChatSocketService: PeerChatSocketService,
 		private peerChatRestService: PeerChatRestService,
+		private store: Store
 	) {
 		this.connectToChat$ = createEffect(() =>
 			this.actions$.pipe(
 				ofType(connectToChat),
 				tap(()=> {
 					this.peerChatSocketService.connect()
-					console.log('successful connection (effect)')
 				})
 			),
 			{
@@ -36,12 +37,10 @@ export class PeerChatEffects {
 			}
 		)
 
-
 		this.sendMessage$ = createEffect(() =>
 			this.actions$.pipe(
 				ofType(sendMessage),
 				tap(({request})=> {
-					console.log('send message successfully: ', request )
 					this.peerChatSocketService.sendMessage(request.receiverId, request.content)
 				})
 			),
@@ -57,7 +56,6 @@ export class PeerChatEffects {
 				mergeMap(({individual2Id}) =>
 					this.peerChatRestService.getChatHistory(individual2Id).pipe(
 						map(response => {
-							console.log('successful chatHistory load (effect): ', response)
 							return loadChatHistorySuccess({response})
 						}),
 						catchError(err =>{

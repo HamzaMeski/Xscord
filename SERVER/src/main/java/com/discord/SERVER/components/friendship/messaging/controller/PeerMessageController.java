@@ -5,8 +5,8 @@ import com.discord.SERVER.components.friendship.messaging.dto.PeerMessageRespons
 import com.discord.SERVER.components.friendship.messaging.service.PeerMessageService;
 import com.discord.SERVER.security.CurrentUser;
 import com.discord.SERVER.security.UserPrincipal;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Slf4j
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/peerMessages")
@@ -28,26 +29,31 @@ public class PeerMessageController {
     private final SimpMessagingTemplate messagingTemplate;
 
     @MessageMapping("/chat.sendMessage")
-    public Integer sendMessage(
-            @Payload
-            PeerMessageRequestDTO requestDTO,
+    public void sendMessage(
+            @Payload PeerMessageRequestDTO requestDTO,
             Message<?> message
     ) {
         StompHeaderAccessor accessor = MessageHeaderAccessor.getAccessor(message, StompHeaderAccessor.class);
         UsernamePasswordAuthenticationToken authentication = (UsernamePasswordAuthenticationToken)accessor.getUser();
         UserPrincipal authUser = (UserPrincipal)authentication.getPrincipal();
+
+        log.info("Received message request from user {} to user {}", authUser.getId(), requestDTO.receiverId());
+
         PeerMessageResponseDTO responseDTO = peerMessageService.sendMessage(authUser.getId(), requestDTO);
 
-        // send real time message through web socket
-        messagingTemplate.convertAndSendToUser(
-                requestDTO.receiverId().toString(),
-                "/queue/messages",
-                responseDTO
-        );
+        try {
+            String destination = "/topic/messages." + requestDTO.receiverId();
+            log.info("Sending message to destination: {}", destination);
 
-        return 200;
+            messagingTemplate.convertAndSend(destination, responseDTO);
+
+        } catch (Exception e) {
+            log.error("Failed to send WebSocket message", e);
+            e.printStackTrace();
+        }
     }
 
+    
     @MessageMapping("/chat.markAsRead")
     public void markAsRead(
             @Payload

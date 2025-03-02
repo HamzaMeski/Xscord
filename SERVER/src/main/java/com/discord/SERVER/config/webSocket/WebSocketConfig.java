@@ -81,8 +81,8 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     @Override
     public void configureMessageBroker(MessageBrokerRegistry registry) {
-        registry.setApplicationDestinationPrefixes("/app");     // = Where clients send messages TO backend socket
-        registry.enableSimpleBroker("/queue"); // = Where clients receive messages FROM backend socket
-        registry.setUserDestinationPrefix("/user");             // = How messages get routed to specific users
+        registry.setApplicationDestinationPrefixes("/app");
+        registry.enableSimpleBroker("/topic");  // Change to topic
+        // Remove user destination prefix
     }
 }

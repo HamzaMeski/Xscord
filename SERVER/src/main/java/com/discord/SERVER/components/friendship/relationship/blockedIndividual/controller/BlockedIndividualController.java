@@ -4,7 +4,6 @@ import com.discord.SERVER.components.friendship.relationship.blockedIndividual.d
 import com.discord.SERVER.components.friendship.relationship.blockedIndividual.service.BlockedIndividualService;
 import com.discord.SERVER.security.CurrentUser;
 import com.discord.SERVER.security.UserPrincipal;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
