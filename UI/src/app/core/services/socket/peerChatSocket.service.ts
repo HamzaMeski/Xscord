@@ -16,6 +16,9 @@ export class PeerChatSocketService {
 	) {
 		this.stompClient = new Client({
 			webSocketFactory: () => new SockJS(`http://localhost:8080/ws-message`),
+			connectHeaders: {
+				Authorization: `Bearer ${localStorage.getItem('authUserToken')}`
+			},
 			onConnect: () => {
 				this.store.dispatch(connectionEstablished())
 				this.subscribeToMessages()

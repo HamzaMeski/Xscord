@@ -18,7 +18,9 @@ import {
 import {CommonModule} from "@angular/common";
 import {
 	selectMeIsConnected,
-	selectPeerChatHistoryConversation, selectPeerChatHistoryError, selectPeerChatHistoryLoading
+	selectPeerChatHistoryConversation,
+	selectPeerChatHistoryError,
+	selectPeerChatHistoryLoading
 } from "../../../../ngrx/selectors/peerChat/peerChat.selectors";
 import {connectToChat, loadChatHistory, sendMessage} from "../../../../ngrx/actions/peerChat/peerChat.actions";
 import {FormsModule} from "@angular/forms";

@@ -24,7 +24,7 @@ public class PeerMessageController {
     private final SimpMessagingTemplate messagingTemplate;
 
     @MessageMapping("/chat.sendMessage")
-    public void sendMessage(
+    public Integer sendMessage(
             @CurrentUser
             UserPrincipal authUser,
             @Valid
@@ -39,6 +39,8 @@ public class PeerMessageController {
                 "/queue/messages",
                 responseDTO
         );
+
+        return 200;
     }
 
     @MessageMapping("/chat.markAsRead")

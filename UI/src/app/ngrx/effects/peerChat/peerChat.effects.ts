@@ -41,6 +41,7 @@ export class PeerChatEffects {
 			this.actions$.pipe(
 				ofType(sendMessage),
 				tap(({request})=> {
+					console.log('send message successfully: ', request )
 					this.peerChatSocketService.sendMessage(request.receiverId, request.content)
 				})
 			),
