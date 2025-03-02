@@ -25,7 +25,6 @@ export const peerChatConnectionReducers = createReducer(
 		loading: false,
 		connected: true
 	})),
-
 )
 
 

@@ -11,17 +11,25 @@ import {
 	selectSelectedFriendResponse
 } from "../../../../ngrx/selectors/friends/friends.selectors";
 import {
-	selectUserProfile, selectUserProfileError,
+	selectUserProfile,
+	selectUserProfileError,
 	selectUserProfileLoading
 } from "../../../../ngrx/selectors/userProfile/userProfile.selectors";
 import {CommonModule} from "@angular/common";
+import {
+	selectMeIsConnected,
+	selectPeerChatHistoryConversation, selectPeerChatHistoryError, selectPeerChatHistoryLoading
+} from "../../../../ngrx/selectors/peerChat/peerChat.selectors";
+import {connectToChat, loadChatHistory, sendMessage} from "../../../../ngrx/actions/peerChat/peerChat.actions";
+import {FormsModule} from "@angular/forms";
 
 @Component({
 	standalone: true,
 	selector: 'friend-chat',
 	imports: [
 		FaIconComponent,
-		CommonModule
+		CommonModule,
+		FormsModule
 	],
 	template: `
 		<section *ngIf="(currentAuthUserLoading$ | async) || (selectedFriendLoading$ | async)" class="flex flex-col bg-blue-300 h-full">
@@ -116,7 +124,14 @@ import {CommonModule} from "@angular/common";
                     <strong>{{ selectedFriend.displayName }}</strong>
                 </div>
                 <main class="flex h-full">
-                    <div class="flex flex-col justify-between">
+
+	                <div *ngIf="chatHistoryError$ | async as error" class="text-red-500">
+		                {{ error }}
+	                </div>
+                    <div *ngIf="!(isConnected$ | async) || (chatHistoryLoading$ | async)" class="flex flex-col justify-between">
+	                    Chat History loading...
+                    </div>
+                    <div *ngIf="(isConnected$ | async) && !(chatHistoryLoading$ | async)" class="flex flex-col justify-between">
                         <div class="h-[800px] overflow-scroll p-4">
                             <div>
                                 <div class="w-30 h-30 flex items-center justify-center bg-red-500 rounded-full">
@@ -134,30 +149,58 @@ import {CommonModule} from "@angular/common";
                             </div>
                             <br>
                             <!--message container-->
-	                        <div>
-                                <div class="flex gap-2 mb-3">
-                                    <div>
-                                        <div class="w-12 h-12 flex items-center justify-center bg-red-500 rounded-full">
-                                            <fa-icon [icon]="faDiscord" class="text-2xl"></fa-icon>
+	                        <div *ngIf="conversation$ | async as messages">
+		                        <div *ngFor="let message of messages">
+			                        <!--if message of currentAuthUser-->
+                                    <div *ngIf="message.sender.id == currentAuthUserId" class="flex gap-2 mb-3">
+                                        <div>
+                                            <div class="w-12 h-12 flex items-center justify-center bg-red-500 rounded-full">
+                                                <fa-icon [icon]="faDiscord" class="text-2xl"></fa-icon>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <div class="flex">
+                                                <strong>{{ message.sender.displayName }}</strong>
+                                                <p>{{ message.createdAt }}</p>
+                                            </div>
+                                            <p>
+                                                {{ message.content }}
+                                            </p>
                                         </div>
                                     </div>
-                                    <div>
-                                        <div class="flex">
-                                            <strong>hamza meski</strong>
-                                            <p>23/02/2025, 13:20</p>
+
+                                    <!--if message of selectedFriend-->
+                                    <div message.sender.id != currentAuthUserId class="flex gap-2 mb-3">
+                                        <div>
+                                            <div class="w-12 h-12 flex items-center justify-center bg-blue-500 rounded-full">
+                                                <fa-icon [icon]="faDiscord" class="text-2xl"></fa-icon>
+                                            </div>
                                         </div>
-                                        <p>
-                                            Hello. hamza me ski I’m contacting the community members to see how their trading is going. Due to the market’s recent swings, I’ve been focusing on the Quantum Financing System (QFS) strategy on the blockchain Ledger. This low-risk management approach is designed for passive accumulation during predictable times. Have you had a chance to start your free demo trading yet?
-                                        </p>
+                                        <div>
+                                            <div class="flex">
+                                                <strong>{{ message.sender.displayName }}</strong>
+                                                <p>{{ message.createdAt }}</p>
+                                            </div>
+                                            <p>
+                                                {{ message.content }}
+                                            </p>
+                                        </div>
                                     </div>
-                                </div>
+		                        </div>
 	                        </div>
-	                        
                         </div>
                         <!--set message section-->
                         <div class="bg-gray-400 flex items-center pl-2">
                             <fa-icon [icon]="faCirclePlus" class="cursor-pointer"></fa-icon>
-                            <input type="text" placeholder="Message hamza me ski" class="border-none w-full p-2 focus:ring-0 focus:outline-none">
+                            <input 
+	                            type="text"
+	                            placeholder="Message hamza me ski"
+	                            class="border-none w-full p-2 focus:ring-0 focus:outline-none"
+	                            
+	                            [(ngModel)]="newMessage"
+	                            (keyup.enter)="sendMessage()"
+                            >
+	                        <button (click)="sendMessage()" >send</button>
                         </div>
                     </div>
 
@@ -194,8 +237,8 @@ import {CommonModule} from "@angular/common";
   `
 })
 export class FriendChatComponent  implements OnInit{
-	protected readonly faDiscord = faDiscord;
-	protected readonly faCirclePlus = faCirclePlus;
+	protected readonly faDiscord = faDiscord
+	protected readonly faCirclePlus = faCirclePlus
 
 	currentAuthUser$
 	currentAuthUserLoading$
@@ -204,6 +247,17 @@ export class FriendChatComponent  implements OnInit{
 	selectedFriend$
 	selectedFriendLoading$
 	selectedFriendError$
+
+
+	selectedFriendId!:number
+	currentAuthUserId!:number
+	newMessage: string  = ''
+
+
+	isConnected$
+	conversation$
+	chatHistoryLoading$
+	chatHistoryError$
 
 	constructor(
 		private route: ActivatedRoute,
@@ -216,12 +270,41 @@ export class FriendChatComponent  implements OnInit{
 		this.selectedFriend$ = this.store.select(selectSelectedFriendResponse)
 		this.selectedFriendLoading$ = this.store.select(selectSelectedFriendLoading)
 		this.selectedFriendError$ = this.store.select(selectSelectedFriendError)
+
+		this.isConnected$ = this.store.select(selectMeIsConnected)
+		this.conversation$ = this.store.select(selectPeerChatHistoryConversation)
+		this.chatHistoryLoading$ = this.store.select(selectPeerChatHistoryLoading)
+		this.chatHistoryError$ = this.store.select(selectPeerChatHistoryError)
 	}
 
 	ngOnInit() {
 		this.route.params.subscribe(params => {
 			const friendId = Number(params['friendId'])
+			this.selectedFriendId = friendId
 			this.store.dispatch(loadSelectedFriend({friendId}))
 		})
+
+		this.currentAuthUser$.subscribe(user => {
+			if(user) {
+				this.currentAuthUserId = user.id
+			}
+		})
+
+		this.store.dispatch(connectToChat())
+
+		this.store.dispatch(loadChatHistory({individual2Id: this.selectedFriendId}))
+	}
+
+	sendMessage() {
+		if(this.newMessage.trim()) {
+			this.store.dispatch(sendMessage({
+				request: {
+					receiverId: this.selectedFriendId,
+					content: this.newMessage.trim()
+				}
+			}))
+
+			this.newMessage = ''
+		}
 	}
 }
