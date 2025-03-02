@@ -1,6 +1,11 @@
 import {createReducer, on} from "@ngrx/store";
 import {initialPeerChatState} from "../../state/peerChat/peerChat.state";
-import {connectionEstablished, connectToChat, receiveMessage} from "../../actions/peerChat/peerChat.actions";
+import {
+	connectionEstablished,
+	connectToChat, loadChatHistoryFailure,
+	loadChatHistorySuccess,
+	receiveMessage
+} from "../../actions/peerChat/peerChat.actions";
 
 
 export const peerChatReducers = createReducer(
@@ -20,5 +25,15 @@ export const peerChatReducers = createReducer(
 	on(receiveMessage, (state, action) => ({
 		...state,
 		conversation: [...state.conversation,action.response]
-	}))
+	})),
+
+	on(loadChatHistorySuccess, (state, action) => ({
+		...state,
+		conversation: action.response
+	})),
+
+	on(loadChatHistoryFailure, (state, action) => ({
+		...state,
+		error: action.error
+	})),
 )

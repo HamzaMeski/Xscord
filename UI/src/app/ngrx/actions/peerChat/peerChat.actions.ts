@@ -40,6 +40,12 @@ export const loadChatHistorySuccess = createAction(
 	props<{response: peerMessageResponse[]}>()
 )
 
+export const loadChatHistoryFailure = createAction(
+	'[Peer Chat] Load Chat History Failure',
+	props<{error: string}>()
+)
+
+
 // Reading a message
 /*
 export const markMessageAsRead = createAction(

@@ -8,7 +8,7 @@ import {connectionEstablished, receiveMessage} from "../../../ngrx/actions/peerC
 @Injectable({
 	providedIn: 'root'
 })
-export class PeerChatService {
+export class PeerChatSocketService {
 	private stompClient: Client
 
 	constructor(
