@@ -23,6 +23,7 @@ import {
     pendingRequestsReducers
 } from "./ngrx/reducers/friends/friends.reducers";
 import {peerChatReducers} from "./ngrx/reducers/peerChat/peerChat.reducers";
+import {PeerChatEffects} from "./ngrx/effects/peerChat/peerChat.effects";
 
 
 export const appConfig: ApplicationConfig = {
@@ -53,7 +54,8 @@ export const appConfig: ApplicationConfig = {
             RegisterEffects,
             LoginEffects,
             UserProfileEffects,
-            FriendsEffects
+            FriendsEffects,
+            PeerChatEffects
         ])
     ]
 };
