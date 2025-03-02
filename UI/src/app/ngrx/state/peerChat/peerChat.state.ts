@@ -1,15 +1,28 @@
 import {peerMessageResponse} from "../../../core/types/peerChat/peerChat.types";
 
-export interface PeerChatState {
-	conversation: peerMessageResponse[],
+
+// peerChat connection
+export interface PeerChatConnectionSate {
+	connected: boolean,
 	loading: boolean,
-	error: string | null,
-	connected: boolean
+	error: string | null
 }
 
-export const initialPeerChatState: PeerChatState = {
+export const initialPeerChatConnectionSate: PeerChatConnectionSate = {
+	connected: false,
+	loading: false,
+	error: null
+}
+
+// peerChat history
+export interface PeerChatHistoryState {
+	conversation: peerMessageResponse[],
+	loading: boolean,
+	error: string | null
+}
+
+export const initialPeerChatHistory: PeerChatHistoryState = {
 	conversation: [],
 	loading: false,
-	error: null,
-	connected: false
+	error: null
 }
