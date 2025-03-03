@@ -175,7 +175,7 @@ import {FormsModule} from "@angular/forms";
                                                 <div *ngIf="message.sender.id == currentAuthUserId"
                                                      class="flex gap-4 items-start">
                                                     <div class="w-10 h-10 rounded-full overflow-hidden flex-shrink-0">
-                                                        <div class="w-full h-full bg-[#5865F2] flex items-center justify-center">
+                                                        <div class="w-full h-full bg-red-500 flex items-center justify-center">
                                                             <fa-icon [icon]="faDiscord" class="text-lg text-white"></fa-icon>
                                                         </div>
                                                     </div>
