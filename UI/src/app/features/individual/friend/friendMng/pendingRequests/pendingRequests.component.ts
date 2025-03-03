@@ -83,7 +83,7 @@ import {CommonModule} from "@angular/common";
 
                         <!-- No Pending Requests -->
                         <div *ngIf="!pendingRequests.length" class="h-full flex flex-col items-center justify-center text-center p-8">
-                            <img src="/addFriend/friends.webp" alt="Wumpus" class="w-[500px] mb-8">
+                            <img src="/addFriend/friends.webp" alt="" class="w-[500px] mb-8">
                             <p class="text-[#949BA4] text-[16px] max-w-md">
                                 There are no pending friend requests. Click "Add Friend" to send friend requests.
                             </p>

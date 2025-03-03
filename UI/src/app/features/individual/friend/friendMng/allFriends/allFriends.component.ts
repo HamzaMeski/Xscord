@@ -12,6 +12,7 @@ import {
 	selectUserProfile, selectUserProfileError,
 	selectUserProfileLoading
 } from "../../../../../ngrx/selectors/userProfile/userProfile.selectors";
+import {faComment, faEllipsisV, faSearch} from "@fortawesome/free-solid-svg-icons";
 
 @Component({
 	standalone: true,
@@ -24,7 +25,7 @@ import {
 	],
 	template: `
         <section class="h-full flex bg-green-300">
-            <div class="flex-1 p-2 flex flex-col gap-4 ">
+            <div class="flex-1  flex flex-col gap-4 ">
                 <!--loading data checker-->
                 <div *ngIf="(individualFriendsLoading$ | async) || (currentAuthUserLoading$ | async)">
                     <svg aria-hidden="true" class="inline w-8 h-8 text-gray-200 animate-spin dark:text-gray-600 fill-red-600" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -33,60 +34,99 @@ import {
                     </svg>
                 </div>
 
-                <!--pending request-->
-                <div *ngIf="!(individualFriendsLoading$ | async) && !(currentAuthUserLoading$ | async)">
+                <!--all friends-->
+                <div *ngIf="!(individualFriendsLoading$ | async) && !(currentAuthUserLoading$ | async)" class="h-full bg-[#313338] p-4">
                     <div *ngIf="individualFriends$ | async as individualFriends">
-                        <div *ngIf="individualFriends.length" class="">
-                            <div *ngFor="let friend of individualFriends" class="flex items-center justify-between gap-2 border-b-1 pb-1">
-                                <div class="flex items-center gap-2">
-                                    <div class="w-12 h-12 flex items-center justify-center bg-red-500 rounded-full">
-                                        <fa-icon [icon]="faDiscord" class="text-2xl"></fa-icon>
-                                    </div>
-                                    <div *ngIf="currentAuthUser$ | async as currentAuthUser">
-                                        <div>
-                                            {{ friend.createdAt }}
+                        <div *ngIf="individualFriends.length" class="flex flex-col gap-4">
+                            <!-- Search Bar -->
+                            <div class="relative">
+                                <input type="text"
+                                       placeholder="Search"
+                                       class="w-full bg-[#1E1F22] text-[#DBDEE1] placeholder-[#949BA4] px-4 py-2 rounded text-sm border-none focus:ring-0 focus:outline-none">
+                                <fa-icon [icon]="faSearch"
+                                         class="absolute right-4 top-1/2 -translate-y-1/2 text-[#949BA4] text-sm">
+                                </fa-icon>
+                            </div>
+
+                            <!-- Friends Count -->
+                            <div class="text-[#949BA4] text-xs font-semibold uppercase tracking-wide px-2">
+                                ALL FRIENDS — {{individualFriends.length}}
+                            </div>
+
+                            <!-- Friends List -->
+                            <div class="flex flex-col">
+                                <div *ngFor="let friend of individualFriends"
+                                     class="flex items-center justify-between p-2 hover:bg-[#2E3035] rounded group transition-colors">
+                                    <!-- Friend Info -->
+                                    <div class="flex items-center gap-3">
+                                        <div class="w-8 h-8 flex items-center justify-center bg-[#5865F2] rounded-full overflow-hidden flex-shrink-0">
+                                            <fa-icon [icon]="faDiscord" class="text-white text-sm"></fa-icon>
                                         </div>
-                                        <!--if individual1 is authUser display individual2-->
-                                        <div >
-                                            <div *ngIf="currentAuthUser.id == friend.individual1.id" class="flex gap-2">
-                                                <strong>{{ friend.individual2.displayName }}</strong>
+                                        <div *ngIf="currentAuthUser$ | async as currentAuthUser">
+                                            <!-- Friend Name -->
+                                            <div class="flex flex-col">
+                                                <div *ngIf="currentAuthUser.id == friend.individual1.id" class="text-white font-medium">
+                                                    {{ friend.individual2.displayName }}
+                                                </div>
+                                                <div *ngIf="currentAuthUser.id == friend.individual2.id" class="text-white font-medium">
+                                                    {{ friend.individual1.displayName }}
+                                                </div>
+                                                <div class="text-[#949BA4] text-sm">
+                                                    Offline
+                                                </div>
                                             </div>
                                         </div>
-
-                                        <!--if individual2 is authUser display individual1-->
-                                        <div >
-                                            <div *ngIf="currentAuthUser.id == friend.individual2.id" class="flex gap-2">
-                                                <strong>{{ friend.individual1.displayName }}</strong>
-                                            </div>
-                                        </div>
                                     </div>
-                                </div>
 
-                                <div class="flex gap-2">
-                                   ...
+                                    <!-- Action Buttons -->
+                                    <div class="flex items-center gap-3 opacity-0 group-hover:opacity-100 transition-opacity">
+                                        <button class="w-9 h-9 flex items-center justify-center rounded-full hover:bg-[#2B2D31] text-[#B5BAC1] hover:text-white transition-colors">
+                                            <fa-icon [icon]="faComment" class="text-lg"></fa-icon>
+                                        </button>
+                                        <button class="w-9 h-9 flex items-center justify-center rounded-full hover:bg-[#2B2D31] text-[#B5BAC1] hover:text-white transition-colors">
+                                            <fa-icon [icon]="faEllipsisV" class="text-lg"></fa-icon>
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                        <div *ngIf="!individualFriends.length">
-                            There is no pending requests for you this moment!
+
+                        <!-- Empty State -->
+                        <div *ngIf="!individualFriends.length" class="h-full flex flex-col items-center justify-center text-center p-8">
+                            <img src="/addFriend/friends.webp" alt="" class="w-[500px] mb-8">
+                            <p class="text-[#949BA4] text-[16px] max-w-md">
+                                No one's around to play with Wumpus.
+                            </p>
                         </div>
                     </div>
-                    <div *ngIf="individualFriendsError$ | async" class="text-red-500">
-                        Encounter trouble when trying to load data from SERVER
+
+                    <!-- Error States -->
+                    <div *ngIf="individualFriendsError$ | async" class="text-[#ED4245] p-4 rounded bg-[#2B2D31] mt-4">
+                        Encountered an error while loading friends list. Please try again later.
                     </div>
-                    <div *ngIf="currentAuthUserError$ | async" class="text-red-500">
-                        Encounter trouble when trying to load auth profile from SERVER
+                    <div *ngIf="currentAuthUserError$ | async" class="text-[#ED4245] p-4 rounded bg-[#2B2D31] mt-4">
+                        Encountered an error while loading your profile. Please try again later.
                     </div>
                 </div>
             </div>
-            <div class="w-90 bg-zinc-500">
-                s sec
+            <!-- Active Now Sidebar -->
+            <div class="w-[340px] bg-[#2B2D31] p-4 border-l border-[#1E1F22]">
+                <h3 class="text-white font-semibold mb-4">Active Now</h3>
+                <div class="flex flex-col items-center justify-center text-center mt-8">
+                    <p class="text-white font-semibold mb-2">It's quiet for now...</p>
+                    <p class="text-[#949BA4] text-[14px]">
+                        When a friend starts an activity—like playing a game or hanging out on voice—we'll show it here!
+                    </p>
+                </div>
             </div>
         </section>
   `
 })
 export class AllFriendsComponent{
-	protected readonly faDiscord = faDiscord;
+	faDiscord = faDiscord
+	faEllipsisV = faEllipsisV
+	faComment = faComment
+	faSearch = faSearch
 
 	individualFriends$
 	individualFriendsLoading$
