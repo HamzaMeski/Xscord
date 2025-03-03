@@ -16,7 +16,7 @@ import {faDiscord} from "@fortawesome/free-brands-svg-icons";
 	    class="h-dvh  flex"
     >
 		<!-- sidebar section -->
-        <div class="flex flex-col items-center gap-2 p-2 bg-red-400 w-20">
+        <div class="flex flex-col items-center gap-2 p-2  w-20">
             <a
 	            class="cursor-pointer w-16 h-16 bg-blue-400 rounded-3xl flex items-center justify-center"
 	            routerLink="/individual/friend"
@@ -26,9 +26,10 @@ import {faDiscord} from "@fortawesome/free-brands-svg-icons";
 	        
             <div class="w-6 h-2 bg-gray-900 rounded-3xl"></div>
 	        
-            <a routerLink="/individual/server" class="cursor-pointer w-16 h-16 bg-gray-800 rounded-full"></a>
-            <div class="w-16 h-16 bg-gray-800 rounded-full"></div>
-            <div class="w-16 h-16 bg-gray-800 rounded-full"></div>
+            <div routerLink="/individual/server" class="w-16 h-16 bg-gray-800 rounded-full flex items-center justify-center"><span>SE</span></div>
+            <div class="w-16 h-16 bg-gray-800 rounded-full flex items-center justify-center"><span>A</span></div>
+            <div class="w-16 h-16 bg-gray-800 rounded-full flex items-center justify-center"><span>B++</span></div>
+
         </div>
 	    
 	    <!-- friend/server section -->

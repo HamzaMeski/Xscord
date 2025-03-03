@@ -52,10 +52,15 @@ import {FormControl, FormGroup, ReactiveFormsModule, Validators} from "@angular/
 				    </div>
 			    </div>
 			    <div class="border-1 border-zinc-600"></div>
+			    
+			    <img src="/addFriend/friends.webp" width="500" alt="">
 		    </div>
 		    <div class="w-90 bg-zinc-500">
-			    Active Now
-			    <p></p>
+			    <h1>Active Now</h1>
+			    <strong>it's quiet for now...</strong>
+			    <p>
+				    When a friend starts an activity - like playing or gaming - we'll show it here!
+			    </p>
 		    </div>
 	    </section>
   `
