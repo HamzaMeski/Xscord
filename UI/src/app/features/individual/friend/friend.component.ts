@@ -111,7 +111,7 @@ import {IndividualResponse} from "../../../core/types/individual/individual.type
                 </div>
 
                 <!-- User Profile Bar -->
-                <div class="mt-auto bg-[#232428] p-2 flex items-center justify-between">
+                <div *ngIf="currentAuthUser$ | async as currentAuthUser" class="mt-auto bg-[#232428] p-2 flex items-center justify-between">
                     <div class="flex items-center gap-2">
                         <div class="relative">
                             <div class="w-8 h-8 rounded-full overflow-hidden bg-[#5865F2] flex items-center justify-center">
@@ -147,7 +147,7 @@ export class FriendComponent implements OnInit {
 	currentAuthUserLoading$
 	currentAuthUserError$
 
-	currentAuthUser: any
+	currentAuthUser!: IndividualResponse | null
 
 	constructor(
 		private store: Store
@@ -164,6 +164,10 @@ export class FriendComponent implements OnInit {
 	ngOnInit(): void {
 		this.store.dispatch(loadUserProfile())
 		this.store.dispatch(getIndividualFriends())
-		this.currentAuthUser$.subscribe(user => this.currentAuthUser = user)
+		this.currentAuthUser$.subscribe(user => {
+			if(user) {
+				this.currentAuthUser = user
+			}
+		})
 	}
 }
