@@ -145,7 +145,7 @@ import {FormsModule} from "@angular/forms";
                         <div *ngIf="(isConnected$ | async) && !(chatHistoryLoading$ | async)"
                              class="flex flex-col flex-1 min-h-0">
                             <!-- Messages Container -->
-                            <div class="flex-1 overflow-y-auto scrollbar-thin scrollbar-thumb-[#1E1F22] scrollbar-track-transparent">
+                            <div class="flex-1 overflow-y-auto">
                                 <!-- Welcome Message -->
                                 <div class="px-4 py-6">
                                     <div class="mb-8">
@@ -220,7 +220,7 @@ import {FormsModule} from "@angular/forms";
                                            [(ngModel)]="newMessage"
                                            (keyup.enter)="sendMessage()"
                                            placeholder="Message {{ selectedFriend.displayName }}"
-                                           class="flex-1 bg-transparent border-none text-[#DBDEE1] placeholder-[#949BA4] focus:ring-0 focus:outline-none text-base">
+                                           class="flex-1 text-[#DBDEE1] placeholder-[#949BA4] focus:outline-none">
                                     <button (click)="sendMessage()"
                                             class="px-4 py-1 bg-[#5865F2] text-white rounded hover:bg-[#4752C4] transition-colors">
                                         Send
