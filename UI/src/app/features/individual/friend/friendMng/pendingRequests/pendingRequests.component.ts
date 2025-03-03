@@ -28,7 +28,7 @@ import {CommonModule} from "@angular/common";
 	],
 	template: `
         <section class="h-full flex bg-green-300">
-	        <div class="flex-1 p-2 flex flex-col gap-4 ">
+	        <div class="flex-1 gap-4">
 		        <!--loading data checker-->
 		        <div *ngIf="(pendingRequestsLoading$ | async)">
                     <svg aria-hidden="true" class="inline w-8 h-8 text-gray-200 animate-spin dark:text-gray-600 fill-red-600" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -38,9 +38,9 @@ import {CommonModule} from "@angular/common";
 		        </div>
 		        
 		        <!--pending request-->
-		        <div *ngIf="!(pendingRequestsLoading$ | async)">
-			        <div *ngIf="pendingRequests$ | async as pendingRequests">
-                        <div *ngIf="pendingRequests.length" class="">
+		        <div *ngIf="!(pendingRequestsLoading$ | async)" class="bg-yellow-300 h-full">
+			        <div *ngIf="pendingRequests$ | async as pendingRequests" class="h-full ">
+                        <div *ngIf="pendingRequests.length" class="h-full bg-red-400">
 	                        <div *ngFor="let request of pendingRequests" class="flex items-center justify-between gap-2 border-b-1 pb-1">
                                 <div class="flex items-center gap-2">
                                     <div class="w-12 h-12 flex items-center justify-center bg-red-500 rounded-full">
@@ -77,8 +77,11 @@ import {CommonModule} from "@angular/common";
                                 </div>
 	                        </div>
                         </div>
-				        <div *ngIf="!pendingRequests.length">
-					        There is no pending requests for you this moment!
+				        <div *ngIf="!pendingRequests.length" class="h-full bg-green-400 flex items-center justify-center">
+					        <div>
+                                <img src="/addFriend/friends.webp" width="500" alt="">
+                                <p>There are no pending friend requests. Click "add Friend" to send friend requests.</p>
+                            </div>
 				        </div>
 			        </div>
 			        <div *ngIf="pendingRequestsError$ | async" class="text-red-500">

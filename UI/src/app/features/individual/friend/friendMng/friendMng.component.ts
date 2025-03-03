@@ -9,13 +9,25 @@ import {RouterLink, RouterOutlet} from "@angular/router";
 		RouterOutlet
 	],
 	template: `
-	    <section class="flex flex-col bg-yellow-300 h-full">
-		    <nav class="flex gap-12 bg-zinc-600 p-2">
-                <a routerLink="/individual/friend/mng/onlineFriends" class="font-bold hover:bg-zinc-800 rounded-md px-2 py-1 font">Online</a>
-                <a routerLink="/individual/friend/mng/allFriends" class="font-bold hover:bg-zinc-800 rounded-md px-2 py-1">All</a>
-                <a routerLink="/individual/friend/mng/pendingRequests" class="font-bold hover:bg-zinc-800 rounded-md px-2 py-1">Pending</a>
-                <a routerLink="/individual/friend/mng/addFriend" class="font-bold hover:bg-zinc-800 rounded-md px-2 py-1">Add Friend</a>
-		    </nav>
+	    <section class="flex flex-col h-full">
+            <nav class="flex items-center gap-8 px-4 py-3 bg-[#313338] border-b border-[#1E1F22]">
+                <a routerLink="/individual/friend/mng/onlineFriends"
+                   class="text-[#949BA4] hover:text-white text-sm font-medium px-3 py-1 rounded transition-colors">
+                    Online
+                </a>
+                <a routerLink="/individual/friend/mng/allFriends"
+                   class="text-[#949BA4] hover:text-white text-sm font-medium px-3 py-1 rounded transition-colors">
+                    All
+                </a>
+                <a routerLink="/individual/friend/mng/pendingRequests"
+                   class="text-[#949BA4] hover:text-white text-sm font-medium px-3 py-1 rounded transition-colors">
+                    Pending
+                </a>
+                <a routerLink="/individual/friend/mng/addFriend"
+                   class="text-green-400 hover:text-green-500 text-sm font-medium px-3 py-1 rounded transition-colors">
+                    Add Friend
+                </a>
+            </nav>
 		    <main class="flex-1">
                 <router-outlet></router-outlet>
 		    </main>
