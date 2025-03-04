@@ -23,6 +23,11 @@ export const sendMessage = createAction(
 	props<{request: peerMessageRequest}>()
 )
 
+export const addSenderMessageToConversation = createAction(
+	'[Peer Chat] Add Sender Message To Conversation',
+	props<{expectedResponse: peerMessageResponse}>()
+)
+
 // receive a message
 export const receiveMessage = createAction(
 	'[Peer Chat] Receive A Message',

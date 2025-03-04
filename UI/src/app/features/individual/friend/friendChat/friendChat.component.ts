@@ -22,8 +22,15 @@ import {
 	selectPeerChatHistoryError,
 	selectPeerChatHistoryLoading
 } from "../../../../ngrx/selectors/peerChat/peerChat.selectors";
-import {connectToChat, loadChatHistory, sendMessage} from "../../../../ngrx/actions/peerChat/peerChat.actions";
+import {
+	addSenderMessageToConversation,
+	connectToChat,
+	loadChatHistory,
+	sendMessage
+} from "../../../../ngrx/actions/peerChat/peerChat.actions";
 import {FormsModule} from "@angular/forms";
+import {map, Observable} from "rxjs";
+import {IndividualResponse} from "../../../../core/types/individual/individual.types";
 
 @Component({
 	standalone: true,
@@ -263,8 +270,8 @@ import {FormsModule} from "@angular/forms";
   `
 })
 export class FriendChatComponent  implements OnInit{
-	protected readonly faDiscord = faDiscord
-	protected readonly faCirclePlus = faCirclePlus
+	faDiscord = faDiscord
+	faCirclePlus = faCirclePlus
 
 	currentAuthUser$
 	currentAuthUserLoading$
@@ -274,16 +281,18 @@ export class FriendChatComponent  implements OnInit{
 	selectedFriendLoading$
 	selectedFriendError$
 
-
 	selectedFriendId!:number
 	currentAuthUserId!:number
 	newMessage: string  = ''
-
 
 	isConnected$
 	conversation$
 	chatHistoryLoading$
 	chatHistoryError$
+
+	currentAuthUser!: IndividualResponse
+	selectedFriend!: IndividualResponse
+	submittedMessageId!: number
 
 	constructor(
 		private route: ActivatedRoute,
@@ -312,7 +321,14 @@ export class FriendChatComponent  implements OnInit{
 
 		this.currentAuthUser$.subscribe(user => {
 			if(user) {
+				this.currentAuthUser = user
 				this.currentAuthUserId = user.id
+			}
+		})
+
+		this.selectedFriend$.subscribe(user => {
+			if(user) {
+				this.selectedFriend = user
 			}
 		})
 
@@ -320,9 +336,15 @@ export class FriendChatComponent  implements OnInit{
 
 		this.store.dispatch(loadChatHistory({individual2Id: this.selectedFriendId}))
 
-		this.conversation$.subscribe(con => {
-			// console.log('conversation',con)
-		})
+		this.conversation$.subscribe(
+			con=>{
+				if(con.length > 0) {
+					this.submittedMessageId = con[con.length - 1].id + 1
+				}else {
+					this.submittedMessageId = 1
+				}
+			}
+		)
 	}
 
 	sendMessage() {
@@ -333,7 +355,22 @@ export class FriendChatComponent  implements OnInit{
 					content: this.newMessage.trim()
 				}
 			}))
+
+			// add sender message to conversation
+			this.store.dispatch(addSenderMessageToConversation({
+				expectedResponse: {
+					id: this.submittedMessageId,
+					sender: this.currentAuthUser,
+					receiver: this.selectedFriend,
+					content: this.newMessage,
+					isRead: false,
+					createdAt: new Date(),
+					updatedAt: new Date()
+				}
+			}))
+
 			this.newMessage = ''
 		}
 	}
+
 }

@@ -4,10 +4,11 @@ import {
 	initialPeerChatHistory,
 } from "../../state/peerChat/peerChat.state";
 import {
+	addSenderMessageToConversation,
 	connectionEstablished,
 	connectToChat, loadChatHistoryFailure,
 	loadChatHistorySuccess,
-	receiveMessage
+	receiveMessage, sendMessage
 } from "../../actions/peerChat/peerChat.actions";
 
 
@@ -31,6 +32,14 @@ export const peerChatConnectionReducers = createReducer(
 // peerChat history
 export const peerChatHistoryReducers = createReducer(
 	initialPeerChatHistory,
+
+	on(addSenderMessageToConversation, (state, action) =>({
+		...state,
+		conversation: [
+			...state.conversation,
+			action.expectedResponse
+		]
+	})),
 
 	on(receiveMessage, (state, action) => ({
 		...state,
