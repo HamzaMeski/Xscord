@@ -1,5 +1,5 @@
-import {Component} from "@angular/core";
-import {RouterLink, RouterOutlet} from "@angular/router";
+import {Component, OnInit} from "@angular/core";
+import {Router, RouterLink, RouterOutlet} from "@angular/router";
 
 @Component({
 	standalone: true,
@@ -34,5 +34,12 @@ import {RouterLink, RouterOutlet} from "@angular/router";
 	    </section>
   `
 })
-export class FriendMngComponent  {
+export class FriendMngComponent implements OnInit {
+
+	constructor(private router: Router) {}
+
+	ngOnInit(): void {
+		this.router.navigate(['/individual/friend/mng/allFriends'])
+	}
+
 }
