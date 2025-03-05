@@ -79,11 +79,11 @@ import {faComment, faEllipsisV, faSearch} from "@fortawesome/free-solid-svg-icon
                                     </div>
 
                                     <!-- Action Buttons -->
-                                    <div class="flex items-center gap-3 opacity-0 group-hover:opacity-100 transition-opacity">
-                                        <button class="w-9 h-9 flex items-center justify-center rounded-full hover:bg-[#2B2D31] text-[#B5BAC1] hover:text-white transition-colors">
+                                    <div class="flex items-center gap-3">
+                                        <button class="w-9 h-9 flex items-center justify-center rounded-full text-[#B5BAC1] hover:text-white transition-colors">
                                             <fa-icon [icon]="faComment" class="text-lg"></fa-icon>
                                         </button>
-                                        <button class="w-9 h-9 flex items-center justify-center rounded-full hover:bg-[#2B2D31] text-[#B5BAC1] hover:text-white transition-colors">
+                                        <button class="w-9 h-9 flex items-center justify-center rounded-full text-[#B5BAC1] hover:text-white transition-colors">
                                             <fa-icon [icon]="faEllipsisV" class="text-lg"></fa-icon>
                                         </button>
                                     </div>
