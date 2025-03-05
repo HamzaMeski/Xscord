@@ -4,7 +4,6 @@ import {FontAwesomeModule} from "@fortawesome/angular-fontawesome";
 import {faDiscord} from "@fortawesome/free-brands-svg-icons";
 import {loadUserProfile} from "../../ngrx/actions/userProfile/userProfile.actions";
 import {Store} from "@ngrx/store";
-import {connectToChat} from "../../ngrx/actions/peerChat/peerChat.actions";
 
 @Component({
 	standalone: true,

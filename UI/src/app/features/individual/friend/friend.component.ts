@@ -173,7 +173,6 @@ export class FriendComponent implements OnInit {
 		).subscribe(() => {
 			const state = this.router.getCurrentNavigation()?.extras.state
 			if(state?.['friendId']) {
-				console.log('here: ',state?.['friendId'])
 				this.store.dispatch(loadChatHistory({individual2Id: state['friendId']}))
 			}
 		})

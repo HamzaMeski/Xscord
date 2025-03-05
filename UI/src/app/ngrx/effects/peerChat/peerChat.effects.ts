@@ -27,7 +27,6 @@ export class PeerChatEffects {
 			this.actions$.pipe(
 				ofType(connectToChat),
 				switchMap(()=> {
-					console.log('start to connect...')
 					return this.peerChatSocketService.connect()
 				})
 			),
@@ -55,6 +54,7 @@ export class PeerChatEffects {
 				mergeMap(({individual2Id}) =>
 					this.peerChatRestService.getChatHistory(individual2Id).pipe(
 						map(response => {
+							console.log('loadChatHistory effect')
 							return loadChatHistorySuccess({response})
 						}),
 						catchError(err =>{
