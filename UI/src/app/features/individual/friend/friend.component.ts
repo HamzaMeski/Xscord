@@ -18,7 +18,7 @@ import {loadUserProfile} from "../../../ngrx/actions/userProfile/userProfile.act
 import {getIndividualFriends} from "../../../ngrx/actions/friends/friends.actions";
 import {AsyncPipe, NgForOf, NgIf} from "@angular/common";
 import {IndividualResponse} from "../../../core/types/individual/individual.types";
-import {filter} from "rxjs";
+import {filter, takeUntil} from "rxjs";
 import {connectToChat, loadChatHistory} from "../../../ngrx/actions/peerChat/peerChat.actions";
 
 
@@ -173,10 +173,10 @@ export class FriendComponent implements OnInit {
 		).subscribe(() => {
 			const state = this.router.getCurrentNavigation()?.extras.state
 			if(state?.['friendId']) {
-				console.log('here: ',state?.['friendId'])
 				this.store.dispatch(loadChatHistory({individual2Id: state['friendId']}))
 			}
 		})
+
 	}
 
 	ngOnInit(): void {
@@ -184,6 +184,7 @@ export class FriendComponent implements OnInit {
 		this.currentAuthUser$.subscribe(user => {
 			if(user) {
 				this.currentAuthUser = user
+				// this.router.navigate(['/individual/friend/mng/allFriends'])
 			}
 		})
 	}

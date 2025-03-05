@@ -1,5 +1,6 @@
-import {Component} from "@angular/core";
-import {RouterLink, RouterOutlet} from "@angular/router";
+import {Component, OnDestroy, OnInit} from "@angular/core";
+import {NavigationEnd, Router, RouterLink, RouterOutlet} from "@angular/router";
+import {filter, Subject, takeUntil} from "rxjs";
 
 @Component({
 	standalone: true,
@@ -34,5 +35,25 @@ import {RouterLink, RouterOutlet} from "@angular/router";
 	    </section>
   `
 })
-export class FriendMngComponent  {
+export class FriendMngComponent implements OnInit, OnDestroy {
+	private destroy$ = new Subject<void>()
+
+	constructor(private router: Router) {
+		this.router.events.pipe(
+			filter(event => event instanceof NavigationEnd),
+			filter((event: NavigationEnd)=> event.url === '/individual/friend/mng'),
+			takeUntil(this.destroy$)
+		).subscribe(()=> {
+			this.router.navigate(['/individual/friend/mng/allFriends'])
+		})
+	}
+
+	ngOnInit(): void {
+		this.router.navigate(['/individual/friend/mng/allFriends'])
+	}
+
+	ngOnDestroy() {
+		this.destroy$.next()
+		this.destroy$.complete()
+	}
 }

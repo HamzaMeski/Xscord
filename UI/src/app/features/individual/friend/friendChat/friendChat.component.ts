@@ -41,8 +41,96 @@ import {IndividualResponse} from "../../../../core/types/individual/individual.t
 		FormsModule
 	],
 	template: `
-		<section *ngIf="(currentAuthUserLoading$ | async) || (selectedFriendLoading$ | async)" class="flex flex-col  h-full">
-         	...
+		<section *ngIf="(currentAuthUserLoading$ | async) || (selectedFriendLoading$ | async)" class="h-screen flex flex-col bg-[#313338]">
+            <div  class="flex flex-col h-full">
+                <!-- Top Navigation Bar -->
+                <div class="flex items-center gap-2 bg-[#1E1F22] px-4 py-3 shadow-md flex-shrink-0">
+                    <div class="flex items-center justify-center w-8 h-8 overflow-hidden rounded-full bg-[#5865F2]">
+                        <fa-icon [icon]="faDiscord" class="text-white"></fa-icon>
+                    </div>
+                    <strong class="text-white font-medium">...</strong>
+                </div>
+
+                <main class="flex flex-1 min-h-0">
+                    <!-- Main Chat Area -->
+                    <div class="flex-1 flex flex-col min-h-0">
+                        
+                        <!-- Chat Content -->
+                        <div
+                             class="flex flex-col flex-1 min-h-0">
+                            <!-- Messages Container -->
+                            <div #messageContainer class="flex-1 overflow-y-auto">
+                                <!-- Welcome Message -->
+                                <div class="px-4 py-6">
+                                    <div class="mb-8">
+                                        <div class="w-20 h-20 mb-4 overflow-hidden rounded-full bg-[#5865F2] flex items-center justify-center">
+                                            <fa-icon [icon]="faDiscord" class="text-4xl text-white"></fa-icon>
+                                        </div>
+                                        <h2 class="text-2xl font-bold text-white mb-2">...</h2>
+                                        <p class="text-[#949BA4] mb-4">This is the beginning of your direct message history with ...</p>
+                                        <div class="flex items-center gap-4 text-sm text-[#949BA4]">
+                                            <span>No servers in common</span>
+                                            <div class="flex gap-2">
+                                                <button class="px-3 py-1 bg-[#2B2D31] hover:bg-[#404249] rounded text-white transition-colors">
+                                                    Remove Friend
+                                                </button>
+                                                <button class="px-3 py-1 bg-[#2B2D31] hover:bg-[#404249] rounded text-white transition-colors">
+                                                    Block
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                            <!-- Message Input -->
+                            <div class="px-4 py-4 flex-shrink-0 bg-[#313338] mt-auto">
+                                <div class="flex items-center gap-2 bg-[#383A40] rounded-lg px-4 py-2.5">
+                                    <button class="text-[#B5BAC1] hover:text-white transition-colors">
+                                        <fa-icon [icon]="faCirclePlus" class="text-xl"></fa-icon>
+                                    </button>
+                                    <input type="text"
+                                           placeholder="Message ..."
+                                           class="flex-1 text-[#DBDEE1] placeholder-[#949BA4] focus:outline-none">
+                                    <button
+                                            class="px-4 py-1 bg-[#5865F2] text-white rounded hover:bg-[#4752C4] transition-colors">
+                                        Send
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right Sidebar -->
+                    <div class="w-[340px] bg-[#2B2D31] border-l border-[#1F2023] flex-shrink-0">
+                        <div class="h-[180px] bg-[#1E1F22]"></div>
+                        <div class="flex flex-col px-4 -mt-16">
+                            <div class="w-[120px] h-[120px] rounded-full border-8 border-[#2B2D31] overflow-hidden bg-[#5865F2] flex items-center justify-center mb-3">
+                                <fa-icon [icon]="faDiscord" class="text-4xl text-white"></fa-icon>
+                            </div>
+                            <h2 class="text-xl font-bold text-white mb-4">{{ selectedFriend.displayName }}</h2>
+
+                            <!-- About Section -->
+                            <div class="bg-[#232428] rounded-lg p-3 mb-4">
+                                <h3 class="text-[#949BA4] font-medium mb-2">ABOUT ME</h3>
+                                <p class="text-[#DBDEE1] text-sm">{{ selectedFriend.bio }}</p>
+                            </div>
+
+                            <!-- Member Since -->
+                            <div class="bg-[#232428] rounded-lg p-3">
+                                <h3 class="text-[#949BA4] font-medium mb-2">MEMBER SINCE</h3>
+                                <p class="text-[#DBDEE1] text-sm">{{ selectedFriend.createdAt }}</p>
+                            </div>
+
+                            <!-- View Profile Button -->
+                            <button class="mt-4 w-full px-4 py-2 bg-[#4E505C] text-white rounded hover:bg-[#6D6F7B] transition-colors">
+                                View Profile
+                            </button>
+                        </div>
+                    </div>
+                </main>
+            </div>
         </section>
 
 
