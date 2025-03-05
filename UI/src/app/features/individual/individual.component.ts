@@ -1,9 +1,10 @@
 import {Component, OnInit} from "@angular/core";
-import {RouterLink, RouterOutlet} from "@angular/router";
+import {NavigationEnd, Router, RouterLink, RouterOutlet} from "@angular/router";
 import {FontAwesomeModule} from "@fortawesome/angular-fontawesome";
 import {faDiscord} from "@fortawesome/free-brands-svg-icons";
 import {loadUserProfile} from "../../ngrx/actions/userProfile/userProfile.actions";
 import {Store} from "@ngrx/store";
+import {filter, Subject, takeUntil} from "rxjs";
 
 @Component({
 	standalone: true,
@@ -43,10 +44,20 @@ import {Store} from "@ngrx/store";
 })
 export class IndividualComponent implements OnInit {
 	faDiscord = faDiscord
+	destroy$ = new Subject<void>()
 
 	constructor(
-		private store: Store
-	) {}
+		private store: Store,
+		private router: Router
+	) {
+		this.router.events.pipe(
+			filter(event => event instanceof NavigationEnd),
+			filter((event: NavigationEnd)=> event.url === '/individual/friend'),
+			takeUntil(this.destroy$)
+		).subscribe(()=> {
+			this.router.navigate(['/individual/friend/mng/allFriends'])
+		})
+	}
 
 	ngOnInit() {
 		this.store.dispatch(loadUserProfile())
