@@ -1,17 +1,29 @@
-import { Component } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import {CommonModule} from "@angular/common";
+import {Store} from "@ngrx/store";
+import {connectToChat} from "./ngrx/actions/peerChat/peerChat.actions";
 
 @Component({
-  standalone: true,
-  selector: 'app-root',
-  imports: [CommonModule, RouterOutlet],
-  template: `
-    <section class="bg-zinc-900 text-gray-100 max-h-dvh">
-      <router-outlet></router-outlet>
-    </section>
-  `
+    standalone: true,
+    selector: 'app-root',
+    imports: [CommonModule, RouterOutlet],
+    template: `
+        <section class="bg-zinc-900 text-gray-100 max-h-dvh">
+            <router-outlet></router-outlet>
+        </section>
+    `
 })
-export class AppComponent {
-  title = 'Discord UI';
+export class AppComponent implements OnInit{
+
+    constructor(
+        private store: Store
+    ) {}
+
+    ngOnInit() {
+      if(localStorage.getItem('authUserToken')) {
+        console.log('profile loaded...')
+        this.store.dispatch(connectToChat())
+      }
+    }
 }

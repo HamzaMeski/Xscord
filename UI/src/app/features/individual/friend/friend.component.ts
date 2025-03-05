@@ -19,7 +19,7 @@ import {getIndividualFriends} from "../../../ngrx/actions/friends/friends.action
 import {AsyncPipe, NgForOf, NgIf} from "@angular/common";
 import {IndividualResponse} from "../../../core/types/individual/individual.types";
 import {filter} from "rxjs";
-import {loadChatHistory} from "../../../ngrx/actions/peerChat/peerChat.actions";
+import {connectToChat, loadChatHistory} from "../../../ngrx/actions/peerChat/peerChat.actions";
 
 
 @Component({
@@ -180,7 +180,6 @@ export class FriendComponent implements OnInit {
 	}
 
 	ngOnInit(): void {
-		this.store.dispatch(loadUserProfile())
 		this.store.dispatch(getIndividualFriends())
 		this.currentAuthUser$.subscribe(user => {
 			if(user) {
