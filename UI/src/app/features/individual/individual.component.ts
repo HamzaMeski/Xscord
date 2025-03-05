@@ -1,4 +1,4 @@
-import {Component, OnInit} from "@angular/core";
+import {Component, OnDestroy, OnInit} from "@angular/core";
 import {NavigationEnd, Router, RouterLink, RouterOutlet} from "@angular/router";
 import {FontAwesomeModule} from "@fortawesome/angular-fontawesome";
 import {faDiscord} from "@fortawesome/free-brands-svg-icons";
@@ -42,7 +42,7 @@ import {filter, Subject, takeUntil} from "rxjs";
     </section>
   `
 })
-export class IndividualComponent implements OnInit {
+export class IndividualComponent implements OnInit, OnDestroy {
 	faDiscord = faDiscord
 	destroy$ = new Subject<void>()
 
@@ -61,5 +61,10 @@ export class IndividualComponent implements OnInit {
 
 	ngOnInit() {
 		this.store.dispatch(loadUserProfile())
+	}
+
+	ngOnDestroy() {
+		this.destroy$.next()
+		this.destroy$.complete()
 	}
 }

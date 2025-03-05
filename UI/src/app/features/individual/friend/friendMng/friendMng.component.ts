@@ -1,4 +1,4 @@
-import {Component, OnInit} from "@angular/core";
+import {Component, OnDestroy, OnInit} from "@angular/core";
 import {NavigationEnd, Router, RouterLink, RouterOutlet} from "@angular/router";
 import {filter, Subject, takeUntil} from "rxjs";
 
@@ -35,7 +35,7 @@ import {filter, Subject, takeUntil} from "rxjs";
 	    </section>
   `
 })
-export class FriendMngComponent implements OnInit {
+export class FriendMngComponent implements OnInit, OnDestroy {
 	private destroy$ = new Subject<void>()
 
 	constructor(private router: Router) {
@@ -52,4 +52,8 @@ export class FriendMngComponent implements OnInit {
 		this.router.navigate(['/individual/friend/mng/allFriends'])
 	}
 
+	ngOnDestroy() {
+		this.destroy$.next()
+		this.destroy$.complete()
+	}
 }
