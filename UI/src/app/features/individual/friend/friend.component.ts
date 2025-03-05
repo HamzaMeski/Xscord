@@ -1,5 +1,5 @@
 import {Component, OnInit} from "@angular/core";
-import {RouterLink, RouterOutlet} from "@angular/router";
+import {NavigationEnd, Router, RouterLink, RouterOutlet} from "@angular/router";
 import {faDiscord} from "@fortawesome/free-brands-svg-icons";
 import {FontAwesomeModule} from "@fortawesome/angular-fontawesome";
 import {faGear, faUser} from "@fortawesome/free-solid-svg-icons";
@@ -18,6 +18,8 @@ import {loadUserProfile} from "../../../ngrx/actions/userProfile/userProfile.act
 import {getIndividualFriends} from "../../../ngrx/actions/friends/friends.actions";
 import {AsyncPipe, NgForOf, NgIf} from "@angular/common";
 import {IndividualResponse} from "../../../core/types/individual/individual.types";
+import {filter} from "rxjs";
+import {loadChatHistory} from "../../../ngrx/actions/peerChat/peerChat.actions";
 
 
 @Component({
@@ -78,7 +80,9 @@ import {IndividualResponse} from "../../../core/types/individual/individual.type
                                     <div *ngFor="let friend of individualFriends">
                                         <!-- Friend Item (individual1) -->
                                         <div *ngIf="currentAuthUser.id == friend.individual1.id">
-                                            <a [routerLink]="['/individual/friend/chat', friend.individual2.id]"
+                                            <a 
+	                                            [routerLink]="['/individual/friend/chat', friend.individual2.id]"
+                                                [state]="{friendId: friend.individual2.id}"
                                                class="flex items-center gap-2 px-2 py-2 rounded group hover:bg-[#404249] transition-colors">
                                                 <div class="relative">
                                                     <div class="w-8 h-8 rounded-full overflow-hidden bg-[#5865F2] flex items-center justify-center">
@@ -92,7 +96,10 @@ import {IndividualResponse} from "../../../core/types/individual/individual.type
 
                                         <!-- Friend Item (individual2) -->
                                         <div *ngIf="currentAuthUser.id == friend.individual2.id">
-                                            <a [routerLink]="['/individual/friend/chat', friend.individual1.id]"
+                                            <a
+	                                            [routerLink]="['/individual/friend/chat', friend.individual1.id]"
+	                                            [state]="{friendId: friend.individual1.id}"
+											
                                                class="flex items-center gap-2 px-2 py-2 rounded group hover:bg-[#404249] transition-colors">
                                                 <div class="relative">
                                                     <div class="w-8 h-8 rounded-full overflow-hidden bg-[#5865F2] flex items-center justify-center">
@@ -150,7 +157,8 @@ export class FriendComponent implements OnInit {
 	currentAuthUser!: IndividualResponse | null
 
 	constructor(
-		private store: Store
+		private store: Store,
+		private router: Router
 	) {
 		this.individualFriends$ = store.select(selectGetIndividualFriendsResponse)
 		this.individualFriendsLoading$ = store.select(selectGetIndividualFriendsLoading)
@@ -159,6 +167,16 @@ export class FriendComponent implements OnInit {
 		this.currentAuthUser$ = store.select(selectUserProfile)
 		this.currentAuthUserLoading$ = store.select(selectUserProfileLoading)
 		this.currentAuthUserError$ = store.select(selectUserProfileError)
+
+		this.router.events.pipe(
+			filter(event => event instanceof NavigationEnd)
+		).subscribe(() => {
+			const state = this.router.getCurrentNavigation()?.extras.state
+			if(state?.['friendId']) {
+				console.log('here: ',state?.['friendId'])
+				this.store.dispatch(loadChatHistory({individual2Id: state['friendId']}))
+			}
+		})
 	}
 
 	ngOnInit(): void {
