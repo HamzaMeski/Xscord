@@ -65,13 +65,13 @@ import {IndividualResponse} from "../../../../core/types/individual/individual.t
                         </div>
 
                         <!-- Loading State -->
-                        <div *ngIf="!(isConnected$ | async) || (chatHistoryLoading$ | async)"
+                        <div *ngIf="(chatHistoryLoading$ | async)"
                              class="flex-1 flex items-center justify-center text-[#949BA4]">
                             Chat History loading...
                         </div>
 
                         <!-- Chat Content -->
-                        <div *ngIf="(isConnected$ | async) && !(chatHistoryLoading$ | async)"
+                        <div *ngIf="!(chatHistoryLoading$ | async)"
                              class="flex flex-col flex-1 min-h-0">
                             <!-- Messages Container -->
                             <div #messageContainer class="flex-1 overflow-y-auto">
@@ -207,7 +207,6 @@ export class FriendChatComponent  implements OnInit, OnDestroy{
 	currentAuthUserId!:number
 	newMessage: string  = ''
 
-	isConnected$
 	conversation$
 	chatHistoryLoading$
 	chatHistoryError$
@@ -229,7 +228,6 @@ export class FriendChatComponent  implements OnInit, OnDestroy{
 		this.selectedFriendLoading$ = this.store.select(selectSelectedFriendLoading)
 		this.selectedFriendError$ = this.store.select(selectSelectedFriendError)
 
-		this.isConnected$ = this.store.select(selectMeIsConnected)
 		this.conversation$ = this.store.select(selectPeerChatHistoryConversation)
 		this.chatHistoryLoading$ = this.store.select(selectPeerChatHistoryLoading)
 		this.chatHistoryError$ = this.store.select(selectPeerChatHistoryError)
@@ -254,8 +252,6 @@ export class FriendChatComponent  implements OnInit, OnDestroy{
 				this.selectedFriend = user
 			}
 		})
-
-		this.store.dispatch(connectToChat())
 
 		this.store.dispatch(loadChatHistory({individual2Id: this.selectedFriendId}))
 

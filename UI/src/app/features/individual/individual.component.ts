@@ -1,7 +1,10 @@
-import {Component} from "@angular/core";
+import {Component, OnInit} from "@angular/core";
 import {RouterLink, RouterOutlet} from "@angular/router";
 import {FontAwesomeModule} from "@fortawesome/angular-fontawesome";
 import {faDiscord} from "@fortawesome/free-brands-svg-icons";
+import {loadUserProfile} from "../../ngrx/actions/userProfile/userProfile.actions";
+import {Store} from "@ngrx/store";
+import {connectToChat} from "../../ngrx/actions/peerChat/peerChat.actions";
 
 @Component({
 	standalone: true,
@@ -39,6 +42,14 @@ import {faDiscord} from "@fortawesome/free-brands-svg-icons";
     </section>
   `
 })
-export class IndividualComponent  {
+export class IndividualComponent implements OnInit {
 	faDiscord = faDiscord
+
+	constructor(
+		private store: Store
+	) {}
+
+	ngOnInit() {
+		this.store.dispatch(loadUserProfile())
+	}
 }

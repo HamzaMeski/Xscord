@@ -3,7 +3,8 @@ import {Router} from "@angular/router";
 import {AuthService} from "../../../core/services/restfull/auth.service";
 import {Actions, createEffect, ofType} from "@ngrx/effects";
 import {login, loginFailure, loginSuccess} from "../../actions/auth/login.actions";
-import {catchError, map, mergeMap, of, tap} from "rxjs";
+import {catchError, concatMap, map, mergeMap, of, tap} from "rxjs";
+import {connectToChat} from "../../actions/peerChat/peerChat.actions";
 
 
 @Injectable()
@@ -36,13 +37,16 @@ export class LoginEffects {
 		this.loginSuccess$ = createEffect(() =>
 			this.actions$.pipe(
 				ofType(loginSuccess),
-				tap(({response})=> {
+				concatMap(({response})=> {
 					const authUserToken = response.token
 					localStorage.setItem('authUserToken', authUserToken)
 					this.router.navigate(['/individual'])
+
+					console.log(localStorage.getItem('authUserToken'))
+					console.log('before connecting in login effect:')
+					return of(connectToChat())
 				})
-			),
-			{dispatch: false}
+			)
 		)
 	}
 }
