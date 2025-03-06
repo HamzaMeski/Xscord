@@ -109,18 +109,18 @@ import {IndividualResponse} from "../../../../core/types/individual/individual.t
                             <div class="w-[120px] h-[120px] rounded-full border-8 border-[#2B2D31] overflow-hidden bg-[#5865F2] flex items-center justify-center mb-3">
                                 <fa-icon [icon]="faDiscord" class="text-4xl text-white"></fa-icon>
                             </div>
-                            <h2 class="text-xl font-bold text-white mb-4">{{ selectedFriend.displayName }}</h2>
+                            <h2 class="text-xl font-bold text-white mb-4">...</h2>
 
                             <!-- About Section -->
                             <div class="bg-[#232428] rounded-lg p-3 mb-4">
                                 <h3 class="text-[#949BA4] font-medium mb-2">ABOUT ME</h3>
-                                <p class="text-[#DBDEE1] text-sm">{{ selectedFriend.bio }}</p>
+                                <p class="text-[#DBDEE1] text-sm">...</p>
                             </div>
 
                             <!-- Member Since -->
                             <div class="bg-[#232428] rounded-lg p-3">
                                 <h3 class="text-[#949BA4] font-medium mb-2">MEMBER SINCE</h3>
-                                <p class="text-[#DBDEE1] text-sm">{{ selectedFriend.createdAt }}</p>
+                                <p class="text-[#DBDEE1] text-sm">...</p>
                             </div>
 
                             <!-- View Profile Button -->
