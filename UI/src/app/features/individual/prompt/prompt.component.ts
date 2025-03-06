@@ -28,42 +28,43 @@ import {finalize} from "rxjs";
                 </div>
 	        </div>
             <!-- Message Container -->
-            <div class="w-3xl mx-auto flex flex-col justify-between flex-1">
+            <div class="w-4xl mx-auto flex flex-col justify-between flex-1 min-h-0">
                 <!-- Conversation Area -->
                 <strong *ngIf="!messages.length" class="text-center mt-20 text-4xl font-bold">
                     Hello HAMZA MESKI!
                 </strong>
-                <div *ngFor="let message of messages " class="overflow-y-auto space-y-2">
-	               
-                    <!-- AI Message 2 -->
-                    <div
-	                    *ngIf="!message.isUser"
-	                    class="flex items-start gap-4"
-                    >
-                        <div class="w-15 h-15 rounded-full bg-[#5865F2] flex items-center justify-center">
-                            <img src="/AI/gemini.png" alt="AI Avatar" class="w-[30px]">
-                        </div>
-                        <p class="flex-1 text-[#DCDDDE] p-4">
-	                        {{message.content}}
-                        </p>
-                    </div>
-
-                    <!-- User Message 2 -->
-                    <div
-                        *ngIf="message.isUser"
-	                    class="flex items-start gap-4"
-                    >
-                        <div class="w-15 h-15">
-                        </div>
-                        <div class="flex-1 flex justify-end ">
-                            <p class="bg-zinc-900 rounded-tl-2xl rounded-br-2xl rounded-bl-2xl p-4 text-[#DCDDDE]">
+	            
+                <div class="overflow-y-auto space-y-2 px-8">
+	                <div  *ngFor="let message of messages ">
+                        <!-- AI Message 2 -->
+                        <div
+                            *ngIf="!message.isUser"
+                            class="flex items-start gap-4"
+                        >
+                            <div class="w-15 h-15 rounded-full bg-[#5865F2] flex items-center justify-center">
+                                <img src="/AI/gemini.png" alt="AI Avatar" class="w-[30px]">
+                            </div>
+                            <p class="flex-1 text-[#DCDDDE] p-4">
                                 {{message.content}}
                             </p>
                         </div>
-                    </div>
+
+                        <!-- User Message 2 -->
+                        <div
+                            *ngIf="message.isUser"
+                            class="flex items-start gap-4"
+                        >
+                            <div class="w-15 h-15">
+                            </div>
+                            <div class="flex-1 flex justify-end ">
+                                <p class="bg-zinc-900 rounded-tl-2xl rounded-br-2xl rounded-bl-2xl p-4 text-[#DCDDDE]">
+                                    {{message.content}}
+                                </p>
+                            </div>
+                        </div>
+	                </div>
                 </div>
-	            
-	            
+                
 
                 <!-- Input Area -->
                 <div class="flex items-center gap-2 bg-[#383A40] rounded-lg px-4 py-2.5">
@@ -75,12 +76,14 @@ import {finalize} from "rxjs";
                            class="flex-1 text-[#DBDEE1] placeholder-[#949BA4] focus:outline-none"
                            [(ngModel)]="promptText"
                     >
-                    <button  (click)="sendMessage()" class="px-4 py-1 bg-[#5865F2] text-white rounded hover:bg-[#4752C4] transition-colors">
+                    <button
+	                    (click)="sendMessage()"
+	                    [ngClass]="(isLoading || !promptText.trim())? 'bg-blue-300' : 'bg-[#5865F2] hover:bg-[#4752C4]'"
+	                    class="px-4 py-1  text-white rounded  transition-colors">
                         Send
                     </button>
                 </div>
             </div>
-
         </section>
 	`
 })
