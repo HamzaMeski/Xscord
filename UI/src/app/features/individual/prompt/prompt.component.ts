@@ -20,8 +20,8 @@ import {finalize} from "rxjs";
         <section class="min-h-screen bg-[#2B2D31] text-white p-4 h-full flex flex-col">
 	        <div class="flex justify-between pb-8">
                 <div class="flex flex-col">
-	                <strong class="text-2xl">Gemini</strong>
-	                <span class="text-sm">2.0 Flash</span>
+	                <strong class="text-2xl">OpenChat </strong>
+	                <span class="text-sm">3.5 7B</span>
                 </div>
                 <div class="w-10 h-10 rounded-full overflow-hidden bg-[#5865F2] flex items-center justify-center">
                     <fa-icon [icon]="faDiscord" class="text-white text-xl"></fa-icon>
