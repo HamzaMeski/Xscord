@@ -29,9 +29,12 @@ import {filter, Subject, takeUntil} from "rxjs";
 	        
             <div class="w-6 h-2 bg-gray-900 rounded-3xl"></div>
 	        
-            <div routerLink="/individual/server" class="w-16 h-16 bg-gray-800 rounded-full flex items-center justify-center"><span>SE</span></div>
-            <div class="w-16 h-16 bg-gray-800 rounded-full flex items-center justify-center"><span>A</span></div>
-            <div class="w-16 h-16 bg-gray-800 rounded-full flex items-center justify-center"><span>B++</span></div>
+            <a routerLink="/individual/server" class="w-16 h-16 bg-gray-800 rounded-full flex items-center justify-center">SE</a>
+            <a class="w-16 h-16 bg-gray-800 rounded-full flex items-center justify-center">A</a>
+            <a class="w-16 h-16 bg-gray-800 rounded-full flex items-center justify-center">B++</a>
+            <a routerLink="/individual/prompt" class="w-16 h-16 bg-gray-800 rounded-full flex items-center justify-center">
+	            <img src="/AI/gemini.png" alt="" class="w-[40px]">
+            </a>
 
         </div>
 	    
