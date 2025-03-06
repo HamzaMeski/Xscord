@@ -1,9 +1,11 @@
-import {Component} from "@angular/core";
+import {Component, OnInit} from "@angular/core";
 import {CommonModule} from "@angular/common";
 import {faDiscord} from "@fortawesome/free-brands-svg-icons";
 import {FaIconComponent} from "@fortawesome/angular-fontawesome";
 import {FormsModule} from "@angular/forms";
 import {faCirclePlus} from "@fortawesome/free-solid-svg-icons";
+import {ModelService} from "../../../core/services/prompt/model.service";
+import {finalize} from "rxjs";
 
 
 @Component({
@@ -26,25 +28,37 @@ import {faCirclePlus} from "@fortawesome/free-solid-svg-icons";
                 </div>
 	        </div>
             <!-- Message Container -->
-            <div class="max-w-3xl mx-auto flex flex-col justify-between flex-1">
+            <div class="w-3xl mx-auto flex flex-col justify-between flex-1">
                 <!-- Conversation Area -->
-                <div class="overflow-y-auto space-y-2">
+                <strong *ngIf="!messages.length" class="text-center mt-20 text-4xl font-bold">
+                    Hello HAMZA MESKI!
+                </strong>
+                <div *ngFor="let message of messages " class="overflow-y-auto space-y-2">
+	               
                     <!-- AI Message 2 -->
-                    <div class="flex items-start gap-4">
+                    <div
+	                    *ngIf="!message.isUser"
+	                    class="flex items-start gap-4"
+                    >
                         <div class="w-15 h-15 rounded-full bg-[#5865F2] flex items-center justify-center">
                             <img src="/AI/gemini.png" alt="AI Avatar" class="w-[30px]">
                         </div>
                         <p class="flex-1 text-[#DCDDDE] p-4">
-                            I’m sorry to hear that. Can you please provide your email address associated with the account?
+	                        {{message.content}}
                         </p>
                     </div>
 
                     <!-- User Message 2 -->
-                    <div class="flex items-start gap-4">
+                    <div
+                        *ngIf="message.isUser"
+	                    class="flex items-start gap-4"
+                    >
                         <div class="w-15 h-15">
                         </div>
                         <div class="flex-1 flex justify-end ">
-                            <p class="bg-zinc-900 rounded-tl-2xl rounded-br-2xl rounded-bl-2xl p-4 text-[#DCDDDE]">It's use.com.</p>
+                            <p class="bg-zinc-900 rounded-tl-2xl rounded-br-2xl rounded-bl-2xl p-4 text-[#DCDDDE]">
+                                {{message.content}}
+                            </p>
                         </div>
                     </div>
                 </div>
@@ -58,8 +72,10 @@ import {faCirclePlus} from "@fortawesome/free-solid-svg-icons";
                     </button>
                     <input type="text"
                            placeholder="Start messaging with gemini"
-                           class="flex-1 text-[#DBDEE1] placeholder-[#949BA4] focus:outline-none">
-                    <button class="px-4 py-1 bg-[#5865F2] text-white rounded hover:bg-[#4752C4] transition-colors">
+                           class="flex-1 text-[#DBDEE1] placeholder-[#949BA4] focus:outline-none"
+                           [(ngModel)]="promptText"
+                    >
+                    <button  (click)="sendMessage()" class="px-4 py-1 bg-[#5865F2] text-white rounded hover:bg-[#4752C4] transition-colors">
                         Send
                     </button>
                 </div>
@@ -68,7 +84,48 @@ import {faCirclePlus} from "@fortawesome/free-solid-svg-icons";
         </section>
 	`
 })
-export class PromptComponent {
+export class PromptComponent implements OnInit{
 	faDiscord = faDiscord
-	protected readonly faCirclePlus = faCirclePlus;
+	faCirclePlus = faCirclePlus
+
+	messages: Array<{content: string, isUser: boolean}> = []
+	promptText: string = ''
+	isLoading = false
+
+	constructor(private modelService : ModelService) {}
+
+	sendMessage() {
+		console.log('send message')
+		if(!this.promptText.trim() || this.isLoading) return
+
+		const userPrompt = this.promptText
+		this.messages.push({
+			content: userPrompt,
+			isUser: true
+		})
+		this.modelService.generateResponse(userPrompt).pipe(
+			finalize(() => this.isLoading = false)
+		).subscribe({
+			next: (response) => {
+				console.log(response)
+				const aiResponse = response.choices[0].message.content
+				this.messages.push({
+					content: aiResponse,
+					isUser: false
+				})
+				this.promptText =''
+			},
+			error: (error) => {
+				this.messages.push({
+					content: 'Sorry encounter an error try again',
+					isUser: false
+				})
+				this.promptText =''
+			}
+		})
+	}
+
+	ngOnInit() {
+		console.log(this.messages.length)
+	}
 }
