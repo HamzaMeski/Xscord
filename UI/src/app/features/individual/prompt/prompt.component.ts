@@ -1,4 +1,4 @@
-import {Component, OnInit} from "@angular/core";
+import {AfterViewChecked, Component, ElementRef, OnInit, ViewChild} from "@angular/core";
 import {CommonModule} from "@angular/common";
 import {faDiscord} from "@fortawesome/free-brands-svg-icons";
 import {FaIconComponent} from "@fortawesome/angular-fontawesome";
@@ -34,15 +34,15 @@ import {finalize} from "rxjs";
                     Hello HAMZA MESKI!
                 </strong>
 	            
-                <div class="overflow-y-auto space-y-2 px-8">
+                <div #messagesContainer class="overflow-y-auto space-y-2 px-8">
 	                <div  *ngFor="let message of messages ">
                         <!-- AI Message 2 -->
                         <div
                             *ngIf="!message.isUser"
                             class="flex items-start gap-4"
                         >
-                            <div class="w-15 h-15 rounded-full bg-[#5865F2] flex items-center justify-center">
-                                <img src="/AI/gemini.png" alt="AI Avatar" class="w-[30px]">
+                            <div class="w-15 h-15 rounded-full bg-gray-200  flex items-center justify-center">
+                                <img src="/AI/gpt.png" alt="" class="w-[93%]">
                             </div>
                             <p class="flex-1 text-[#DCDDDE] p-4">
                                 {{message.content}}
@@ -87,7 +87,7 @@ import {finalize} from "rxjs";
         </section>
 	`
 })
-export class PromptComponent implements OnInit{
+export class PromptComponent implements OnInit, AfterViewChecked {
 	faDiscord = faDiscord
 	faCirclePlus = faCirclePlus
 
@@ -95,19 +95,27 @@ export class PromptComponent implements OnInit{
 	promptText: string = ''
 	isLoading = false
 
+	@ViewChild('messagesContainer') private messagesContainer!: ElementRef
+
+	scrollDown() {
+		this.messagesContainer.nativeElement.scrollTop = this.messagesContainer.nativeElement.scrollHeight
+	}
+
 	constructor(private modelService : ModelService) {}
 
 	sendMessage() {
-		console.log('send message')
 		if(!this.promptText.trim() || this.isLoading) return
 
 		const userPrompt = this.promptText
+		this.promptText =''
 		this.messages.push({
 			content: userPrompt,
 			isUser: true
 		})
 		this.modelService.generateResponse(userPrompt).pipe(
-			finalize(() => this.isLoading = false)
+			finalize(() => {
+				this.isLoading = false
+			})
 		).subscribe({
 			next: (response) => {
 				console.log(response)
@@ -116,19 +124,22 @@ export class PromptComponent implements OnInit{
 					content: aiResponse,
 					isUser: false
 				})
-				this.promptText =''
+
 			},
 			error: (error) => {
 				this.messages.push({
-					content: 'Sorry encounter an error try again',
+					content: `Sorry encounter an error try again: ${error}`,
 					isUser: false
 				})
-				this.promptText =''
 			}
 		})
 	}
 
 	ngOnInit() {
 		console.log(this.messages.length)
+	}
+
+	ngAfterViewChecked(): void {
+		this.scrollDown()
 	}
 }

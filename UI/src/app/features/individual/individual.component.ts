@@ -32,14 +32,14 @@ import {filter, Subject, takeUntil} from "rxjs";
             <a routerLink="/individual/server" class="w-16 h-16 bg-gray-800 rounded-full flex items-center justify-center">SE</a>
             <a class="w-16 h-16 bg-gray-800 rounded-full flex items-center justify-center">A</a>
             <a class="w-16 h-16 bg-gray-800 rounded-full flex items-center justify-center">B++</a>
-            <a routerLink="/individual/prompt" class="w-16 h-16 bg-gray-800 rounded-full flex items-center justify-center">
-	            <img src="/AI/gemini.png" alt="" class="w-[40px]">
+            <a routerLink="/individual/prompt" class="w-16 h-16 bg-gray-200 rounded-full flex items-center justify-center">
+	            <img src="/AI/gpt.png" alt="" class="w-[93%]">
             </a>
 
         </div>
 	    
 	    <!-- friend/server section -->
-	    <div class="bg-green-400 flex-1">
+	    <div class=" flex-1">
             <router-outlet></router-outlet>
 	    </div>
     </section>
@@ -64,6 +64,7 @@ export class IndividualComponent implements OnInit, OnDestroy {
 
 	ngOnInit() {
 		this.store.dispatch(loadUserProfile())
+		this.router.navigate(['individual/friend/mng/allFriends'])
 	}
 
 	ngOnDestroy() {
