@@ -21,7 +21,7 @@ import {filter, Subject, takeUntil} from "rxjs";
 		<!-- sidebar section -->
         <div class="flex flex-col items-center gap-2 p-2  w-20">
             <a
-	            class="cursor-pointer w-16 h-16 bg-blue-400 rounded-3xl flex items-center justify-center"
+	            class="cursor-pointer w-16 h-16 bg-[#5865F2] rounded-3xl flex items-center justify-center"
 	            routerLink="/individual/friend"
             >
 	            <fa-icon [icon]="faDiscord" class="text-3xl"></fa-icon>
@@ -64,7 +64,7 @@ export class IndividualComponent implements OnInit, OnDestroy {
 
 	ngOnInit() {
 		this.store.dispatch(loadUserProfile())
-		this.router.navigate(['individual/friend/mng/allFriends'])
+		// this.router.navigate(['individual/friend/mng/allFriends'])
 	}
 
 	ngOnDestroy() {

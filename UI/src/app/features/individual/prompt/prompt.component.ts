@@ -6,6 +6,9 @@ import {FormsModule} from "@angular/forms";
 import {faCirclePlus} from "@fortawesome/free-solid-svg-icons";
 import {ModelService} from "../../../core/services/prompt/model.service";
 import {finalize} from "rxjs";
+import {Store} from "@ngrx/store";
+import {loadUserProfile} from "../../../ngrx/actions/userProfile/userProfile.actions";
+import {selectUserProfile} from "../../../ngrx/selectors/userProfile/userProfile.selectors";
 
 
 @Component({
@@ -71,10 +74,12 @@ import {finalize} from "rxjs";
                     <button class="text-[#B5BAC1] hover:text-white transition-colors">
                         <fa-icon [icon]="faCirclePlus" class="text-xl"></fa-icon>
                     </button>
-                    <input type="text"
-                           placeholder="Start messaging with gemini"
-                           class="flex-1 text-[#DBDEE1] placeholder-[#949BA4] focus:outline-none"
-                           [(ngModel)]="promptText"
+                    <input
+	                    (keyup.enter)="sendMessage()"
+	                    type="text"
+                        placeholder="Start messaging with gemini"
+                        class="flex-1 text-[#DBDEE1] placeholder-[#949BA4] focus:outline-none"
+                        [(ngModel)]="promptText"
                     >
                     <button
 	                    (click)="sendMessage()"
@@ -101,7 +106,10 @@ export class PromptComponent implements OnInit, AfterViewChecked {
 		this.messagesContainer.nativeElement.scrollTop = this.messagesContainer.nativeElement.scrollHeight
 	}
 
-	constructor(private modelService : ModelService) {}
+	constructor(
+		private modelService : ModelService,
+		private store: Store
+	) {}
 
 	sendMessage() {
 		if(!this.promptText.trim() || this.isLoading) return
@@ -136,7 +144,6 @@ export class PromptComponent implements OnInit, AfterViewChecked {
 	}
 
 	ngOnInit() {
-		console.log(this.messages.length)
 	}
 
 	ngAfterViewChecked(): void {
