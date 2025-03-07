@@ -24,7 +24,7 @@ import {faComment, faEllipsisV, faSearch} from "@fortawesome/free-solid-svg-icon
 		NgIf,
 	],
 	template: `
-        <section class="h-full flex bg-green-300">
+        <section class="h-full flex ">
             <div class="flex-1  flex flex-col gap-4 ">
                 <!--loading data checker-->
                 <div *ngIf="(individualFriendsLoading$ | async) || (currentAuthUserLoading$ | async)">

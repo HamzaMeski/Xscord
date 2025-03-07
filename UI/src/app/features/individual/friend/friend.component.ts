@@ -121,7 +121,7 @@ import {connectToChat, loadChatHistory} from "../../../ngrx/actions/peerChat/pee
                 <div *ngIf="currentAuthUser$ | async as currentAuthUser" class="mt-auto bg-[#232428] p-2 flex items-center justify-between">
                     <div class="flex items-center gap-2">
                         <div class="relative">
-                            <div class="w-8 h-8 rounded-full overflow-hidden bg-[#5865F2] flex items-center justify-center">
+	                            <div class="w-8 h-8 rounded-full overflow-hidden bg-[#5865F2] flex items-center justify-center">
                                 <fa-icon [icon]="faDiscord" class="text-white"></fa-icon>
                             </div>
                             <div class="absolute bottom-0 right-0 w-2.5 h-2.5 bg-[#23A559] rounded-full border-2 border-[#232428]"></div>

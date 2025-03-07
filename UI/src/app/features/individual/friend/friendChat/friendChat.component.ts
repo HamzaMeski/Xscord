@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild} from "@angular/core";
+import {AfterViewChecked, AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild} from "@angular/core";
 import {FaIconComponent} from "@fortawesome/angular-fontawesome";
 import {faDiscord} from "@fortawesome/free-brands-svg-icons";
 import {faCirclePlus} from "@fortawesome/free-solid-svg-icons";
@@ -279,7 +279,7 @@ import {IndividualResponse} from "../../../../core/types/individual/individual.t
         </section>
   `
 })
-export class FriendChatComponent  implements OnInit, OnDestroy{
+export class FriendChatComponent  implements OnInit, AfterViewChecked, AfterViewInit, OnDestroy{
 	faDiscord = faDiscord
 	faCirclePlus = faCirclePlus
 
@@ -303,6 +303,10 @@ export class FriendChatComponent  implements OnInit, OnDestroy{
 	selectedFriend!: IndividualResponse
 	submittedMessageId!: number
 
+	@ViewChild('messageContainer') private messageContainer!: ElementRef
+	scrollDown(): void {
+		this.messageContainer.nativeElement.scrollTop = this.messageContainer.nativeElement.scrollHeight
+	}
 
 	constructor(
 		private route: ActivatedRoute,
@@ -378,6 +382,14 @@ export class FriendChatComponent  implements OnInit, OnDestroy{
 
 			this.newMessage = ''
 		}
+	}
+
+	ngAfterViewChecked(): void {
+		this.scrollDown()
+	}
+
+	ngAfterViewInit(): void {
+		this.scrollDown()
 	}
 
 	/* TODO: must clean up the subscriptions to avoid memory leak */

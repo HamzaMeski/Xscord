@@ -24,7 +24,7 @@ interface ChatCompletionResponse {
 })
 export class ModelService {
 	private readonly API_URL = 'https://openrouter.ai/api/v1/chat/completions'
-	private readonly MODEL = 'deepseek/deepseek-r1:free'
+	private readonly MODEL = 'openchat/openchat-7b:free'
 
 	constructor(private http: HttpClient) {}
 
