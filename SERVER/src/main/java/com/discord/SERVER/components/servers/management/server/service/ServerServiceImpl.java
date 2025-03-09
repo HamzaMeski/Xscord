@@ -62,6 +62,7 @@ public class ServerServiceImpl implements ServerService{
                 .toList();
     }
 
+
     @Override
     public void deleteServer(Long serverId) {
         Server server = serverRepository.findById(serverId)

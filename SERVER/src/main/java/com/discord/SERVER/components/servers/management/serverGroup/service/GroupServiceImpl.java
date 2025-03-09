@@ -1,8 +1,9 @@
 package com.discord.SERVER.components.servers.management.serverGroup.service;
 
 import com.discord.SERVER.components.servers.management.server.repository.ServerRepository;
-import com.discord.SERVER.components.servers.management.serverGroup.dto.GroupRequestDTO;
+import com.discord.SERVER.components.servers.management.serverGroup.dto.CreateGroupRequestDTO;
 import com.discord.SERVER.components.servers.management.serverGroup.dto.GroupResponseDTO;
+import com.discord.SERVER.components.servers.management.serverGroup.dto.UpdateGroupRequestDTO;
 import com.discord.SERVER.components.servers.management.serverGroup.mapper.GroupMapper;
 import com.discord.SERVER.components.servers.management.serverGroup.repository.GroupRepository;
 import com.discord.SERVER.entities.Group;
@@ -21,7 +22,7 @@ public class GroupServiceImpl implements GroupService {
     private final ServerRepository serverRepository;
 
     @Override
-    public GroupResponseDTO createGroup(GroupRequestDTO groupRequestDTO) {
+    public GroupResponseDTO createGroup(CreateGroupRequestDTO groupRequestDTO) {
         Server server = serverRepository.findById(groupRequestDTO.serverId()).orElseThrow();
         Group group = groupMapper.toEntity(groupRequestDTO);
         group.setServer(server);
@@ -45,6 +46,22 @@ public class GroupServiceImpl implements GroupService {
         return groupRepository.findByServer(server).stream()
                 .map(groupMapper::toResponse)
                 .toList();
+    }
+
+    @Override
+    public GroupResponseDTO updateGroup(UpdateGroupRequestDTO requestDTO, Long groupId) {
+        Group group = groupRepository.findById(groupId)
+                .orElseThrow(() -> new ResourceNotFoundException("group doesn't exist with id: "+groupId));
+
+        if(requestDTO.name() != null) {
+            group.setName(requestDTO.name());
+        }
+
+        if(requestDTO.description() != null) {
+            group.setDescription(requestDTO.description());
+        }
+
+        return groupMapper.toResponse(groupRepository.save(group));
     }
 
     @Override
