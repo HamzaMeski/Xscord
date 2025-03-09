@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -23,7 +24,8 @@ public class Server {
     private Individual individual;
 
     @OneToMany(mappedBy = "server", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Group> groups;
+    @Builder.Default
+    private List<Group> groups = new ArrayList<>();
 
     private String name;
     private String description;
