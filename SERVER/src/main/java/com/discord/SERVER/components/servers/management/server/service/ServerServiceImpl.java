@@ -28,7 +28,6 @@ public class ServerServiceImpl implements ServerService{
         Server server = serverMapper.toEntity(requestDTO);
         server.setIndividual(serverOwner);
 
-        // first default group #general
         Group group1 = Group.builder()
                 .server(server)
                 .name("general")
@@ -36,7 +35,6 @@ public class ServerServiceImpl implements ServerService{
                 .build();
         server.getGroups().add(group1);
 
-        // second default group #games
         Group group2 = Group.builder()
                 .server(server)
                 .name("games")
@@ -44,7 +42,6 @@ public class ServerServiceImpl implements ServerService{
                 .build();
         server.getGroups().add(group2);
 
-        // third default group #music
         Group group3 = Group.builder()
                 .server(server)
                 .name("music")
