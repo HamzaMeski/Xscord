@@ -10,6 +10,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/servers")
@@ -25,7 +27,14 @@ public class ServerController {
         return new ResponseEntity<>(serverService.createServer(serverRequestDTO, serverOwnerId), HttpStatus.CREATED);
     }
 
-    @DeleteMapping("/delete/{serverId}")
+    @GetMapping("/individualServers")
+    public ResponseEntity<List<ServerResponseDTO>> getIndividualServers(
+            @CurrentUser UserPrincipal authUser
+    ) {
+        return ResponseEntity.ok(serverService.getIndividualServers(authUser.getId()));
+    }
+
+    @DeleteMapping("/{serverId}")
     public ResponseEntity<Void> deleteServer(
             @PathVariable Long serverId
     ) {

@@ -11,6 +11,8 @@ import com.discord.SERVER.exception.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class ServerServiceImpl implements ServerService{
@@ -27,6 +29,16 @@ public class ServerServiceImpl implements ServerService{
         server.setIndividual(serverOwner);
 
         return serverMapper.toResponse(serverRepository.save(server));
+    }
+
+    @Override
+    public List<ServerResponseDTO> getIndividualServers(Long ownerId) {
+        Individual serversOwner = individualRepository.findById(ownerId)
+                .orElseThrow(() -> new ResourceNotFoundException("there is no owner with id: "+ownerId));
+
+        return serverRepository.findByIndividual(serversOwner).stream()
+                .map(serverMapper::toResponse)
+                .toList();
     }
 
     @Override
