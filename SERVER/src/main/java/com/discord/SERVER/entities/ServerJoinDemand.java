@@ -4,8 +4,6 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @AllArgsConstructor
@@ -13,22 +11,27 @@ import java.util.List;
 @Setter
 @Getter
 @Builder
-@Table(name = "servers")
-public class Server {
+@Table(name = "servers_join_demands")
+public class ServerJoinDemand {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
     @ManyToOne()
-    @JoinColumn(name = "individual_id")
-    private Individual individual;
+    @JoinColumn(name = "server_id")
+    private Server server;
 
-    @OneToMany(mappedBy = "server", cascade = CascadeType.ALL, orphanRemoval = true)
+    @ManyToOne()
+    @JoinColumn(name = "receiver_id")
+    private Individual receiver;
+
     @Builder.Default
-    private List<Group> groups = new ArrayList<>();
+    @Column(name = "is_invitation_link")
+    private boolean isInvitationLink = false;
 
-    private String name;
-    private String description;
+    @Builder.Default
+    private boolean accepted = false;
+
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
