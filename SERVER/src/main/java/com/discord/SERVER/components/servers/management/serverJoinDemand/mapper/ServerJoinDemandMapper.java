@@ -11,6 +11,6 @@ public interface ServerJoinDemandMapper {
     ServerJoinDemand toEntity(ServerJoinDemandRequestDTO joinDemandRequest);
 
     @Mapping(target = "serverId", source = "server.id")
-    @Mapping(target = "receiverId", source = "receiver.d")
+    @Mapping(target = "receiverId", source = "receiver.id")
     ServerJoinDemandResponseDTO toResponse(ServerJoinDemand serverJoinDemand);
 }
