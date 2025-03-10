@@ -1,7 +1,7 @@
 import {Injectable} from "@angular/core";
 import {HttpClient} from "@angular/common/http";
 import {Observable} from "rxjs";
-import {peerMessageResponse} from "../../types/peerChat/peerChat.types";
+import {peerMessageResponse} from "../../../types/peerChat/peerChat.types";
 
 @Injectable({
 	providedIn: 'root'

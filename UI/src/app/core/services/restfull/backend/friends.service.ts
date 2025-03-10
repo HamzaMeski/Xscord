@@ -1,7 +1,7 @@
 import {Injectable} from "@angular/core";
 import {HttpClient} from "@angular/common/http";
 import {Observable} from "rxjs";
-import {FriendRowResponse, FriendShipDemandResponse} from "../../types/friends /friends.types";
+import {FriendRowResponse, FriendShipDemandResponse} from "../../../types/friends /friends.types";
 
 @Injectable({
 	providedIn: 'root'

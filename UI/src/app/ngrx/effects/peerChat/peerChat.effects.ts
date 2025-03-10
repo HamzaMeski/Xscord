@@ -9,7 +9,7 @@ import {
 	sendMessage
 } from "../../actions/peerChat/peerChat.actions";
 import {catchError, map, mergeMap, of, switchMap, tap} from "rxjs";
-import {PeerChatRestService} from "../../../core/services/restfull/peerChatRest.service";
+import {PeerChatRestService} from "../../../core/services/restfull/backend/peerChatRest.service";
 
 
 @Injectable()

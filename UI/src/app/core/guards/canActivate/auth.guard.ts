@@ -6,7 +6,7 @@ import {
 	MaybeAsync,
 	RouterStateSnapshot
 } from "@angular/router";
-import {AuthFacadeService} from "../../services/authFacade.service";
+import {AuthFacadeService} from "../../services/helpers/authFacade.service";
 
 
 @Injectable({

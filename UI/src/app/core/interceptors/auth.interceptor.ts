@@ -1,8 +1,8 @@
 import {Injectable} from "@angular/core";
 import {HttpEvent, HttpHandler, HttpInterceptor, HttpRequest} from "@angular/common/http";
 import {catchError, Observable, throwError} from "rxjs";
-import {AuthFacadeService} from "../services/authFacade.service";
-import {RedirectionService} from "../services/redirection.service";
+import {AuthFacadeService} from "../services/helpers/authFacade.service";
+import {RedirectionService} from "../services/helpers/redirection.service";
 
 @Injectable({
 	providedIn: 'root'
