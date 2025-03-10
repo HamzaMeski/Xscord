@@ -56,7 +56,7 @@ public class ServerJoinDemandServiceImpl implements ServerJoinDemandService {
     @Override
     public ServerJoinDemandResponseDTO acceptRequest(Long requestId) {
         ServerJoinDemand serverJoinDemand = serverJoinDemandRepository.findById(requestId)
-                .orElseThrow();
+                .orElseThrow(() -> new ResourceNotFoundException("request doesn't exist with id: "+requestId));
 
         serverJoinDemand.setAccepted(true);
 
@@ -66,7 +66,8 @@ public class ServerJoinDemandServiceImpl implements ServerJoinDemandService {
     @Override
     public void refuseRequest(Long requestId) {
         ServerJoinDemand serverJoinDemand = serverJoinDemandRepository.findById(requestId)
-                .orElseThrow();
+                .orElseThrow(() -> new ResourceNotFoundException("request doesn't exist with id: "+requestId));
+
         serverJoinDemandRepository.delete(serverJoinDemand);
     }
 }

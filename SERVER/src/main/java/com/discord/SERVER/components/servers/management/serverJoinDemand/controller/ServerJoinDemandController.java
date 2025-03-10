@@ -4,6 +4,7 @@ import com.discord.SERVER.components.servers.management.serverJoinDemand.dto.Ser
 import com.discord.SERVER.components.servers.management.serverJoinDemand.dto.ServerJoinDemandResponseDTO;
 import com.discord.SERVER.components.servers.management.serverJoinDemand.service.ServerJoinDemandService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/serverJoinRequest")
+@Slf4j
 public class ServerJoinDemandController {
     private final ServerJoinDemandService service;
 

@@ -6,6 +6,7 @@ public record ServerJoinDemandResponseDTO (
         Long id,
         Long serverId,
         Long receiverId,
+        boolean accepted,
         boolean isLinkInvitation,
         LocalDateTime createdAt,
         LocalDateTime updatedAt
