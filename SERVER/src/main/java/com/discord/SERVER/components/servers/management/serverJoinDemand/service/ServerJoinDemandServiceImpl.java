@@ -27,6 +27,8 @@ public class ServerJoinDemandServiceImpl implements ServerJoinDemandService {
         Server server = serverRepository.findById(request.serverId())
                 .orElseThrow(() -> new ResourceNotFoundException("server doesn't not exist with id: "+request.serverId()));
 
+//        if(serverRepository.doesIndividualHaveServer())
+
         Individual receiver = individualRepository.findById(request.receiverId())
                 .orElseThrow(() -> new ResourceNotFoundException("receiver doesn't not exist with id: "+request.receiverId()));
 
