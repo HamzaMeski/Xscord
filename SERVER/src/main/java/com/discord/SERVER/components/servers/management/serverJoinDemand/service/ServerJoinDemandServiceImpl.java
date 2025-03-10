@@ -12,10 +12,14 @@ import com.discord.SERVER.entities.ServerJoinDemand;
 import com.discord.SERVER.exception.DuplicateResourceException;
 import com.discord.SERVER.exception.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class ServerJoinDemandServiceImpl implements ServerJoinDemandService {
     private final ServerJoinDemandRepository serverJoinDemandRepository;
     private final ServerJoinDemandMapper serverJoinDemandMapper;
@@ -38,6 +42,7 @@ public class ServerJoinDemandServiceImpl implements ServerJoinDemandService {
 
         if(serverJoinDemandRepository.existsWithFalseAcceptation(server, receiver)){
             ServerJoinDemand serverJoinDemand = serverJoinDemandRepository.findByServerAndReceiver(server, receiver);
+            serverJoinDemand.setUpdatedAt(LocalDateTime.now());
             return serverJoinDemandMapper.toResponse(serverJoinDemandRepository.save(serverJoinDemand));
         }
 
