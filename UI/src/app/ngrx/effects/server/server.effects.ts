@@ -35,13 +35,14 @@ export class ServerEffects {
 				)
 			)
 		)
-		
+
 		this.getIndividualServers$ = createEffect(()=>
 			this.actions$.pipe(
 				ofType(getIndividualServers),
 				mergeMap(()  =>
 					this.serverService.getIndividualServers().pipe(
 						map(response => {
+							console.log('effect: ',response)
 							return getIndividualServersSuccess({response})
 						}),
 						catchError(err => {
