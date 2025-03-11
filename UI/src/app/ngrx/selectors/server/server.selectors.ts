@@ -2,6 +2,7 @@ import {createFeatureSelector, createSelector} from "@ngrx/store";
 import {ServersState} from "../../state/server/server.state";
 
 
+// create a server selector
 export const selectCreateServerState = createFeatureSelector<ServersState['newServer']>('createServer')
 
 export const selectCreateServerResponse = createSelector(
@@ -17,3 +18,21 @@ export const selectCreateServerError = createSelector(
 	(state: ServersState['newServer'])=> state.error
 )
 
+
+// get individual servers selector
+export const selectGetIndividualServersState = createFeatureSelector<ServersState['individualServers']>('getIndividualServers')
+
+export const selectGetIndividualServersResponse = createSelector(
+	selectGetIndividualServersState,
+	(state: ServersState['individualServers'])=> state.servers
+)
+
+export const selectGetIndividualServersLoading = createSelector(
+	selectGetIndividualServersState,
+	(state: ServersState['individualServers'])=> state.loading
+)
+
+export const selectGetIndividualServersFailure = createSelector(
+	selectGetIndividualServersState,
+	(state: ServersState['individualServers'])=> state.error
+)

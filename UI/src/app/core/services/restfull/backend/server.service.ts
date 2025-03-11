@@ -17,8 +17,8 @@ export class ServerService {
 		return this.http.post<ServerResponse>(`${this.API_URL}/servers/create`, serverRequest)
 	}
 
-	getIndividualServers(): Observable<ServerResponse> {
-		return this.http.post<ServerResponse>(`${this.API_URL}/servers/create`, {})
+	getIndividualServers(): Observable<ServerResponse[]> {
+		return this.http.post<ServerResponse[]>(`${this.API_URL}/servers/create`, {})
 	}
 
 	deleteServer(serverId: number): Observable<any> {
