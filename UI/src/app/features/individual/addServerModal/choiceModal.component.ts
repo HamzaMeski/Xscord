@@ -13,7 +13,7 @@ import {CommonModule} from "@angular/common";
 	],
 	template: `
         <section class="bg-[#313338] w-[440px] p-4 rounded-md">
-            <div class="flex justify-end mb-4">
+            <div (click)="closeModal()" class="flex justify-end mb-4">
                 <fa-icon [icon]="faXmark" class="text-gray-400 hover:text-gray-200 cursor-pointer text-xl"></fa-icon>
             </div>
 
@@ -68,5 +68,11 @@ export class ChoiceModalComponent {
 			createServerModalChecker: false,
 			joinServerModalChecker: true
 		})
+	}
+
+
+	@Output() close = new EventEmitter<boolean>()
+	closeModal() {
+		this.close.emit(true)
 	}
 }

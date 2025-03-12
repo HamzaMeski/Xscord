@@ -1,4 +1,4 @@
-import {Component, OnInit} from "@angular/core";
+import {Component, EventEmitter, Output} from "@angular/core";
 import {CommonModule} from "@angular/common";
 import {ChoiceModalComponent} from "./choiceModal.component";
 import {CreateServerComponent} from "./createServer.component";
@@ -15,15 +15,14 @@ import {JoinServerComponent} from "./joinServer.component";
 		JoinServerComponent,
 	],
 	template: `
-		<section >
-			<div>container</div>
-            <choice-modal *ngIf="choiceModalChecker" (checker)="updateCheckers($event)"></choice-modal>
-            <create-server-modal *ngIf="createServerModalChecker" (checker)="updateCheckers($event)"></create-server-modal>
-            <join-server-modal *ngIf="joinServerModalChecker" (checker)="updateCheckers($event)"></join-server-modal>
+		<section>
+            <choice-modal *ngIf="choiceModalChecker" (checker)="updateCheckers($event)" (close)="handleCloseModal($event)"></choice-modal>
+            <create-server-modal *ngIf="createServerModalChecker" (checker)="updateCheckers($event)" (close)="handleCloseModal($event)"></create-server-modal>
+            <join-server-modal *ngIf="joinServerModalChecker" (checker)="updateCheckers($event)" (close)="handleCloseModal($event)"></join-server-modal>
 		</section>
 	`
 })
-export class ServerContainerModal implements OnInit{
+export class ServerContainerModal{
 	choiceModalChecker: boolean = true
 	createServerModalChecker: boolean = false
 	joinServerModalChecker: boolean = false
@@ -39,7 +38,9 @@ export class ServerContainerModal implements OnInit{
 		this.joinServerModalChecker = event.joinServerModalChecker
 	}
 
-	ngOnInit() {
-		console.log('container init')
+
+	@Output() close = new EventEmitter<boolean>()
+	handleCloseModal(value: boolean) {
+		this.close.emit(true)
 	}
 }

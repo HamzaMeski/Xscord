@@ -12,7 +12,7 @@ import {FaIconComponent} from "@fortawesome/angular-fontawesome";
 	template: `
         <section class="bg-[#313338] w-[440px] p-4 rounded-md">
             <!-- Close button -->
-            <div class="flex justify-end mb-4">
+            <div (click)="closeModal()" class="flex justify-end mb-4">
                 <fa-icon [icon]="faXmark" class="text-gray-400 hover:text-gray-200 cursor-pointer text-xl"></fa-icon>
             </div>
 
@@ -87,11 +87,15 @@ export class JoinServerComponent {
 
 
 	back() {
-		console.log('back')
 		this.checker.emit({
 			choiceModalChecker: true,
 			createServerModalChecker: false,
 			joinServerModalChecker: false
 		})
+	}
+
+	@Output() close = new EventEmitter<boolean>()
+	closeModal() {
+		this.close.emit(true)
 	}
 }

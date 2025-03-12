@@ -33,8 +33,8 @@ import {ServerContainerModal} from "./addServerModal/serverContainerModal";
 	],
 	template: `
 		<main class="relative">
-            <section class="absolute bg-black/70 top-0 bottom-0 left-0 right-0 z-1 flex items-center justify-center">
-				<server-container-modal></server-container-modal>
+            <section *ngIf="showServerModal"  class="absolute bg-black/70 top-0 bottom-0 left-0 right-0 z-1 flex items-center justify-center">
+				<server-container-modal (close)="handleCloseModal($event)"></server-container-modal>
             </section>
             <section class="h-dvh flex">
                 <!-- sidebar section -->
@@ -58,8 +58,7 @@ import {ServerContainerModal} from "./addServerModal/serverContainerModal";
                     </div>
 
                     <div class="relative">
-                        <button class="w-14 h-14 bg-[#313338] rounded-full flex items-center justify-center cursor-pointer"
-                        >
+                        <button (click)="showServerModal = true" class="w-14 h-14 bg-[#313338] rounded-full flex items-center justify-center cursor-pointer">
                             <fa-icon [icon]="faPlus" class="text-xl"></fa-icon>
                         </button>
 
@@ -95,6 +94,8 @@ export class IndividualComponent implements OnInit, OnDestroy {
 	individualServersLoading$
 	individualServersError$
 
+	showServerModal: boolean = false
+
 	constructor(
 		private store: Store,
 		private router: Router
@@ -124,5 +125,10 @@ export class IndividualComponent implements OnInit, OnDestroy {
 	ngOnDestroy() {
 		this.destroy$.next()
 		this.destroy$.complete()
+	}
+
+	handleCloseModal(close: boolean) {
+		if(close==true) this.showServerModal = false
+		else this.showServerModal = true
 	}
 }
