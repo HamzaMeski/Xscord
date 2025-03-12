@@ -1,8 +1,9 @@
 import {Injectable} from "@angular/core";
 import {HttpEvent, HttpHandler, HttpInterceptor, HttpRequest} from "@angular/common/http";
 import {catchError, Observable, throwError} from "rxjs";
-import {AuthFacadeService} from "../services/authFacade.service";
-import {RedirectionService} from "../services/redirection.service";
+import {AuthFacadeService} from "../services/helpers/authFacade.service";
+import {RedirectionService} from "../services/helpers/redirection.service";
+import {openRouterApiKey} from "../../../environments/env";
 
 @Injectable({
 	providedIn: 'root'
@@ -32,7 +33,7 @@ export class AuthInterceptor implements HttpInterceptor {
 		if(req.url.valueOf() == 'https://openrouter.ai/api/v1/chat/completions') {
 			req = req.clone({
 				headers: req.headers
-					.set('Authorization', `Bearer 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`)
+					.set('Authorization', `Bearer ${openRouterApiKey}`)
 					.set('Content-Type', 'application/json')
 			})
 

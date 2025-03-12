@@ -20,10 +20,10 @@ import {
 	loadSelectedFriendSuccess
 } from "../../actions/friends/friends.actions";
 import {Actions, createEffect, ofType} from "@ngrx/effects";
-import {FriendsService} from "../../../core/services/restfull/friends.service";
+import {FriendsService} from "../../../core/services/restfull/backend/friends.service";
 import {catchError, map, mergeMap, of, tap} from "rxjs";
 import {Store} from "@ngrx/store";
-import {IndividualsService} from "../../../core/services/restfull/individuals.service";
+import {IndividualsService} from "../../../core/services/restfull/backend/individuals.service";
 
 
 @Injectable()

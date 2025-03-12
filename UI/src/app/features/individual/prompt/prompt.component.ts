@@ -4,7 +4,7 @@ import {faDiscord} from "@fortawesome/free-brands-svg-icons";
 import {FaIconComponent} from "@fortawesome/angular-fontawesome";
 import {FormsModule} from "@angular/forms";
 import {faCirclePlus} from "@fortawesome/free-solid-svg-icons";
-import {ModelService} from "../../../core/services/prompt/model.service";
+import {ModelService} from "../../../core/services/restfull/external/model.service";
 import {finalize} from "rxjs";
 import {Store} from "@ngrx/store";
 import {loadUserProfile} from "../../../ngrx/actions/userProfile/userProfile.actions";
@@ -13,7 +13,7 @@ import {selectUserProfile} from "../../../ngrx/selectors/userProfile/userProfile
 
 @Component({
 	standalone: true,
-	selector: 'prompt',
+	selector: 'external',
 	imports: [
 		CommonModule,
 		FaIconComponent,

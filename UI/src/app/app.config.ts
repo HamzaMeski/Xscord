@@ -27,6 +27,8 @@ import {
     peerChatHistoryReducers
 } from "./ngrx/reducers/peerChat/peerChat.reducers";
 import {PeerChatEffects} from "./ngrx/effects/peerChat/peerChat.effects";
+import {createServerReducers, getIndividualServersReducers} from "./ngrx/reducers/server/server.reducers";
+import {ServerEffects} from "./ngrx/effects/server/server.effects";
 
 
 export const appConfig: ApplicationConfig = {
@@ -51,7 +53,10 @@ export const appConfig: ApplicationConfig = {
             getIndividualFriends: getIndividualFriendsReducers,
             loadSelectedFriend: loadSelectedFriendReducers,
             peerChatConnection: peerChatConnectionReducers,
-            peerChatHistory:peerChatHistoryReducers
+            peerChatHistory:peerChatHistoryReducers,
+            createServer: createServerReducers,
+            getIndividualServers: getIndividualServersReducers,
+
         }),
         provideStoreDevtools({ maxAge: 25, logOnly: !isDevMode() }),
         provideEffects([
@@ -59,7 +64,8 @@ export const appConfig: ApplicationConfig = {
             LoginEffects,
             UserProfileEffects,
             FriendsEffects,
-            PeerChatEffects
+            PeerChatEffects,
+            ServerEffects
         ])
     ]
 };

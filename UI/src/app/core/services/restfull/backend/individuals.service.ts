@@ -1,14 +1,15 @@
 import {Injectable} from "@angular/core";
 import {HttpClient} from "@angular/common/http";
 import {Observable} from "rxjs";
-import {IndividualResponse} from "../../types/individual/individual.types";
+import {IndividualResponse} from "../../../types/individual/individual.types";
+import {serverApiUrl} from "../../../../../environments/env";
 
 
 @Injectable({
 	providedIn: 'root'
 })
 export class IndividualsService {
-	private readonly API_URL: string = 'http://localhost:8080/api/v1'
+	private readonly API_URL: string = serverApiUrl
 
 	constructor(private http: HttpClient) {
 	}
