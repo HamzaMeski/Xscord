@@ -38,9 +38,9 @@ import {ServerContainerModal} from "./addServerModal/serverContainerModal";
             </section>
             <section class="h-dvh flex">
                 <!-- sidebar section -->
-                <div class="flex flex-col items-center gap-2 p-2  w-20">
+                <div class="flex flex-col items-center gap-2 p-2 w-20 overflow-auto">
                     <a
-                        class="cursor-pointer w-16 h-16 bg-[#5865F2] rounded-3xl flex items-center justify-center"
+                        class="cursor-pointer w-14 h-14 shrink-0 bg-[#5865F2] rounded-3xl flex items-center justify-center"
                         routerLink="/individual/friend"
                     >
                         <fa-icon [icon]="faDiscord" class="text-3xl"></fa-icon>
@@ -68,7 +68,7 @@ import {ServerContainerModal} from "./addServerModal/serverContainerModal";
                         </div>
                     </div>
 
-                    <a routerLink="/individual/prompt" class="w-14 h-14 bg-gray-200 rounded-full flex items-center justify-center">
+                    <a routerLink="/individual/prompt" class="w-14 h-14 shrink-0 bg-gray-200 rounded-full flex items-center justify-center">
                         <img src="/AI/gpt.png" alt="" class="w-[93%]">
                     </a>
                 </div>
@@ -128,7 +128,7 @@ export class IndividualComponent implements OnInit, OnDestroy {
 	}
 
 	handleCloseModal(close: boolean) {
-		if(close==true) this.showServerModal = false
+		if(close) this.showServerModal = false
 		else this.showServerModal = true
 	}
 }

@@ -32,7 +32,6 @@ export class ServerContainerModal{
 		createServerModalChecker: boolean,
 		joinServerModalChecker: boolean
 	}){
-		console.log('emitted at parent')
 		this.choiceModalChecker = event.choiceModalChecker
 		this.createServerModalChecker = event.createServerModalChecker
 		this.joinServerModalChecker = event.joinServerModalChecker

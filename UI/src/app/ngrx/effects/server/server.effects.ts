@@ -22,8 +22,8 @@ export class ServerEffects {
 		this.createServer$ = createEffect(() =>
 			this.actions$.pipe(
 				ofType(createServer),
-				mergeMap(({request}) =>
-					this.serverService.createServer(request).pipe(
+				mergeMap(({request}) => {
+					return this.serverService.createServer(request).pipe(
 						map(response => {
 							return createServerSuccess({response})
 						}),
@@ -31,7 +31,7 @@ export class ServerEffects {
 							const error: string = err.error.message
 							return of(createServerFailure({error}))
 						})
-					)
+					)}
 				)
 			)
 		)
@@ -42,7 +42,6 @@ export class ServerEffects {
 				mergeMap(()  =>
 					this.serverService.getIndividualServers().pipe(
 						map(response => {
-							console.log('effect: ',response)
 							return getIndividualServersSuccess({response})
 						}),
 						catchError(err => {
