@@ -5,7 +5,12 @@ import {
 	createServer,
 	createServerFailure,
 	createServerSuccess,
-	getIndividualServers, getIndividualServersFailure, getIndividualServersSuccess
+	getIndividualServers,
+	getIndividualServersFailure,
+	getIndividualServersSuccess,
+	getServer,
+	getServerFailure,
+	getServerSuccess
 } from "../../actions/server/server.actions";
 import {catchError, map, mergeMap, of, tap} from "rxjs";
 import {Store} from "@ngrx/store";
@@ -16,6 +21,8 @@ export class ServerEffects {
 	createServer$
 	getIndividualServers$
 	getIndividualServersSuccess$
+
+	getServer$
 
 	constructor(
 		private actions$: Actions,
@@ -62,6 +69,23 @@ export class ServerEffects {
 				tap(()=> this.store.dispatch(getIndividualServers()))
 			),
 			{dispatch:false}
+		)
+
+		this.getServer$ = createEffect(() =>
+			this.actions$.pipe(
+				ofType(getServer),
+				mergeMap(({serverId})=> {
+					return this.serverService.getServer(serverId).pipe(
+						map(response=> {
+							return getServerSuccess({response})
+						}),
+						catchError(err => {
+							const error: string = err.error.message
+							return of(getServerFailure({error}))
+						})
+					)
+				})
+			)
 		)
 	}
 }
