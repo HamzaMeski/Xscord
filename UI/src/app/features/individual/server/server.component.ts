@@ -18,11 +18,7 @@ import {
 	selector: 'server',
 	imports: [
 		FaIconComponent,
-		AsyncPipe,
-		NgIf,
 		ReactiveFormsModule,
-		NgForOf,
-		RouterLink,
 		RouterOutlet
 	],
 	template:`
@@ -86,6 +82,6 @@ export class ServerComponent  {
 		this.serverLoading$ = this.store.select(selectServerLoading)
 		this.serverFailure$ = this.store.select(selectServerFailure)
 
-		
+
 	}
 }

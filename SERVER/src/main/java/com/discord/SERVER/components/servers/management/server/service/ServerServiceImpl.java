@@ -62,6 +62,13 @@ public class ServerServiceImpl implements ServerService{
                 .toList();
     }
 
+    @Override
+    public ServerResponseDTO getServer(Long serverId) {
+        Server server = serverRepository.findById(serverId)
+                .orElseThrow(() -> new ResourceNotFoundException("server doesn't found with id "+serverId));
+
+        return serverMapper.toResponse(server);
+    }
 
     @Override
     public void deleteServer(Long serverId) {

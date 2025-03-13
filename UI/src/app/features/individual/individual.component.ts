@@ -51,9 +51,11 @@ import {ServerContainerModal} from "./addServerModal/serverContainerModal";
                     <div *ngIf="individualServersLoading$ | async" class="w-14 h-14 bg-[#313338] rounded-full flex items-center justify-center">...</div>
                     <div *ngIf="!(individualServersLoading$ | async)">
                         <div *ngIf="individualServers$ | async as servers" class="flex flex-col gap-2">
-                            <a *ngFor="let server of servers" routerLink="/individual/server" class="w-14 h-14 bg-[#313338] rounded-full flex items-center justify-center">
-                                {{ server.name.substring(0,4) }}
-                            </a>
+	                        <div *ngFor="let server of servers" >
+                                <a [routerLink]="['/individual/server', server.id]" class="w-14 h-14 bg-[#313338] rounded-full flex items-center justify-center">
+                                    {{ server.name.substring(0,4) }}
+                                </a>
+	                        </div>
                         </div>
                     </div>
 

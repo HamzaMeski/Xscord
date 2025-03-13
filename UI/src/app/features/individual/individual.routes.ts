@@ -1,8 +1,6 @@
 import {Routes} from "@angular/router";
-import {ServerComponent} from "./server/server.component";
 import {IndividualComponent} from "./individual.component";
 import {PromptComponent} from "./prompt/prompt.component";
-
 
 export const individualRoutes: Routes = [
 	{
@@ -15,8 +13,9 @@ export const individualRoutes: Routes = [
 					.then(res => res.friendRoutes)
 			},
 			{
-				path: 'server',
-				component: ServerComponent
+				path: 'server/:serverId',
+				loadChildren: () => import('./server/server.routes')
+					.then(res => res.serverRoutes)
 			},
 			{
 				path: 'prompt',
