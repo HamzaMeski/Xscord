@@ -10,8 +10,7 @@ import {ServerRequest, ServerResponse} from "../../../types/server/server.types"
 export class ServerService {
 	private readonly API_URL: string = serverApiUrl
 
-	constructor(private http: HttpClient) {
-	}
+	constructor(private http: HttpClient) {}
 
 	createServer(serverRequest: ServerRequest): Observable<ServerResponse> {
 		return this.http.post<ServerResponse>(`${this.API_URL}/servers/create`, serverRequest)
@@ -22,7 +21,7 @@ export class ServerService {
 	}
 
 	getServer(serverId: number): Observable<ServerResponse> {
-		return this.http.get<ServerResponse>(`${this.API_URL}/servers/{serverId}`, {})
+		return this.http.get<ServerResponse>(`${this.API_URL}/servers/${serverId}`, {})
 	}
 
 	deleteServer(serverId: number): Observable<any> {

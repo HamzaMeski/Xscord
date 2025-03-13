@@ -1,17 +1,19 @@
-import {Component} from "@angular/core";
+import {Component, OnInit} from "@angular/core";
 import {FaIconComponent} from "@fortawesome/angular-fontawesome";
 import {AsyncPipe, NgForOf, NgIf} from "@angular/common";
 import {ReactiveFormsModule} from "@angular/forms";
 import {faDiscord} from "@fortawesome/free-brands-svg-icons";
 import {faCirclePlus, faGear, faUser, faUserPlus} from "@fortawesome/free-solid-svg-icons";
 
-import {Router, RouterLink, RouterOutlet} from "@angular/router";
+import {ActivatedRoute, Router, RouterLink, RouterOutlet} from "@angular/router";
 import {Store} from "@ngrx/store";
 import {
 	selectServerFailure,
 	selectServerLoading,
 	selectServerResponse
 } from "../../../ngrx/selectors/server/server.selectors";
+import {loadSelectedFriend} from "../../../ngrx/actions/friends/friends.actions";
+import {getServer} from "../../../ngrx/actions/server/server.actions";
 
 @Component({
 	standalone: true,
@@ -64,7 +66,7 @@ import {
         </section>
   	`
 })
-export class ServerComponent  {
+export class ServerComponent implements OnInit{
 	faDiscord = faDiscord
 	faCirclePlus = faCirclePlus
 	faGear = faGear
@@ -75,13 +77,19 @@ export class ServerComponent  {
 	serverFailure$
 
 	constructor(
+		private route: ActivatedRoute,
 		private store: Store,
 		private router: Router
 	) {
 		this.server$ = this.store.select(selectServerResponse)
 		this.serverLoading$ = this.store.select(selectServerLoading)
 		this.serverFailure$ = this.store.select(selectServerFailure)
+	}
 
-
+	ngOnInit(): void{
+		this.route.params.subscribe(params => {
+			const serverId = Number(params['serverId'])
+			this.store.dispatch(getServer({serverId}))
+		})
 	}
 }

@@ -32,7 +32,7 @@ public class GroupController {
     }
 
     @GetMapping("/server/{serverId}")
-    public ResponseEntity<List<GroupResponseDTO>> create(
+    public ResponseEntity<List<GroupResponseDTO>> getServerGroups(
             @PathVariable Long serverId
     ) {
         return ResponseEntity.ok(groupService.getServerGroups(serverId));

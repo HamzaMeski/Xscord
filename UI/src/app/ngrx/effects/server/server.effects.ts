@@ -15,7 +15,6 @@ import {
 import {catchError, map, mergeMap, of, tap} from "rxjs";
 import {Store} from "@ngrx/store";
 
-
 @Injectable()
 export class ServerEffects {
 	createServer$
@@ -77,6 +76,7 @@ export class ServerEffects {
 				mergeMap(({serverId})=> {
 					return this.serverService.getServer(serverId).pipe(
 						map(response=> {
+							console.log('Effect get server: ', response)
 							return getServerSuccess({response})
 						}),
 						catchError(err => {
