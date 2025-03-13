@@ -7,17 +7,20 @@ import {
 	createServerSuccess,
 	getIndividualServers, getIndividualServersFailure, getIndividualServersSuccess
 } from "../../actions/server/server.actions";
-import {catchError, map, mergeMap, of} from "rxjs";
+import {catchError, map, mergeMap, of, tap} from "rxjs";
+import {Store} from "@ngrx/store";
 
 
 @Injectable()
 export class ServerEffects {
 	createServer$
 	getIndividualServers$
+	getIndividualServersSuccess$
 
 	constructor(
 		private actions$: Actions,
-		private serverService: ServerService
+		private serverService: ServerService,
+		private store: Store
 	) {
 		this.createServer$ = createEffect(() =>
 			this.actions$.pipe(
@@ -51,6 +54,14 @@ export class ServerEffects {
 					)
 				)
 			)
+		)
+
+		this.getIndividualServersSuccess$ = createEffect(()=>
+			this.actions$.pipe(
+				ofType(createServerSuccess),
+				tap(()=> this.store.dispatch(getIndividualServers()))
+			),
+			{dispatch:false}
 		)
 	}
 }
