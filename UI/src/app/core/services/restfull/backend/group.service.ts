@@ -2,7 +2,7 @@ import {Injectable} from "@angular/core";
 import {serverApiUrl} from "../../../../../environments/env";
 import {HttpClient} from "@angular/common/http";
 import {Observable} from "rxjs";
-import {GroupResponse} from "../../../types/server/group.types";
+import {GroupResponse} from "../../../types/group/group.types";
 
 
 @Injectable({

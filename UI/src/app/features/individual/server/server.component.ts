@@ -18,6 +18,7 @@ import {CommonModule, NgForOf} from "@angular/common";
 	standalone: true,
 	selector: 'server',
 	imports: [
+		RouterLink,
 		FaIconComponent,
 		ReactiveFormsModule,
 		RouterOutlet,
@@ -33,17 +34,25 @@ import {CommonModule, NgForOf} from "@angular/common";
 		            <p>TEXT CHANNELS</p>
                     <fa-icon [icon]="faCirclePlus" class="text-white cursor-pointer"></fa-icon>
                 </div>
+	            <div *ngIf="(serverGroupsLoading$ | async)">
+		            ...
+	            </div>
 	            
-	            <div *ngIf="serverGroups$ | async as groups">
-                    <div *ngFor="let group of groups" class="flex items-center justify-between bg-gray-500 m-1">
-                        <p># {{ group.name }} </p>
-                        <div class="">
-                            <fa-icon [icon]="faUserPlus" class="text-white cursor-pointer"></fa-icon>
-                            <fa-icon [icon]="faGear" class="text-white pl-2 cursor-pointer"></fa-icon>
-                        </div>
+	            <div *ngIf="!(serverGroupsLoading$ | async)">
+                    <div *ngIf="serverGroups$ | async as groups">
+	                    <div *ngFor="let group of groups" >
+                            <a
+                                [routerLink]="['/individual/server', group.serverId,'chat', group.id]"
+                                class="flex items-center justify-between bg-gray-500 m-1 cursor-pointer">
+                                <p># {{ group.name }} </p>
+                                <div class="">
+                                    <fa-icon [icon]="faUserPlus" class="text-white cursor-pointer"></fa-icon>
+                                    <fa-icon [icon]="faGear" class="text-white pl-2 cursor-pointer"></fa-icon>
+                                </div>
+                            </a>
+	                    </div>
                     </div>
 	            </div>
-               
 	            
                 <!-- User Profile Bar -->
                 <div class="mt-auto bg-[#232428] p-2 flex items-center justify-between">
