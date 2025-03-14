@@ -14,12 +14,11 @@ import {
 	selectUserProfileError,
 	selectUserProfileLoading
 } from "../../../ngrx/selectors/userProfile/userProfile.selectors";
-import {loadUserProfile} from "../../../ngrx/actions/userProfile/userProfile.actions";
 import {getIndividualFriends} from "../../../ngrx/actions/friends/friends.actions";
 import {AsyncPipe, NgForOf, NgIf} from "@angular/common";
 import {IndividualResponse} from "../../../core/types/individual/individual.types";
-import {filter, takeUntil} from "rxjs";
-import {connectToChat, loadChatHistory} from "../../../ngrx/actions/peerChat/peerChat.actions";
+import {filter} from "rxjs";
+import {loadChatHistory} from "../../../ngrx/actions/peerChat/peerChat.actions";
 
 
 @Component({
@@ -176,7 +175,6 @@ export class FriendComponent implements OnInit {
 				this.store.dispatch(loadChatHistory({individual2Id: state['friendId']}))
 			}
 		})
-
 	}
 
 	ngOnInit(): void {

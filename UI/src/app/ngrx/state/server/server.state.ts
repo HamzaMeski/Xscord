@@ -14,6 +14,12 @@ export interface ServersState {
 		error: string | null
 	},
 
+	server: {
+		server: ServerResponse | null,
+		loading: boolean,
+		error: string | null
+	},
+
 	deletion: {
 		loading: boolean,
 		error: string | null
@@ -31,6 +37,12 @@ export const initialServersState: ServersState = {
 		servers: null,
 		loading: false,
 		error:null
+	},
+
+	server: {
+		server: null,
+		loading: false,
+		error: null
 	},
 
 	deletion: {

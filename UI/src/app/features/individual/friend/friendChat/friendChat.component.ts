@@ -163,8 +163,8 @@ import {IndividualResponse} from "../../../../core/types/individual/individual.t
                              class="flex flex-col flex-1 min-h-0">
                             <!-- Messages Container -->
                             <div #messageContainer class="flex-1 overflow-y-auto">
-                                <!-- Welcome Message -->
                                 <div class="px-4 py-6">
+                                    <!-- Welcome Message -->
                                     <div class="mb-8">
                                         <div class="w-20 h-20 mb-4 overflow-hidden rounded-full bg-[#5865F2] flex items-center justify-center">
                                             <fa-icon [icon]="faDiscord" class="text-4xl text-white"></fa-icon>

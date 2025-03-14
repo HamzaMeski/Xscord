@@ -5,25 +5,34 @@ import {
 	createServer,
 	createServerFailure,
 	createServerSuccess,
-	getIndividualServers, getIndividualServersFailure, getIndividualServersSuccess
+	getIndividualServers,
+	getIndividualServersFailure,
+	getIndividualServersSuccess,
+	getServer,
+	getServerFailure,
+	getServerSuccess
 } from "../../actions/server/server.actions";
-import {catchError, map, mergeMap, of} from "rxjs";
-
+import {catchError, map, mergeMap, of, tap} from "rxjs";
+import {Store} from "@ngrx/store";
 
 @Injectable()
 export class ServerEffects {
 	createServer$
 	getIndividualServers$
+	getIndividualServersSuccess$
+
+	getServer$
 
 	constructor(
 		private actions$: Actions,
-		private serverService: ServerService
+		private serverService: ServerService,
+		private store: Store
 	) {
 		this.createServer$ = createEffect(() =>
 			this.actions$.pipe(
 				ofType(createServer),
-				mergeMap(({request}) =>
-					this.serverService.createServer(request).pipe(
+				mergeMap(({request}) => {
+					return this.serverService.createServer(request).pipe(
 						map(response => {
 							return createServerSuccess({response})
 						}),
@@ -31,7 +40,7 @@ export class ServerEffects {
 							const error: string = err.error.message
 							return of(createServerFailure({error}))
 						})
-					)
+					)}
 				)
 			)
 		)
@@ -42,7 +51,6 @@ export class ServerEffects {
 				mergeMap(()  =>
 					this.serverService.getIndividualServers().pipe(
 						map(response => {
-							console.log('effect: ',response)
 							return getIndividualServersSuccess({response})
 						}),
 						catchError(err => {
@@ -51,6 +59,32 @@ export class ServerEffects {
 						})
 					)
 				)
+			)
+		)
+
+		this.getIndividualServersSuccess$ = createEffect(()=>
+			this.actions$.pipe(
+				ofType(createServerSuccess),
+				tap(()=> this.store.dispatch(getIndividualServers()))
+			),
+			{dispatch:false}
+		)
+
+		this.getServer$ = createEffect(() =>
+			this.actions$.pipe(
+				ofType(getServer),
+				mergeMap(({serverId})=> {
+					return this.serverService.getServer(serverId).pipe(
+						map(response=> {
+							console.log('Effect get server: ', response)
+							return getServerSuccess({response})
+						}),
+						catchError(err => {
+							const error: string = err.error.message
+							return of(getServerFailure({error}))
+						})
+					)
+				})
 			)
 		)
 	}

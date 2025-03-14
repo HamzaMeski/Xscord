@@ -4,7 +4,12 @@ import {
 	createServer,
 	createServerFailure,
 	createServerSuccess,
-	getIndividualServers, getIndividualServersFailure, getIndividualServersSuccess
+	getIndividualServers,
+	getIndividualServersFailure,
+	getIndividualServersSuccess,
+	getServer,
+	getServerFailure,
+	getServerSuccess
 } from "../../actions/server/server.actions";
 
 
@@ -54,6 +59,32 @@ export const getIndividualServersReducers  = createReducer(
 	on(getIndividualServersFailure, (state, action) => ({
 		...state,
 		servers: null,
+		loading: false,
+		error: action.error
+	})),
+)
+
+
+export const getServerReducers = createReducer(
+	initialServersState.server,
+
+	on(getServer, (state)=> ({
+		...state,
+		server: null,
+		loading: true,
+		error: null
+	})),
+
+	on(getServerSuccess, (state, action)=> ({
+		...state,
+		server: action.response,
+		loading: false,
+		error: null
+	})),
+
+	on(getServerFailure, (state, action)=> ({
+		...state,
+		server: null,
 		loading: false,
 		error: action.error
 	})),

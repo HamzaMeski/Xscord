@@ -36,3 +36,22 @@ export const selectGetIndividualServersFailure = createSelector(
 	selectGetIndividualServersState,
 	(state: ServersState['individualServers'])=> state.error
 )
+
+
+// get server
+export const selectServerState = createFeatureSelector<ServersState['server']>('getServer')
+
+export const selectServerResponse = createSelector(
+	selectServerState,
+	(state: ServersState['server'])=> state.server
+)
+
+export const selectServerLoading = createSelector(
+	selectServerState,
+	(state: ServersState['server'])=> state.loading
+)
+
+export const selectServerFailure = createSelector(
+	selectServerState,
+	(state: ServersState['server'])=> state.error
+)
