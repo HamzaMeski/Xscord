@@ -35,6 +35,8 @@ import {
 import {ServerEffects} from "./ngrx/effects/server/server.effects";
 import {getServerGroupsReducers} from "./ngrx/reducers/group/group.reducers";
 import {GroupEffects} from "./ngrx/effects/group/group.effects";
+import {sendServerInvitationReducer} from "./ngrx/reducers/server/serverInvitation.reducers";
+import {ServerInvitationEffects} from "./ngrx/effects/server/serverInvitation.effects";
 
 
 export const appConfig: ApplicationConfig = {
@@ -64,6 +66,7 @@ export const appConfig: ApplicationConfig = {
             getIndividualServers: getIndividualServersReducers,
             getServer: getServerReducers,
             getServerGroups: getServerGroupsReducers,
+            sendServerInvitation: sendServerInvitationReducer,
 
         }),
         provideStoreDevtools({ maxAge: 25, logOnly: !isDevMode() }),
@@ -74,7 +77,8 @@ export const appConfig: ApplicationConfig = {
             FriendsEffects,
             PeerChatEffects,
             ServerEffects,
-            GroupEffects
+            GroupEffects,
+            ServerInvitationEffects
         ])
     ]
 };

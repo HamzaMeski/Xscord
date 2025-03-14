@@ -12,7 +12,7 @@ import {
 	selectServerGroupsResponse
 } from "../../../ngrx/selectors/group/group.selectors";
 import {getServerGroups} from "../../../ngrx/actions/group/group.actions";
-import {CommonModule, NgForOf} from "@angular/common";
+import {CommonModule} from "@angular/common";
 
 @Component({
 	standalone: true,

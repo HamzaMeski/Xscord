@@ -1,14 +1,12 @@
 import {Injectable} from "@angular/core";
 import {Actions, createEffect, ofType} from "@ngrx/effects";
 import {ServerService} from "../../../core/services/restfull/backend/server.service";
-import {Store} from "@ngrx/store";
 import {
 	sendServerInvitation,
 	sendServerInvitationError,
 	sendServerInvitationSuccess
 } from "../../actions/server/serverInvitation.actions";
 import {catchError, map, mergeMap, of} from "rxjs";
-import {createServerFailure} from "../../actions/server/server.actions";
 
 
 @Injectable()
@@ -23,6 +21,7 @@ export class ServerInvitationEffects {
 			this.actions$.pipe(
 				ofType(sendServerInvitation),
 				mergeMap(({request}) => {
+					console.log('EFFECT request: ', request)
 					return this.serverService.sendServerJoinInvitation(request).pipe(
 						map(response=> {
 							return sendServerInvitationSuccess({response})
@@ -35,7 +34,5 @@ export class ServerInvitationEffects {
 				})
 			)
 		)
-
-
 	}
 }

@@ -33,7 +33,7 @@ export class ServerService {
 
 	// Connection to backend FriendShipDemandController
 	sendServerJoinInvitation(request: ServerJoinDemandRequest): Observable<ServerJoinDemandResponse> {
-		return this.http.post<ServerJoinDemandResponse>(`${this.API_URL}/serverJoinRequest/send`, {request})
+		return this.http.post<ServerJoinDemandResponse>(`${this.API_URL}/serverJoinRequest/send`,request)
 	}
 
 	acceptRequest(requestId: number): Observable<ServerJoinDemandResponse> {
