@@ -1,6 +1,5 @@
 import {Injectable} from "@angular/core";
 import {Actions, createEffect, ofType} from "@ngrx/effects";
-import {Store} from "@ngrx/store";
 import {getServerGroups, getServerGroupsFailure, getServerGroupsSuccess} from "../../actions/group/group.actions";
 import {catchError, map, mergeMap, of} from "rxjs";
 import {GroupService} from "../../../core/services/restfull/backend/group.service";
@@ -13,14 +12,15 @@ export class GroupEffects {
 	constructor(
 		private actions$: Actions,
 		private groupService: GroupService,
-		private store: Store
 	) {
 		this.serverGroups$ = createEffect(()=>
 			this.actions$.pipe(
 				ofType(getServerGroups),
 				mergeMap(({serverId}) => {
+					console.log('despatching (serverId): ', serverId)
 					return this.groupService.getServerGroups(serverId).pipe(
 						map(response => {
+							console.log('Effect: ', response)
 							return getServerGroupsSuccess({response})
 						}),
 						catchError(err => {

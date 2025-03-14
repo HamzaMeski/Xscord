@@ -4,17 +4,17 @@ import {GroupsState} from "../../state/group/group.state";
 // get server groups
 export const selectServerGroupsState = createFeatureSelector<GroupsState['getServerGroups']>('getServerGroups')
 
-export const selectServerGroupResponse = createSelector(
+export const selectServerGroupsResponse = createSelector(
 	selectServerGroupsState,
 	(state:GroupsState['getServerGroups'])=> state.groups
 )
 
-export const selectServerGroupLoading = createSelector(
+export const selectServerGroupsLoading = createSelector(
 	selectServerGroupsState,
 	(state:GroupsState['getServerGroups'])=> state.loading
 )
 
-export const selectServerGroupFailure = createSelector(
+export const selectServerGroupsFailure = createSelector(
 	selectServerGroupsState,
 	(state:GroupsState['getServerGroups'])=> state.error
 )

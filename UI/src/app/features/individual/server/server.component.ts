@@ -1,6 +1,5 @@
 import {Component, OnInit} from "@angular/core";
 import {FaIconComponent} from "@fortawesome/angular-fontawesome";
-import {AsyncPipe, NgForOf, NgIf} from "@angular/common";
 import {ReactiveFormsModule} from "@angular/forms";
 import {faDiscord} from "@fortawesome/free-brands-svg-icons";
 import {faCirclePlus, faGear, faUser, faUserPlus} from "@fortawesome/free-solid-svg-icons";
@@ -8,12 +7,12 @@ import {faCirclePlus, faGear, faUser, faUserPlus} from "@fortawesome/free-solid-
 import {ActivatedRoute, Router, RouterLink, RouterOutlet} from "@angular/router";
 import {Store} from "@ngrx/store";
 import {
-	selectServerFailure,
-	selectServerLoading,
-	selectServerResponse
-} from "../../../ngrx/selectors/server/server.selectors";
-import {loadSelectedFriend} from "../../../ngrx/actions/friends/friends.actions";
-import {getServer} from "../../../ngrx/actions/server/server.actions";
+	selectServerGroupsFailure,
+	selectServerGroupsLoading,
+	selectServerGroupsResponse
+} from "../../../ngrx/selectors/group/group.selectors";
+import {getServerGroups} from "../../../ngrx/actions/group/group.actions";
+import {CommonModule, NgForOf} from "@angular/common";
 
 @Component({
 	standalone: true,
@@ -21,7 +20,8 @@ import {getServer} from "../../../ngrx/actions/server/server.actions";
 	imports: [
 		FaIconComponent,
 		ReactiveFormsModule,
-		RouterOutlet
+		RouterOutlet,
+		CommonModule
 	],
 	template:`
         <section class="flex h-full w-full">
@@ -34,13 +34,16 @@ import {getServer} from "../../../ngrx/actions/server/server.actions";
                     <fa-icon [icon]="faCirclePlus" class="text-white cursor-pointer"></fa-icon>
                 </div>
 	            
-                <div class="flex items-center justify-between bg-gray-500 m-1">
-                    <p># Chelling </p>
-                    <div class="">
-                        <fa-icon [icon]="faUserPlus" class="text-white cursor-pointer"></fa-icon>
-                        <fa-icon [icon]="faGear" class="text-white pl-2 cursor-pointer"></fa-icon>
+	            <div *ngIf="serverGroups$ | async as groups">
+                    <div *ngFor="let group of groups" class="flex items-center justify-between bg-gray-500 m-1">
+                        <p># {{ group.name }} </p>
+                        <div class="">
+                            <fa-icon [icon]="faUserPlus" class="text-white cursor-pointer"></fa-icon>
+                            <fa-icon [icon]="faGear" class="text-white pl-2 cursor-pointer"></fa-icon>
+                        </div>
                     </div>
-                </div>
+	            </div>
+               
 	            
                 <!-- User Profile Bar -->
                 <div class="mt-auto bg-[#232428] p-2 flex items-center justify-between">
@@ -72,24 +75,26 @@ export class ServerComponent implements OnInit{
 	faGear = faGear
 	faUserPlus = faUserPlus
 
-	server$
-	serverLoading$
-	serverFailure$
+	serverGroups$
+	serverGroupsLoading$
+	serverGroupsFailure$
 
 	constructor(
 		private route: ActivatedRoute,
-		private store: Store,
-		private router: Router
+		private store: Store
 	) {
-		this.server$ = this.store.select(selectServerResponse)
-		this.serverLoading$ = this.store.select(selectServerLoading)
-		this.serverFailure$ = this.store.select(selectServerFailure)
+		this.serverGroups$ = this.store.select(selectServerGroupsResponse)
+		this.serverGroupsLoading$ = this.store.select(selectServerGroupsLoading)
+		this.serverGroupsFailure$ = this.store.select(selectServerGroupsFailure)
 	}
 
 	ngOnInit(): void{
 		this.route.params.subscribe(params => {
 			const serverId = Number(params['serverId'])
-			this.store.dispatch(getServer({serverId}))
+			this.store.dispatch(getServerGroups({serverId}))
 		})
+
+
+		this.serverGroups$.subscribe(val => console.log('GROUPS: ',val))
 	}
 }

@@ -9,21 +9,21 @@ export const getServerGroupsReducers = createReducer(
 
 	on(getServerGroups, (state) => ({
 		...state,
-		group: null,
+		groups: null,
 		loading: true,
 		error: null
 	})),
 
 	on(getServerGroupsSuccess, (state, action) => ({
 		...state,
-		group: action.response,
+		groups: action.response,
 		loading: false,
 		error: null
 	})),
 
 	on(getServerGroupsFailure, (state, action) => ({
 		...state,
-		group: null,
+		groups: null,
 		loading: false,
 		error: action.error
 	}))
