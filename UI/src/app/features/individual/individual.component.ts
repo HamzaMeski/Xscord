@@ -19,6 +19,8 @@ import {
 	selectGetIndividualServersResponse
 } from "../../ngrx/selectors/server/server.selectors";
 import {ServerContainerModal} from "./addServerModal/serverContainerModal";
+import {addPersonComponent} from "./server/addPerson/addPerson.component";
+import {selectOpenAddPersonModal} from "../../ngrx/selectors/modal/addPerson.selectors";
 
 @Component({
 	standalone: true,
@@ -29,13 +31,17 @@ import {ServerContainerModal} from "./addServerModal/serverContainerModal";
 		RouterLink,
 		CommonModule,
 		ServerContainerModal,
+		addPersonComponent,
 
 	],
 	template: `
 		<main class="relative">
             <section *ngIf="showServerModal"  class="absolute bg-black/70 top-0 bottom-0 left-0 right-0 z-1 flex items-center justify-center">
-				<server-container-modal (close)="handleCloseModal($event)"></server-container-modal>
+				<server-container-modal (close)="handleCloseServerModal($event)"></server-container-modal>
             </section>
+            <section *ngIf="showAddPersonModal" class="absolute bg-black/70 top-0 bottom-0 left-0 right-0 z-1 flex items-center justify-center">
+				<add-person></add-person>
+			</section>
             <section class="h-dvh flex">
                 <!-- sidebar section -->
                 <div class="flex flex-col items-center gap-2 p-2 w-20 overflow-auto">
@@ -97,6 +103,8 @@ export class IndividualComponent implements OnInit, OnDestroy {
 	individualServersError$
 
 	showServerModal: boolean = false
+	showAddPersonModal$
+	showAddPersonModal: boolean = false
 
 	constructor(
 		private store: Store,
@@ -117,20 +125,26 @@ export class IndividualComponent implements OnInit, OnDestroy {
 		this.individualServers$ = this.store.select(selectGetIndividualServersResponse)
 		this.individualServersLoading$ = this.store.select(selectGetIndividualServersLoading)
 		this.individualServersError$ = this.store.select(selectGetIndividualServersFailure)
+
+		this.showAddPersonModal$ = this.store.select(selectOpenAddPersonModal)
 	}
 
 	ngOnInit() {
 		this.store.dispatch(loadUserProfile())
 		this.store.dispatch(getIndividualServers())
+		this.showAddPersonModal$.subscribe(val=>this.showAddPersonModal = val)
+	}
+
+	handleCloseServerModal(close: boolean) {
+		this.showServerModal = !close;
+	}
+
+	handleCloseAddPersonModal(close: boolean) {
+		this.showAddPersonModal = !close;
 	}
 
 	ngOnDestroy() {
 		this.destroy$.next()
 		this.destroy$.complete()
-	}
-
-	handleCloseModal(close: boolean) {
-		if(close) this.showServerModal = false
-		else this.showServerModal = true
 	}
 }

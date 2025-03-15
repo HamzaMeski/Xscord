@@ -1,9 +1,12 @@
-import {Component} from "@angular/core";
+import {Component, OnInit} from "@angular/core";
 import {FaIconComponent} from "@fortawesome/angular-fontawesome";
 import {AsyncPipe, NgIf} from "@angular/common";
 import {ReactiveFormsModule} from "@angular/forms";
 import {faDiscord} from "@fortawesome/free-brands-svg-icons";
 import {faCirclePlus} from "@fortawesome/free-solid-svg-icons";
+import {Store} from "@ngrx/store";
+import {sendServerInvitation} from "../../../../ngrx/actions/server/serverInvitation.actions";
+import {ServerJoinDemandRequest} from "../../../../core/types/server/serverJoinDemand.types";
 
 
 @Component({
@@ -94,7 +97,15 @@ import {faCirclePlus} from "@fortawesome/free-solid-svg-icons";
     </section>
   `
 })
-export class GroupChatComponent  {
+export class GroupChatComponent implements OnInit{
 	faDiscord = faDiscord
 	faCirclePlus = faCirclePlus
+
+	constructor(
+		private store: Store
+	){}
+
+	ngOnInit(): void {
+
+	}
 }

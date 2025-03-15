@@ -17,10 +17,8 @@ export class GroupEffects {
 			this.actions$.pipe(
 				ofType(getServerGroups),
 				mergeMap(({serverId}) => {
-					console.log('despatching (serverId): ', serverId)
 					return this.groupService.getServerGroups(serverId).pipe(
 						map(response => {
-							console.log('Effect: ', response)
 							return getServerGroupsSuccess({response})
 						}),
 						catchError(err => {

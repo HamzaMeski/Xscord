@@ -1,5 +1,5 @@
 import {createAction, props} from "@ngrx/store";
-import {GroupResponse} from "../../../core/types/server/group.types";
+import {GroupResponse} from "../../../core/types/group/group.types";
 
 // get server groups
 export const getServerGroups = createAction(

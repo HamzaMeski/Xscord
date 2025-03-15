@@ -1,4 +1,4 @@
-import {GroupResponse} from "../../../core/types/server/group.types";
+import {GroupResponse} from "../../../core/types/group/group.types";
 
 
 export interface GroupsState {
