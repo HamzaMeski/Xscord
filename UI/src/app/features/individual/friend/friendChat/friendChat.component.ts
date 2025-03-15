@@ -30,6 +30,15 @@ import {
 } from "../../../../ngrx/actions/peerChat/peerChat.actions";
 import {FormsModule} from "@angular/forms";
 import {IndividualResponse} from "../../../../core/types/individual/individual.types";
+import {getReceiverInvitations} from "../../../../ngrx/actions/server/serverInvitation.actions";
+import {peerMessageResponse} from "../../../../core/types/peerChat/peerChat.types";
+import {ServerJoinDemandResponse} from "../../../../core/types/server/serverJoinDemand.types";
+import {
+	selectReceiverInvitationsError,
+	selectReceiverInvitationsLoading,
+	selectReceiverInvitationsResponse
+} from "../../../../ngrx/selectors/server/serverInvitation.selectors";
+import {combineLatest} from "rxjs";
 
 
 @Component({
@@ -185,8 +194,8 @@ import {IndividualResponse} from "../../../../core/types/individual/individual.t
                                     </div>
 
                                     <!-- Messages -->
-                                    <div *ngIf="conversation$ | async as messages">
-                                        <div *ngFor="let message of messages">
+                                    <div *ngFor="let message of messages">
+	                                    <div *ngIf="isPeerMessage(message)">
                                             <div *ngIf="messages.length" class="group hover:bg-[#2E3035] px-4 -mx-4 py-1">
                                                 <!-- Current User Message -->
                                                 <div *ngIf="message.sender.id == currentAuthUserId"
@@ -222,7 +231,11 @@ import {IndividualResponse} from "../../../../core/types/individual/individual.t
                                                     </div>
                                                 </div>
                                             </div>
+
                                         </div>
+	                                    <div *ngIf="!isPeerMessage(message)">
+		                                    invitation request
+	                                    </div>
                                     </div>
                                 </div>
                             </div>
@@ -303,6 +316,16 @@ export class FriendChatComponent  implements OnInit, AfterViewChecked, AfterView
 	selectedFriend!: IndividualResponse
 	submittedMessageId!: number
 
+	receiverInvitations$
+	receiverInvitationsLoading$
+	receiverInvitationsError$
+
+	messages!: (peerMessageResponse | ServerJoinDemandResponse)[]
+
+	isPeerMessage(message: peerMessageResponse | ServerJoinDemandResponse): message is peerMessageResponse {
+		return 'content' in message && 'sender' in message
+	}
+
 	@ViewChild('messageContainer') private messageContainer!: ElementRef
 	scrollDown(): void {
 		this.messageContainer.nativeElement.scrollTop = this.messageContainer.nativeElement.scrollHeight
@@ -323,6 +346,10 @@ export class FriendChatComponent  implements OnInit, AfterViewChecked, AfterView
 		this.conversation$ = this.store.select(selectPeerChatHistoryConversation)
 		this.chatHistoryLoading$ = this.store.select(selectPeerChatHistoryLoading)
 		this.chatHistoryError$ = this.store.select(selectPeerChatHistoryError)
+
+		this.receiverInvitations$ = this.store.select(selectReceiverInvitationsResponse)
+		this.receiverInvitationsLoading$ = this.store.select(selectReceiverInvitationsLoading)
+		this.receiverInvitationsError$ = this.store.select(selectReceiverInvitationsError)
 	}
 
 	ngOnInit() {
@@ -345,7 +372,19 @@ export class FriendChatComponent  implements OnInit, AfterViewChecked, AfterView
 			}
 		})
 
-		this.store.dispatch(loadChatHistory({individual2Id: this.selectedFriendId}))
+
+		this.currentAuthUser$.subscribe((user)=> {
+			if(user) {
+				this.store.dispatch(loadChatHistory({individual2Id: this.selectedFriendId}))
+				this.store.dispatch(getReceiverInvitations({receiverId: user.id}))
+			}
+		})
+
+		combineLatest([this.conversation$, this.receiverInvitations$]).subscribe(([conversation, receiverInvitations]) => {
+			// TODO: I set that checker because in the state receiverInvitations have | null, I have to fixe that later
+			if(receiverInvitations) this.messages = [...conversation, ...receiverInvitations]
+			console.log(this.messages)
+		})
 
 		this.conversation$.subscribe(
 			con=>{

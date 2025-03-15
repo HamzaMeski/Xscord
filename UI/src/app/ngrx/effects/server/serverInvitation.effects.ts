@@ -40,8 +40,10 @@ export class ServerInvitationEffects {
 			this.actions$.pipe(
 				ofType(getReceiverInvitations),
 				mergeMap(({receiverId}) => {
+					console.log('receiverId: ', receiverId)
 					return this.serverService.getReceiverInvitations(receiverId).pipe(
 						map(response=> {
+							console.log(response)
 							return getReceiverInvitationsSuccess({response})
 						}),
 						catchError(err => {

@@ -135,12 +135,6 @@ export class IndividualComponent implements OnInit, OnDestroy {
 		this.store.dispatch(loadUserProfile())
 		this.store.dispatch(getIndividualServers())
 		this.showAddPersonModal$.subscribe(val=>this.showAddPersonModal = val)
-
-		this.store.dispatch(getReceiverInvitations({receiverId: 4}))
-		this.store.select(selectReceiverInvitationsResponse).subscribe(val => {
-			console.log('HERE:')
-			console.log(val)
-		})
 	}
 
 	handleCloseServerModal(close: boolean) {
