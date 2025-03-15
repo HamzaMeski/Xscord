@@ -30,7 +30,6 @@ export class ServerService {
 		return this.http.delete(`${this.API_URL}/servers/{${serverId}`, {})
 	}
 
-
 	// Connection to backend FriendShipDemandController
 	sendServerJoinInvitation(request: ServerJoinDemandRequest): Observable<ServerJoinDemandResponse> {
 		return this.http.post<ServerJoinDemandResponse>(`${this.API_URL}/serverJoinRequest/send`,request)
@@ -42,5 +41,9 @@ export class ServerService {
 
 	refuseRequest(requestId: number): Observable<any> {
 		return this.http.delete(`${this.API_URL}/serverJoinRequest/refuse/${requestId}`, {})
+	}
+
+	getReceiverInvitations(receiverId: number): Observable<ServerJoinDemandResponse[]> {
+		return this.http.get<ServerJoinDemandResponse[]>(`${this.API_URL}/serverJoinRequest/receiverInvitations/${receiverId}`, {})
 	}
 }

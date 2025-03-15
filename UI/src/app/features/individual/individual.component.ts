@@ -21,6 +21,8 @@ import {
 import {ServerContainerModal} from "./addServerModal/serverContainerModal";
 import {addPersonComponent} from "./server/addPerson/addPerson.component";
 import {selectOpenAddPersonModal} from "../../ngrx/selectors/modal/addPerson.selectors";
+import {selectReceiverInvitationsResponse} from "../../ngrx/selectors/server/serverInvitation.selectors";
+import {getReceiverInvitations} from "../../ngrx/actions/server/serverInvitation.actions";
 
 @Component({
 	standalone: true,
@@ -133,6 +135,12 @@ export class IndividualComponent implements OnInit, OnDestroy {
 		this.store.dispatch(loadUserProfile())
 		this.store.dispatch(getIndividualServers())
 		this.showAddPersonModal$.subscribe(val=>this.showAddPersonModal = val)
+
+		this.store.dispatch(getReceiverInvitations({receiverId: 4}))
+		this.store.select(selectReceiverInvitationsResponse).subscribe(val => {
+			console.log('HERE:')
+			console.log(val)
+		})
 	}
 
 	handleCloseServerModal(close: boolean) {
