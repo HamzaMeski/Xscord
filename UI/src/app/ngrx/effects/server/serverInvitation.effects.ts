@@ -21,7 +21,6 @@ export class ServerInvitationEffects {
 			this.actions$.pipe(
 				ofType(sendServerInvitation),
 				mergeMap(({request}) => {
-					console.log('EFFECT request: ', request)
 					return this.serverService.sendServerJoinInvitation(request).pipe(
 						map(response=> {
 							return sendServerInvitationSuccess({response})

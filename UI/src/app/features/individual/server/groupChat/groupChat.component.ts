@@ -106,13 +106,6 @@ export class GroupChatComponent implements OnInit{
 	){}
 
 	ngOnInit(): void {
-		console.log('Here')
-		const request: ServerJoinDemandRequest = {
-			serverId: 22,
-			receiverId: 1,
-			isInvitationLink: false
-		}
 
-		this.store.dispatch(sendServerInvitation({request}))
 	}
 }

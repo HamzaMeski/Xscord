@@ -22,7 +22,6 @@ export class AppComponent implements OnInit{
 
     ngOnInit() {
       if(localStorage.getItem('authUserToken')) {
-        console.log('profile loaded...')
         this.store.dispatch(connectToChat())
       }
     }

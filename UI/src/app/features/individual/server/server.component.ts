@@ -1,4 +1,4 @@
-import {Component, OnInit} from "@angular/core";
+import {Component, EventEmitter, OnInit, Output} from "@angular/core";
 import {FaIconComponent} from "@fortawesome/angular-fontawesome";
 import {ReactiveFormsModule} from "@angular/forms";
 import {faDiscord} from "@fortawesome/free-brands-svg-icons";
@@ -13,6 +13,7 @@ import {
 } from "../../../ngrx/selectors/group/group.selectors";
 import {getServerGroups} from "../../../ngrx/actions/group/group.actions";
 import {CommonModule} from "@angular/common";
+import {openAddPersonModal} from "../../../ngrx/actions/modal/addPerson.actions";
 
 @Component({
 	standalone: true,
@@ -46,7 +47,7 @@ import {CommonModule} from "@angular/common";
                                 class="flex items-center justify-between bg-gray-500 m-1 cursor-pointer">
                                 <p># {{ group.name }} </p>
                                 <div class="">
-                                    <fa-icon [icon]="faUserPlus" class="text-white cursor-pointer"></fa-icon>
+                                    <fa-icon (click)="setShowAddPersonModalToTrue()" [icon]="faUserPlus" class="text-white cursor-pointer"></fa-icon>
                                     <fa-icon [icon]="faGear" class="text-white pl-2 cursor-pointer"></fa-icon>
                                 </div>
                             </a>
@@ -102,8 +103,10 @@ export class ServerComponent implements OnInit{
 			const serverId = Number(params['serverId'])
 			this.store.dispatch(getServerGroups({serverId}))
 		})
+	}
 
-
-		this.serverGroups$.subscribe(val => console.log('GROUPS: ',val))
+	setShowAddPersonModalToTrue() {
+		console.log('dispatching')
+		this.store.dispatch(openAddPersonModal())
 	}
 }

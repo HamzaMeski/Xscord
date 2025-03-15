@@ -10,7 +10,7 @@ import {
 	getServer,
 	getServerFailure,
 	getServerSuccess
-} from "../../actions/server/server.actions";
+} from "../../actions/server/server.actions"
 
 
 export const createServerReducers = createReducer(
