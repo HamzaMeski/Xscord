@@ -3,7 +3,6 @@ import {ServerJoinDemandRequest, ServerJoinDemandResponse} from "../../../core/t
 
 export interface ServerInvitationState {
 	send: {
-		invitationRequest: ServerJoinDemandRequest | null,
 		invitationResponse: ServerJoinDemandResponse | null,
 		loading: boolean,
 		error: string | null
@@ -23,7 +22,6 @@ export interface ServerInvitationState {
 
 export const initialServerInvitationState: ServerInvitationState = {
 	send: {
-		invitationRequest: null,
 		invitationResponse: null,
 		loading: false,
 		error: null

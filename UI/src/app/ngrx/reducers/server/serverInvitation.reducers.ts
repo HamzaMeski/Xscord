@@ -12,7 +12,6 @@ export const sendServerInvitationReducer = createReducer(
 
 	on(sendServerInvitation, (state, action)=> ({
 		...state,
-		invitationRequest: action.request,
 		invitationResponse: null,
 		loading: true,
 		error: null
@@ -20,17 +19,15 @@ export const sendServerInvitationReducer = createReducer(
 
 	on(sendServerInvitationSuccess, (state, action)=> ({
 		...state,
-		invitationRequest: null,
 		invitationResponse: action.response,
-		loading: true,
+		loading: false,
 		error: null
 	})),
 
 	on(sendServerInvitationError, (state)=> ({
 		...state,
-		invitationRequest: null,
 		invitationResponse: null,
-		loading: true,
+		loading: false,
 		error: null
 	})),
 )

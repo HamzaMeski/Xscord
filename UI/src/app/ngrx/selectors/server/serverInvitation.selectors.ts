@@ -15,5 +15,3 @@ export const selectSendServerInvitationError = createSelector(
 	selectSendServerInvitationState,
 	(state: ServerInvitationState['send'])=>state.error
 )
-
-
