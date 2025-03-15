@@ -16,6 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -30,8 +31,6 @@ public class ServerJoinDemandServiceImpl implements ServerJoinDemandService {
     public ServerJoinDemandResponseDTO sendRequest(ServerJoinDemandRequestDTO request) {
         Server server = serverRepository.findById(request.serverId())
                 .orElseThrow(() -> new ResourceNotFoundException("server doesn't not exist with id: "+request.serverId()));
-
-//        if(serverRepository.doesIndividualHaveServer())
 
         Individual receiver = individualRepository.findById(request.receiverId())
                 .orElseThrow(() -> new ResourceNotFoundException("receiver doesn't not exist with id: "+request.receiverId()));
@@ -61,6 +60,16 @@ public class ServerJoinDemandServiceImpl implements ServerJoinDemandService {
         serverJoinDemand.setAccepted(true);
 
         return serverJoinDemandMapper.toResponse(serverJoinDemandRepository.save(serverJoinDemand));
+    }
+
+    @Override
+    public List<ServerJoinDemandResponseDTO> getIndividualInvitations(Long receiverId) {
+        Individual receiver = individualRepository.findById(receiverId)
+                .orElseThrow(() -> new ResourceNotFoundException("receiver doesn't not exist with id: "+receiverId));
+
+        return serverJoinDemandRepository.individualInvitationsWithFalseAcceptation(receiver).stream()
+                .map(serverJoinDemandMapper::toResponse)
+                .toList();
     }
 
     @Override

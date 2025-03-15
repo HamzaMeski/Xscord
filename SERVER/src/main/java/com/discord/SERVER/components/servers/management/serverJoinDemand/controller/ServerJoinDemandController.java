@@ -9,6 +9,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/serverJoinRequest")
@@ -28,6 +30,13 @@ public class ServerJoinDemandController {
             @PathVariable Long requestId
     ) {
         return ResponseEntity.ok(service.acceptRequest(requestId));
+    }
+
+    @GetMapping("/receiverInvitations/{receiverId}")
+    public ResponseEntity<List<ServerJoinDemandResponseDTO>> getIndividualInvitations(
+            @PathVariable Long receiverId
+    ) {
+        return ResponseEntity.ok(service.getIndividualInvitations(receiverId));
     }
 
     @DeleteMapping("/refuse/{requestId}")
