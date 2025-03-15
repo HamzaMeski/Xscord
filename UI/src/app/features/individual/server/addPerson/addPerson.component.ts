@@ -18,6 +18,10 @@ import {getIndividualFriends} from "../../../../ngrx/actions/friends/friends.act
 import {ServerJoinDemandRequest} from "../../../../core/types/server/serverJoinDemand.types";
 import {ActivatedRoute, Router} from "@angular/router";
 import {sendServerInvitation} from "../../../../ngrx/actions/server/serverInvitation.actions";
+import {sendMessage} from "../../../../ngrx/actions/peerChat/peerChat.actions";
+import {ServerResponse} from "../../../../core/types/server/server.types";
+import {selectServerResponse} from "../../../../ngrx/selectors/server/server.selectors";
+import {getServer} from "../../../../ngrx/actions/server/server.actions";
 
 @Component({
 	standalone: true,
@@ -150,6 +154,9 @@ export class addPersonComponent implements OnInit{
 
 	serverId!: number
 
+	server$
+	server!: ServerResponse | null
+
 	constructor(
 		private store: Store,
 		private router: Router
@@ -161,6 +168,8 @@ export class addPersonComponent implements OnInit{
 		this.currentAuthUser$ = this.store.select(selectUserProfile)
 		this.currentAuthUserLoading$ = this.store.select(selectUserProfileLoading)
 		this.currentAuthUserError$ = this.store.select(selectUserProfileError)
+
+		this.server$ = this.store.select(selectServerResponse)
 	}
 
 	closeModal() {
@@ -179,16 +188,28 @@ export class addPersonComponent implements OnInit{
 		// TODO: this approach is fragile it must be changed: Hm
 		const urlSegments = this.router.url.split('/')
 		this.serverId = Number(urlSegments[3])
+		this.store.dispatch(getServer({serverId: this.serverId}))
+
+		this.server$.subscribe(val => this.server = val)
 	}
 
 	sendServerInvitation(receiverId: number, ) {
 		const request :ServerJoinDemandRequest = {
 			serverId: this.serverId,
 			receiverId: receiverId,
-			isInvitationLink: false
+			invitationLink: this.generateInvitationLink()
 		}
 
-		console.log(request)
 		this.store.dispatch(sendServerInvitation({request}))
+		this.store.dispatch(sendMessage({
+			request: {
+				receiverId: receiverId,
+				content: this.generateInvitationLink()
+			}
+		}))
+	}
+
+	generateInvitationLink() {
+		return `https://discord.gg/${this.server?.name}/join/${new Date()}`
 	}
 }

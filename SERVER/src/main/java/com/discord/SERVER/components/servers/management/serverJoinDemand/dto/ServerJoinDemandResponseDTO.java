@@ -5,9 +5,10 @@ import java.time.LocalDateTime;
 public record ServerJoinDemandResponseDTO (
         Long id,
         Long serverId,
+        String serverName,
         Long receiverId,
         boolean accepted,
-        boolean isLinkInvitation,
+        String invitationLink,
         LocalDateTime createdAt,
         LocalDateTime updatedAt
 ){}

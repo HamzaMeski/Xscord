@@ -9,5 +9,5 @@ public record ServerJoinDemandRequestDTO(
         @NotNull(message = "receiver id is required")
         Long receiverId,
 
-        boolean isInvitationLink
+        String invitationLink
 ){}
