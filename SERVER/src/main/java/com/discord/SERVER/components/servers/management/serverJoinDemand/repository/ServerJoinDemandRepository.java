@@ -35,4 +35,12 @@ public interface ServerJoinDemandRepository extends JpaRepository<ServerJoinDema
         (sjd.receiver = :receiver AND sjd.accepted = false)
     """)
     List<ServerJoinDemand> individualInvitationsWithFalseAcceptation(Individual receiver);
+
+    @Query("""
+        SELECT sjd.receiver
+        FROM ServerJoinDemand sjd
+        WHERE
+        (sjd.server = :server AND sjd.accepted = true)
+    """)
+    List<Individual> getServerMembers(Server server);
 }

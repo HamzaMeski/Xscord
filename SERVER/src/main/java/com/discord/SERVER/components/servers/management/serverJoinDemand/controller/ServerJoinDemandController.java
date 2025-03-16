@@ -1,5 +1,6 @@
 package com.discord.SERVER.components.servers.management.serverJoinDemand.controller;
 
+import com.discord.SERVER.components.individual.dto.IndividualResponseDTO;
 import com.discord.SERVER.components.servers.management.serverJoinDemand.dto.ServerJoinDemandRequestDTO;
 import com.discord.SERVER.components.servers.management.serverJoinDemand.dto.ServerJoinDemandResponseDTO;
 import com.discord.SERVER.components.servers.management.serverJoinDemand.service.ServerJoinDemandService;
@@ -37,6 +38,13 @@ public class ServerJoinDemandController {
             @PathVariable Long receiverId
     ) {
         return ResponseEntity.ok(service.getIndividualInvitations(receiverId));
+    }
+
+    @GetMapping("/serverMembers/{serverId}")
+    public ResponseEntity<List<IndividualResponseDTO>> getServerMembers(
+            @PathVariable Long serverId
+    ) {
+        return ResponseEntity.ok(service.getServerMembers(serverId));
     }
 
     @DeleteMapping("/refuse/{requestId}")
