@@ -1,4 +1,5 @@
 import {ServerJoinDemandResponse} from "../../../core/types/server/serverJoinDemand.types";
+import {IndividualResponse} from "../../../core/types/individual/individual.types";
 
 
 export interface ServerInvitationState {
@@ -21,6 +22,12 @@ export interface ServerInvitationState {
 
 	receiverInvitations: {
 		invitationsResponse: ServerJoinDemandResponse[] | null,
+		loading: boolean,
+		error: string | null
+	},
+
+	serverMembers: {
+		members: IndividualResponse[] | null,
 		loading: boolean,
 		error: string | null
 	}
@@ -46,6 +53,12 @@ export const initialServerInvitationState: ServerInvitationState = {
 
 	receiverInvitations: {
 		invitationsResponse: null,
+		loading: false,
+		error: null
+	},
+
+	serverMembers: {
+		members: null,
 		loading: false,
 		error: null
 	}

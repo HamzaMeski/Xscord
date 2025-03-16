@@ -4,6 +4,7 @@ import {HttpClient} from "@angular/common/http";
 import {Observable} from "rxjs";
 import {ServerRequest, ServerResponse} from "../../../types/server/server.types";
 import {ServerJoinDemandRequest, ServerJoinDemandResponse} from "../../../types/server/serverJoinDemand.types";
+import {IndividualResponse} from "../../../types/individual/individual.types";
 
 @Injectable({
 	providedIn: 'root'
@@ -45,5 +46,9 @@ export class ServerService {
 
 	getReceiverInvitations(receiverId: number): Observable<ServerJoinDemandResponse[]> {
 		return this.http.get<ServerJoinDemandResponse[]>(`${this.API_URL}/serverJoinRequest/receiverInvitations/${receiverId}`, {})
+	}
+
+	getServerMembers(serverId: number): Observable<IndividualResponse[]> {
+		return this.http.get<IndividualResponse[]>(`${this.API_URL}/serverJoinRequest/serverMembers/${serverId}`, {})
 	}
 }

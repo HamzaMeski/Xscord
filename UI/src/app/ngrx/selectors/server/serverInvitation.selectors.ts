@@ -1,5 +1,6 @@
 import {createFeatureSelector, createSelector} from "@ngrx/store";
 import {ServerInvitationState} from "../../state/server/serverInvitation.state";
+import {getServerMembersReducer} from "../../reducers/server/serverInvitation.reducers";
 
 
 export const selectSendServerInvitationState = createFeatureSelector<ServerInvitationState['send']>('sendServerInvitation')
@@ -49,3 +50,17 @@ export const selectAcceptServerInvitationError = createSelector(
 )
 
 
+
+export const selectServerMembersState = createFeatureSelector<ServerInvitationState['serverMembers']>('getServerMembers')
+export const selectServerMembersResponse = createSelector(
+	selectServerMembersState,
+	(state: ServerInvitationState['serverMembers'])=>state.members
+)
+export const selectServerMembersLoading = createSelector(
+	selectServerMembersState,
+	(state: ServerInvitationState['serverMembers'])=>state.loading
+)
+export const selectServerMembersError = createSelector(
+	selectServerMembersState,
+	(state: ServerInvitationState['serverMembers'])=>state.error
+)

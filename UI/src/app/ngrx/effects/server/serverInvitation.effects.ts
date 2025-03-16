@@ -2,8 +2,14 @@ import {Injectable} from "@angular/core";
 import {Actions, createEffect, ofType} from "@ngrx/effects";
 import {ServerService} from "../../../core/services/restfull/backend/server.service";
 import {
-	acceptServerInvitation, acceptServerInvitationError, acceptServerInvitationSuccess,
-	getReceiverInvitations, getReceiverInvitationsError, getReceiverInvitationsSuccess,
+	acceptServerInvitation,
+	acceptServerInvitationError,
+	acceptServerInvitationSuccess,
+	getReceiverInvitations,
+	getReceiverInvitationsError,
+	getReceiverInvitationsSuccess,
+	getServerMembers, getServerMembersError,
+	getServerMembersSuccess,
 	sendServerInvitation,
 	sendServerInvitationError,
 	sendServerInvitationSuccess
@@ -16,6 +22,7 @@ export class ServerInvitationEffects {
 	sendServerInvitation$
     getReceiverInvitations$
 	acceptServerInvitation$
+	serverMembers$
 
 	constructor(
 		private actions$: Actions,
@@ -42,10 +49,8 @@ export class ServerInvitationEffects {
 			this.actions$.pipe(
 				ofType(getReceiverInvitations),
 				mergeMap(({receiverId}) => {
-					console.log('receiverId: ', receiverId)
 					return this.serverService.getReceiverInvitations(receiverId).pipe(
 						map(response=> {
-							console.log(response)
 							return getReceiverInvitationsSuccess({response})
 						}),
 						catchError(err => {
@@ -68,6 +73,23 @@ export class ServerInvitationEffects {
 						catchError(err => {
 							const error: string = err.error.message
 							return of(acceptServerInvitationError({error}))
+						})
+					)
+				})
+			)
+		)
+
+		this.serverMembers$ = catchError(() =>
+			this.actions$.pipe(
+				ofType(getServerMembers),
+				mergeMap(({serverId}) => {
+					return this.serverService.getServerMembers(serverId).pipe(
+						map(response=> {
+							return getServerMembersSuccess({response})
+						}),
+						catchError(err => {
+							const error: string = err.error.message
+							return of(getServerMembersError({error}))
 						})
 					)
 				})
