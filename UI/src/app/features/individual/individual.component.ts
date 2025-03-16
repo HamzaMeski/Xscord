@@ -21,6 +21,8 @@ import {
 import {ServerContainerModal} from "./addServerModal/serverContainerModal";
 import {addPersonComponent} from "./server/addPerson/addPerson.component";
 import {selectOpenAddPersonModal} from "../../ngrx/selectors/modal/addPerson.selectors";
+import {selectReceiverInvitationsResponse} from "../../ngrx/selectors/server/serverInvitation.selectors";
+import {getReceiverInvitations} from "../../ngrx/actions/server/serverInvitation.actions";
 
 @Component({
 	standalone: true,

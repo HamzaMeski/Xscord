@@ -25,9 +25,8 @@ public class ServerJoinDemand {
     @JoinColumn(name = "receiver_id")
     private Individual receiver;
 
-    @Builder.Default
-    @Column(name = "is_invitation_link")
-    private boolean isInvitationLink = false;
+    @Column(name = "invitation_link")
+    private String invitationLink;
 
     @Builder.Default
     private boolean accepted = false;

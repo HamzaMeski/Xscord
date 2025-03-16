@@ -1,6 +1,8 @@
 import {createReducer, on} from "@ngrx/store";
 import {initialServerInvitationState} from "../../state/server/serverInvitation.state";
 import {
+	acceptServerInvitation, acceptServerInvitationError, acceptServerInvitationSuccess,
+	getReceiverInvitations, getReceiverInvitationsError, getReceiverInvitationsSuccess,
 	sendServerInvitation,
 	sendServerInvitationError,
 	sendServerInvitationSuccess
@@ -12,7 +14,6 @@ export const sendServerInvitationReducer = createReducer(
 
 	on(sendServerInvitation, (state, action)=> ({
 		...state,
-		invitationRequest: action.request,
 		invitationResponse: null,
 		loading: true,
 		error: null
@@ -20,17 +21,67 @@ export const sendServerInvitationReducer = createReducer(
 
 	on(sendServerInvitationSuccess, (state, action)=> ({
 		...state,
-		invitationRequest: null,
 		invitationResponse: action.response,
+		loading: false,
+		error: null
+	})),
+
+	on(sendServerInvitationError, (state, action)=> ({
+		...state,
+		invitationResponse: null,
+		loading: false,
+		error: action.error
+	})),
+)
+
+
+export const getReceiverInvitationsReducer = createReducer(
+	initialServerInvitationState.receiverInvitations,
+
+	on(getReceiverInvitations, (state) => ({
+		...state,
+		invitationsResponse: null,
 		loading: true,
 		error: null
 	})),
 
-	on(sendServerInvitationError, (state)=> ({
+	on(getReceiverInvitationsSuccess, (state, action) => ({
 		...state,
-		invitationRequest: null,
+		invitationsResponse: action.response,
+		loading: false,
+		error: null
+	})),
+
+	on(getReceiverInvitationsError, (state, action) => ({
+		...state,
+		invitationsResponse: null,
+		loading: false,
+		error: action.error
+	})),
+)
+
+
+export const acceptServerInvitationReducer = createReducer(
+	initialServerInvitationState.accept,
+
+	on(acceptServerInvitation, (state, action)=> ({
+		...state,
 		invitationResponse: null,
 		loading: true,
 		error: null
+	})),
+
+	on(acceptServerInvitationSuccess, (state, action)=> ({
+		...state,
+		invitationResponse: action.response,
+		loading: false,
+		error: null
+	})),
+
+	on(acceptServerInvitationError, (state, action)=> ({
+		...state,
+		invitationResponse: null,
+		loading: false,
+		error: action.error
 	})),
 )

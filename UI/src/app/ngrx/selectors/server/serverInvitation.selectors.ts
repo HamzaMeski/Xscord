@@ -17,3 +17,35 @@ export const selectSendServerInvitationError = createSelector(
 )
 
 
+
+export const selectReceiverInvitationsState = createFeatureSelector<ServerInvitationState['receiverInvitations']>('getReceiverInvitations')
+export const selectReceiverInvitationsResponse = createSelector(
+	selectReceiverInvitationsState,
+	(state: ServerInvitationState['receiverInvitations'])=> state.invitationsResponse
+)
+export const selectReceiverInvitationsLoading = createSelector(
+	selectReceiverInvitationsState,
+	(state: ServerInvitationState['receiverInvitations'])=> state.loading
+)
+export const selectReceiverInvitationsError = createSelector(
+	selectReceiverInvitationsState,
+	(state: ServerInvitationState['receiverInvitations'])=> state.error
+)
+
+
+
+export const selectAcceptServerInvitationState = createFeatureSelector<ServerInvitationState['accept']>('acceptServerInvitation')
+export const selectAcceptServerInvitationResponse = createSelector(
+	selectAcceptServerInvitationState,
+	(state: ServerInvitationState['accept'])=>state.invitationResponse
+)
+export const selectAcceptServerInvitationLoading = createSelector(
+	selectAcceptServerInvitationState,
+	(state: ServerInvitationState['accept'])=>state.loading
+)
+export const selectAcceptServerInvitationError = createSelector(
+	selectAcceptServerInvitationState,
+	(state: ServerInvitationState['accept'])=>state.error
+)
+
+

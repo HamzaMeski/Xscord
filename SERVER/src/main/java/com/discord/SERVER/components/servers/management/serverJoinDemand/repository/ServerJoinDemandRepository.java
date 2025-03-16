@@ -6,6 +6,8 @@ import com.discord.SERVER.entities.ServerJoinDemand;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
+import java.util.List;
+
 public interface ServerJoinDemandRepository extends JpaRepository<ServerJoinDemand, Long> {
 
     @Query("""
@@ -25,4 +27,12 @@ public interface ServerJoinDemandRepository extends JpaRepository<ServerJoinDema
     boolean existsWithTrueAcceptation(Server server, Individual receiver);
 
     ServerJoinDemand findByServerAndReceiver(Server server, Individual receiver);
+
+    @Query("""
+        SELECT sjd
+        FROM ServerJoinDemand sjd
+        WHERE
+        (sjd.receiver = :receiver AND sjd.accepted = false)
+    """)
+    List<ServerJoinDemand> individualInvitationsWithFalseAcceptation(Individual receiver);
 }

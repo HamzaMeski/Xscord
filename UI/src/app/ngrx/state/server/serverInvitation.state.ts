@@ -1,9 +1,8 @@
-import {ServerJoinDemandRequest, ServerJoinDemandResponse} from "../../../core/types/server/serverJoinDemand.types";
+import {ServerJoinDemandResponse} from "../../../core/types/server/serverJoinDemand.types";
 
 
 export interface ServerInvitationState {
 	send: {
-		invitationRequest: ServerJoinDemandRequest | null,
 		invitationResponse: ServerJoinDemandResponse | null,
 		loading: boolean,
 		error: string | null
@@ -18,12 +17,17 @@ export interface ServerInvitationState {
 	refuse: {
 		loading: boolean,
 		error: string | null
+	},
+
+	receiverInvitations: {
+		invitationsResponse: ServerJoinDemandResponse[] | null,
+		loading: boolean,
+		error: string | null
 	}
 }
 
 export const initialServerInvitationState: ServerInvitationState = {
 	send: {
-		invitationRequest: null,
 		invitationResponse: null,
 		loading: false,
 		error: null
@@ -36,6 +40,12 @@ export const initialServerInvitationState: ServerInvitationState = {
 	},
 
 	refuse: {
+		loading: false,
+		error: null
+	},
+
+	receiverInvitations: {
+		invitationsResponse: null,
 		loading: false,
 		error: null
 	}

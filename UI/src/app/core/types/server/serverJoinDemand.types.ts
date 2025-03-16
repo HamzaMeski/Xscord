@@ -2,14 +2,15 @@
 export interface ServerJoinDemandRequest {
 	serverId: number,
 	receiverId: number,
-	isInvitationLink: boolean
+	invitationLink: string
 }
 
 export interface ServerJoinDemandResponse {
 	id: number,
 	serverId: number,
+	serverName: string,
 	receiverId: number,
-	isInvitationLink: boolean,
+	invitationLink: string,
 	accepted: boolean,
 	createdAt: Date,
 	updatedAt: Date

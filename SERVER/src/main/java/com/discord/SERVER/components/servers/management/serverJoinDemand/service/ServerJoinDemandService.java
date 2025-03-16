@@ -3,8 +3,11 @@ package com.discord.SERVER.components.servers.management.serverJoinDemand.servic
 import com.discord.SERVER.components.servers.management.serverJoinDemand.dto.ServerJoinDemandRequestDTO;
 import com.discord.SERVER.components.servers.management.serverJoinDemand.dto.ServerJoinDemandResponseDTO;
 
+import java.util.List;
+
 public interface ServerJoinDemandService {
     ServerJoinDemandResponseDTO sendRequest(ServerJoinDemandRequestDTO request);
-    ServerJoinDemandResponseDTO acceptRequest(Long requestId);
+    ServerJoinDemandResponseDTO acceptRequest(ServerJoinDemandRequestDTO request);
+    List<ServerJoinDemandResponseDTO> getIndividualInvitations(Long receiverId);
     void refuseRequest(Long requestId);
 }
