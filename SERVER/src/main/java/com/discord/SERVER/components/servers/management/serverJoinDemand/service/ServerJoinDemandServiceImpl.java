@@ -53,9 +53,14 @@ public class ServerJoinDemandServiceImpl implements ServerJoinDemandService {
     }
 
     @Override
-    public ServerJoinDemandResponseDTO acceptRequest(Long requestId) {
-        ServerJoinDemand serverJoinDemand = serverJoinDemandRepository.findById(requestId)
-                .orElseThrow(() -> new ResourceNotFoundException("request doesn't exist with id: "+requestId));
+    public ServerJoinDemandResponseDTO acceptRequest(ServerJoinDemandRequestDTO request) {
+        Server server = serverRepository.findById(request.serverId())
+                .orElseThrow(() -> new ResourceNotFoundException("server doesn't not exist with id: "+request.serverId()));
+        Individual receiver = individualRepository.findById(request.receiverId())
+                .orElseThrow(() -> new ResourceNotFoundException("receiver doesn't not exist with id: "+request.receiverId()));
+
+
+        ServerJoinDemand serverJoinDemand = serverJoinDemandRepository.findByServerAndReceiver(server, receiver);
 
         serverJoinDemand.setAccepted(true);
 

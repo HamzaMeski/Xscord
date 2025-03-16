@@ -35,8 +35,8 @@ export class ServerService {
 		return this.http.post<ServerJoinDemandResponse>(`${this.API_URL}/serverJoinRequest/send`,request)
 	}
 
-	acceptRequest(requestId: number): Observable<ServerJoinDemandResponse> {
-		return this.http.put<ServerJoinDemandResponse>(`${this.API_URL}/serverJoinRequest/accept/${requestId}`, {})
+	acceptRequest(request: any): Observable<ServerJoinDemandResponse> {
+		return this.http.put<ServerJoinDemandResponse>(`${this.API_URL}/serverJoinRequest/accept`, request)
 	}
 
 	refuseRequest(requestId: number): Observable<any> {

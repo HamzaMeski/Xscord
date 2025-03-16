@@ -28,3 +28,17 @@ export const getReceiverInvitationsError = createAction(
 	'[Receiver Invitations] Get Receiver Invitations Error',
 	props<{error: string}>()
 )
+
+
+export const acceptServerInvitation = createAction(
+	'[Server Invitation] Accept Invitation',
+	props<{request: {serverId: number, receiverId: number}}>()
+)
+export const acceptServerInvitationSuccess = createAction(
+	'[Server Invitation] Accept Invitation Success',
+	props<{response: ServerJoinDemandResponse}>()
+)
+export const acceptServerInvitationError = createAction(
+	'[Server Invitation] Accept Invitation Error',
+	props<{error: string}>()
+)

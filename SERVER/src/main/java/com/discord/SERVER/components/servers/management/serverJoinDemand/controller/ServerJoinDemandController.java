@@ -25,11 +25,11 @@ public class ServerJoinDemandController {
         return new ResponseEntity<>(service.sendRequest(requestDTO), HttpStatus.CREATED);
     }
 
-    @PutMapping("/accept/{requestId}")
+    @PutMapping("/accept")
     private ResponseEntity<ServerJoinDemandResponseDTO> accept(
-            @PathVariable Long requestId
+            @RequestBody ServerJoinDemandRequestDTO requestDTO
     ) {
-        return ResponseEntity.ok(service.acceptRequest(requestId));
+        return ResponseEntity.ok(service.acceptRequest(requestDTO));
     }
 
     @GetMapping("/receiverInvitations/{receiverId}")

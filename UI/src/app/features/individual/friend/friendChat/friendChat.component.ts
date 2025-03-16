@@ -30,10 +30,12 @@ import {
 } from "../../../../ngrx/actions/peerChat/peerChat.actions";
 import {FormsModule} from "@angular/forms";
 import {IndividualResponse} from "../../../../core/types/individual/individual.types";
-import {getReceiverInvitations} from "../../../../ngrx/actions/server/serverInvitation.actions";
+import {acceptServerInvitation, getReceiverInvitations} from "../../../../ngrx/actions/server/serverInvitation.actions";
 import {peerMessageResponse} from "../../../../core/types/peerChat/peerChat.types";
 import {ServerJoinDemandResponse} from "../../../../core/types/server/serverJoinDemand.types";
 import {
+	selectAcceptServerInvitationLoading,
+	selectAcceptServerInvitationResponse,
 	selectReceiverInvitationsError,
 	selectReceiverInvitationsLoading,
 	selectReceiverInvitationsResponse
@@ -210,7 +212,7 @@ import {combineLatest} from "rxjs";
                                                             <span class="font-medium text-white">{{ message.sender.displayName }}</span>
                                                             <span class="text-xs text-[#949BA4]">{{ message.createdAt }}</span>
                                                         </div>
-                                                        <p class="text-[#DBDEE1] break-words">{{ message.content }}</p>
+                                                        <p  class="text-[#DBDEE1] break-words">{{ message.content }}</p>
                                                     </div>
                                                 </div>
 
@@ -227,11 +229,35 @@ import {combineLatest} from "rxjs";
                                                             <span class="font-medium text-white">{{ message.sender.displayName }}</span>
                                                             <span class="text-xs text-[#949BA4]">{{ message.createdAt }}</span>
                                                         </div>
-                                                        <p class="text-[#DBDEE1] break-words">{{ message.content }}</p>
-                                                    </div>
+                                                        <p *ngIf="!message.content.startsWith('https://discord.gg')" class="text-[#DBDEE1] break-words">{{ message.content }}</p>
+                                                        <div *ngIf="message.content.startsWith('https://discord.gg')">
+                                                            <p class="text-blue-500 break-words">{{ message.content }}</p>
+                                                            <div class="bg-[#313338] border-2 border-[#23A559] rounded-md p-4">
+                                                                <div class="text-gray-200 text-sm mb-4">YOU'VE BEEN INVITED TO JOIN A SERVER</div>
+                                                                <div class="flex items-center justify-between">
+                                                                    <div class="flex items-center gap-3">
+                                                                        <div class="w-12 h-12 bg-[#2B2D31] rounded-full flex items-center justify-center text-gray-200 text-xl font-semibold">
+                                                                            {{message.content.split('/')[3].slice(0, 2)}}
+                                                                        </div>
+
+                                                                        <div>
+                                                                            <div class="text-white font-semibold">{{message.content.split('/')[3]}}</div>
+                                                                            <div class="flex items-center gap-1 text-gray-400">
+                                                                                <span class="text-lg">#</span>
+                                                                                <span>general</span>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <button
+                                                                        (click)="joinServer(message.content.split('/')[5])"
+                                                                        class="bg-[#23A559] hover:bg-[#1A8045] text-white px-4 py-1.5 rounded-md transition-colors">
+                                                                        Join
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+                                                        </div>                                                    </div>
                                                 </div>
                                             </div>
-
                                         </div>
                                     </div>
                                 </div>
@@ -318,6 +344,9 @@ export class FriendChatComponent  implements OnInit, AfterViewChecked, AfterView
 	receiverInvitationsLoading$
 	receiverInvitationsError$
 
+	joinServerResponse$
+	joinServerLoading$
+
 
 
 	@ViewChild('messageContainer') private messageContainer!: ElementRef
@@ -344,6 +373,9 @@ export class FriendChatComponent  implements OnInit, AfterViewChecked, AfterView
 		this.receiverInvitations$ = this.store.select(selectReceiverInvitationsResponse)
 		this.receiverInvitationsLoading$ = this.store.select(selectReceiverInvitationsLoading)
 		this.receiverInvitationsError$ = this.store.select(selectReceiverInvitationsError)
+
+		this.joinServerResponse$ = this.store.select(selectAcceptServerInvitationResponse)
+		this.joinServerLoading$ = this.store.select(selectAcceptServerInvitationLoading)
 	}
 
 	ngOnInit() {
@@ -413,6 +445,14 @@ export class FriendChatComponent  implements OnInit, AfterViewChecked, AfterView
 
 			this.newMessage = ''
 		}
+	}
+
+	joinServer(serverId: string) {
+		const req = {
+			serverId: Number(serverId),
+			receiverId: this.currentAuthUserId
+		}
+		this.store.dispatch(acceptServerInvitation({request: req}))
 	}
 
 	ngAfterViewChecked(): void {

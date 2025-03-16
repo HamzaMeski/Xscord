@@ -210,6 +210,6 @@ export class addPersonComponent implements OnInit{
 	}
 
 	generateInvitationLink() {
-		return `https://discord.gg/${this.server?.name}/join/${new Date()}`
+		return `https://discord.gg/${this.server?.name}/join/${this.server?.id}/${new Date()}`
 	}
 }

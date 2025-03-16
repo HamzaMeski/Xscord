@@ -36,6 +36,7 @@ import {ServerEffects} from "./ngrx/effects/server/server.effects";
 import {getServerGroupsReducers} from "./ngrx/reducers/group/group.reducers";
 import {GroupEffects} from "./ngrx/effects/group/group.effects";
 import {
+    acceptServerInvitationReducer,
     getReceiverInvitationsReducer,
     sendServerInvitationReducer
 } from "./ngrx/reducers/server/serverInvitation.reducers";
@@ -72,7 +73,8 @@ export const appConfig: ApplicationConfig = {
             getServerGroups: getServerGroupsReducers,
             sendServerInvitation: sendServerInvitationReducer,
             openAddPersonModal: openAddPersonReducers,
-            getReceiverInvitations: getReceiverInvitationsReducer
+            getReceiverInvitations: getReceiverInvitationsReducer,
+            acceptServerInvitation: acceptServerInvitationReducer
         }),
         provideStoreDevtools({ maxAge: 25, logOnly: !isDevMode() }),
         provideEffects([

@@ -1,6 +1,7 @@
 import {createReducer, on} from "@ngrx/store";
 import {initialServerInvitationState} from "../../state/server/serverInvitation.state";
 import {
+	acceptServerInvitation, acceptServerInvitationError, acceptServerInvitationSuccess,
 	getReceiverInvitations, getReceiverInvitationsError, getReceiverInvitationsSuccess,
 	sendServerInvitation,
 	sendServerInvitationError,
@@ -25,11 +26,11 @@ export const sendServerInvitationReducer = createReducer(
 		error: null
 	})),
 
-	on(sendServerInvitationError, (state)=> ({
+	on(sendServerInvitationError, (state, action)=> ({
 		...state,
 		invitationResponse: null,
 		loading: false,
-		error: null
+		error: action.error
 	})),
 )
 
@@ -54,6 +55,32 @@ export const getReceiverInvitationsReducer = createReducer(
 	on(getReceiverInvitationsError, (state, action) => ({
 		...state,
 		invitationsResponse: null,
+		loading: false,
+		error: action.error
+	})),
+)
+
+
+export const acceptServerInvitationReducer = createReducer(
+	initialServerInvitationState.accept,
+
+	on(acceptServerInvitation, (state, action)=> ({
+		...state,
+		invitationResponse: null,
+		loading: true,
+		error: null
+	})),
+
+	on(acceptServerInvitationSuccess, (state, action)=> ({
+		...state,
+		invitationResponse: action.response,
+		loading: false,
+		error: null
+	})),
+
+	on(acceptServerInvitationError, (state, action)=> ({
+		...state,
+		invitationResponse: null,
 		loading: false,
 		error: action.error
 	})),
