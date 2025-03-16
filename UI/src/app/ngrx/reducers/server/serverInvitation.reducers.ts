@@ -119,11 +119,10 @@ export const getServerMembersReducer = createReducer(
 )
 
 
-
 export const getMemberJoinedServersReducer = createReducer(
 	initialServerInvitationState.memberJoinedServers,
 
-	on(getServerMembers, (state) => ({
+	on(getMemberJoinedServers, (state) => ({
 		...state,
 		servers: null,
 		loading: true,

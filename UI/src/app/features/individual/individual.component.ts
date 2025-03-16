@@ -60,7 +60,7 @@ import {ServerResponse} from "../../core/types/server/server.types";
                     </a>
 
                     <div class="w-6 h-2 bg-[#313338] rounded-3xl"></div>
-					<!--authUser servers-->
+                    <!--authUser servers-->
                     <div *ngIf="(isLoading$ | async)" class="w-14 h-14 bg-[#313338] rounded-full flex items-center justify-center">...</div>
                     <div *ngIf="!(isLoading$ | async)">
                         <div *ngIf="allServers$ | async as servers" class="flex flex-col gap-2">
