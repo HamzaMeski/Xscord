@@ -60,15 +60,14 @@ export const getServerMembersError = createAction(
 )
 
 
-
 export const getMemberJoinedServers = createAction(
-	'[Member Joined Servers] Get Server Members'
+	'[Member Joined Servers] Get Member Joined Servers'
 )
 export const getMemberJoinedServersSuccess = createAction(
-	'[Member Joined Servers] Get Server Members Success',
+	'[Member Joined Servers] Get Member Joined Servers Success',
 	props<{response: ServerResponse[]}>()
 )
 export const getMemberJoinedServersError = createAction(
-	'[Member Joined Servers] Get Server Members Error',
+	'[Member Joined Servers] Get Member Joined Servers Error',
 	props<{error: string}>()
 )

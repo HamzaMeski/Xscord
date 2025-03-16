@@ -138,11 +138,10 @@ export class ServerComponent implements OnInit{
 		this.serverGroups$.subscribe(groups=> {
 			if(groups){
 				const firstGroup = groups[0]
-				const firstGroupId = firstGroup.id
 				const serverId  = firstGroup.serverId
-				console.log(serverId, firstGroupId)
+				const firstGroupId = firstGroup.id
 
-				// this.router.navigate([`/individual/server/${firstGroup}/chat/${serverId}`])
+				this.router.navigate([`/individual/server/${serverId}/chat/${firstGroupId}`])
 			}
 		})
 	}
