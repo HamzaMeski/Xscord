@@ -4,7 +4,7 @@ import {FontAwesomeModule} from "@fortawesome/angular-fontawesome";
 import {faDiscord} from "@fortawesome/free-brands-svg-icons";
 import {loadUserProfile} from "../../ngrx/actions/userProfile/userProfile.actions";
 import {Store} from "@ngrx/store";
-import {filter, Subject, takeUntil} from "rxjs";
+import {combineLatest, filter, map, Observable, Subject, takeUntil} from "rxjs";
 import {faPlus} from "@fortawesome/free-solid-svg-icons";
 import {CommonModule} from "@angular/common";
 import {
@@ -21,8 +21,13 @@ import {
 import {ServerContainerModal} from "./addServerModal/serverContainerModal";
 import {addPersonComponent} from "./server/addPerson/addPerson.component";
 import {selectOpenAddPersonModal} from "../../ngrx/selectors/modal/addPerson.selectors";
-import {selectReceiverInvitationsResponse} from "../../ngrx/selectors/server/serverInvitation.selectors";
-import {getReceiverInvitations} from "../../ngrx/actions/server/serverInvitation.actions";
+import {
+	selectMemberJoinedServersError,
+	selectMemberJoinedServersLoading,
+	selectMemberJoinedServersResponse,
+} from "../../ngrx/selectors/server/serverInvitation.selectors";
+import {getMemberJoinedServers} from "../../ngrx/actions/server/serverInvitation.actions";
+import {ServerResponse} from "../../core/types/server/server.types";
 
 @Component({
 	standalone: true,
@@ -37,13 +42,13 @@ import {getReceiverInvitations} from "../../ngrx/actions/server/serverInvitation
 
 	],
 	template: `
-		<main class="relative">
+        <main class="relative">
             <section *ngIf="showServerModal"  class="absolute bg-black/70 top-0 bottom-0 left-0 right-0 z-1 flex items-center justify-center">
-				<server-container-modal (close)="handleCloseServerModal($event)"></server-container-modal>
+                <server-container-modal (close)="handleCloseServerModal($event)"></server-container-modal>
             </section>
-            <section *ngIf="showAddPersonModal" class="absolute bg-black/70 top-0 bottom-0 left-0 right-0 z-1 flex items-center justify-center">
-				<add-person></add-person>
-			</section>
+            <section *ngIf="showAddPersonModal$ | async" class="absolute bg-black/70 top-0 bottom-0 left-0 right-0 z-1 flex items-center justify-center">
+                <add-person></add-person>
+            </section>
             <section class="h-dvh flex">
                 <!-- sidebar section -->
                 <div class="flex flex-col items-center gap-2 p-2 w-20 overflow-auto">
@@ -55,15 +60,20 @@ import {getReceiverInvitations} from "../../ngrx/actions/server/serverInvitation
                     </a>
 
                     <div class="w-6 h-2 bg-[#313338] rounded-3xl"></div>
-
-                    <div *ngIf="individualServersLoading$ | async" class="w-14 h-14 bg-[#313338] rounded-full flex items-center justify-center">...</div>
-                    <div *ngIf="!(individualServersLoading$ | async)">
-                        <div *ngIf="individualServers$ | async as servers" class="flex flex-col gap-2">
-	                        <div *ngFor="let server of servers" >
+					<!--authUser servers-->
+                    <div *ngIf="(isLoading$ | async)" class="w-14 h-14 bg-[#313338] rounded-full flex items-center justify-center">...</div>
+                    <div *ngIf="!(isLoading$ | async)">
+                        <div *ngIf="allServers$ | async as servers" class="flex flex-col gap-2">
+                            <div *ngFor="let server of servers.individualServers" >
                                 <a [routerLink]="['/individual/server', server.id]" class="w-14 h-14 bg-[#313338] rounded-full flex items-center justify-center">
                                     {{ server.name.substring(0,4) }}
                                 </a>
-	                        </div>
+                            </div>
+                            <div *ngFor="let server of servers.joinedServers" >
+                                <a [routerLink]="['/individual/server', server.id]" class="w-14 h-14 bg-[#313338] rounded-full flex items-center justify-center">
+                                    {{ server.name.substring(0,4) }}
+                                </a>
+                            </div>
                         </div>
                     </div>
 
@@ -71,11 +81,6 @@ import {getReceiverInvitations} from "../../ngrx/actions/server/serverInvitation
                         <button (click)="showServerModal = true" class="w-14 h-14 bg-[#313338] rounded-full flex items-center justify-center cursor-pointer">
                             <fa-icon [icon]="faPlus" class="text-xl"></fa-icon>
                         </button>
-
-                        <div *ngIf="false" class="absolute ml-full ml-6 mt-10 top-0 w-[200px] bg-[#313338] rounded-md p-2 text-white shadow-lg z-10">
-                            <div class="py-2 px-3  cursor-pointer">Join a server</div>
-                            <div class="py-2 px-3  rounded cursor-pointer">Create a server</div>
-                        </div>
                     </div>
 
                     <a routerLink="/individual/prompt" class="w-14 h-14 shrink-0 bg-gray-200 rounded-full flex items-center justify-center">
@@ -88,8 +93,8 @@ import {getReceiverInvitations} from "../../ngrx/actions/server/serverInvitation
                     <router-outlet></router-outlet>
                 </div>
             </section>
-		</main>
-  `
+        </main>
+	`
 })
 export class IndividualComponent implements OnInit, OnDestroy {
 	faDiscord = faDiscord
@@ -100,13 +105,22 @@ export class IndividualComponent implements OnInit, OnDestroy {
 	authUserLoading$
 	authUserError$
 
-	individualServers$
-	individualServersLoading$
-	individualServersError$
+	individualServers$:Observable<ServerResponse[]| null>
+	individualServersLoading$:Observable<boolean>
+	individualServersError$:Observable<string | null>
+
+	memberJoinedServers$:Observable<ServerResponse[]| null>
+	memberJoinedServersLoading$:Observable<boolean>
+	memberJoinedServersError$:Observable<string | null>
+
+	isLoading$!:Observable<boolean>
+	allServers$!:Observable<{
+		individualServers: ServerResponse[] | null,
+		joinedServers: ServerResponse[] | null
+	}>
 
 	showServerModal: boolean = false
 	showAddPersonModal$
-	showAddPersonModal: boolean = false
 
 	constructor(
 		private store: Store,
@@ -128,21 +142,40 @@ export class IndividualComponent implements OnInit, OnDestroy {
 		this.individualServersLoading$ = this.store.select(selectGetIndividualServersLoading)
 		this.individualServersError$ = this.store.select(selectGetIndividualServersFailure)
 
+		this.memberJoinedServers$ = this.store.select(selectMemberJoinedServersResponse)
+		this.memberJoinedServersLoading$ = this.store.select(selectMemberJoinedServersLoading)
+		this.memberJoinedServersError$ = this.store.select(selectMemberJoinedServersError)
+
 		this.showAddPersonModal$ = this.store.select(selectOpenAddPersonModal)
+
+		this.isLoading$ = combineLatest([
+			this.individualServersLoading$,
+			this.memberJoinedServersLoading$
+		]).pipe(
+			map(([individualLoading, joinedLoading]) => individualLoading || joinedLoading)
+		)
+
+		this.allServers$ = combineLatest([
+			this.individualServers$,
+			this.memberJoinedServers$
+		]).pipe(
+			map(([individualServers, joinedServers]) => ({
+				individualServers: individualServers,
+				joinedServers: joinedServers
+			}))
+		)
 	}
 
 	ngOnInit() {
 		this.store.dispatch(loadUserProfile())
+
 		this.store.dispatch(getIndividualServers())
-		this.showAddPersonModal$.subscribe(val=>this.showAddPersonModal = val)
+
+		this.store.dispatch(getMemberJoinedServers())
 	}
 
 	handleCloseServerModal(close: boolean) {
 		this.showServerModal = !close;
-	}
-
-	handleCloseAddPersonModal(close: boolean) {
-		this.showAddPersonModal = !close;
 	}
 
 	ngOnDestroy() {

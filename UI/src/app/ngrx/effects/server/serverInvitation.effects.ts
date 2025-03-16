@@ -5,6 +5,9 @@ import {
 	acceptServerInvitation,
 	acceptServerInvitationError,
 	acceptServerInvitationSuccess,
+	getMemberJoinedServers,
+	getMemberJoinedServersError,
+	getMemberJoinedServersSuccess,
 	getReceiverInvitations,
 	getReceiverInvitationsError,
 	getReceiverInvitationsSuccess,
@@ -23,6 +26,7 @@ export class ServerInvitationEffects {
     getReceiverInvitations$
 	acceptServerInvitation$
 	serverMembers$
+	memberJoinedServers$
 
 	constructor(
 		private actions$: Actions,
@@ -79,7 +83,7 @@ export class ServerInvitationEffects {
 			)
 		)
 
-		this.serverMembers$ = catchError(() =>
+		this.serverMembers$ = createEffect(() =>
 			this.actions$.pipe(
 				ofType(getServerMembers),
 				mergeMap(({serverId}) => {
@@ -90,6 +94,23 @@ export class ServerInvitationEffects {
 						catchError(err => {
 							const error: string = err.error.message
 							return of(getServerMembersError({error}))
+						})
+					)
+				})
+			)
+		)
+
+		this.memberJoinedServers$ = createEffect(() =>
+			this.actions$.pipe(
+				ofType(getMemberJoinedServers),
+				mergeMap(({}) => {
+					return this.serverService.getMemberJoinedServers().pipe(
+						map(response=> {
+							return getMemberJoinedServersSuccess({response})
+						}),
+						catchError(err => {
+							const error: string = err.error.message
+							return of(getMemberJoinedServersError({error}))
 						})
 					)
 				})

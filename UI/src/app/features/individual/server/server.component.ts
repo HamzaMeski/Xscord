@@ -1,4 +1,4 @@
-import {Component, OnInit} from "@angular/core";
+import {ChangeDetectorRef, Component, OnInit} from "@angular/core";
 import {FaIconComponent} from "@fortawesome/angular-fontawesome";
 import {ReactiveFormsModule} from "@angular/forms";
 import {faDiscord} from "@fortawesome/free-brands-svg-icons";
@@ -113,6 +113,7 @@ export class ServerComponent implements OnInit{
 	faCirclePlus = faCirclePlus
 	faGear = faGear
 	faUserPlus = faUserPlus
+	faChevronDown = faChevronDown
 
 	serverGroups$
 	serverGroupsLoading$
@@ -120,7 +121,8 @@ export class ServerComponent implements OnInit{
 
 	constructor(
 		private route: ActivatedRoute,
-		private store: Store
+		private store: Store,
+		private router: Router
 	) {
 		this.serverGroups$ = this.store.select(selectServerGroupsResponse)
 		this.serverGroupsLoading$ = this.store.select(selectServerGroupsLoading)
@@ -132,14 +134,20 @@ export class ServerComponent implements OnInit{
 			const serverId = Number(params['serverId'])
 			this.store.dispatch(getServerGroups({serverId}))
 		})
+
+		this.serverGroups$.subscribe(groups=> {
+			if(groups){
+				const firstGroup = groups[0]
+				const firstGroupId = firstGroup.id
+				const serverId  = firstGroup.serverId
+				console.log(serverId, firstGroupId)
+
+				// this.router.navigate([`/individual/server/${firstGroup}/chat/${serverId}`])
+			}
+		})
 	}
 
 	setShowAddPersonModalToTrue() {
-		console.log('dispatching')
 		this.store.dispatch(openAddPersonModal())
 	}
-
-	protected readonly faChevronDown = faChevronDown;
-	protected readonly faCalendar = faCalendar;
-	protected readonly faMicrophone = faMicrophone;
 }

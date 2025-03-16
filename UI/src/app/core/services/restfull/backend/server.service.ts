@@ -51,4 +51,8 @@ export class ServerService {
 	getServerMembers(serverId: number): Observable<IndividualResponse[]> {
 		return this.http.get<IndividualResponse[]>(`${this.API_URL}/serverJoinRequest/serverMembers/${serverId}`, {})
 	}
+
+	getMemberJoinedServers(): Observable<ServerResponse[]> {
+		return this.http.get<ServerResponse[]>(`${this.API_URL}/serverJoinRequest/memberJoinedServers`, {})
+	}
 }

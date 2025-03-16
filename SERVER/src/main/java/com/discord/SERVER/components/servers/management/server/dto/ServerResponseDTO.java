@@ -6,6 +6,7 @@ public record ServerResponseDTO (
         Long id,
         Long individualId,
         String name,
+        String ownerName,
         String description,
         LocalDateTime createdAt,
         LocalDateTime updatedAt

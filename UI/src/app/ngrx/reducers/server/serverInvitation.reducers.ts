@@ -3,7 +3,7 @@ import {initialServerInvitationState} from "../../state/server/serverInvitation.
 import {
 	acceptServerInvitation,
 	acceptServerInvitationError,
-	acceptServerInvitationSuccess,
+	acceptServerInvitationSuccess, getMemberJoinedServers, getMemberJoinedServersError, getMemberJoinedServersSuccess,
 	getReceiverInvitations,
 	getReceiverInvitationsError,
 	getReceiverInvitationsSuccess,
@@ -113,6 +113,33 @@ export const getServerMembersReducer = createReducer(
 	on(getServerMembersError, (state, action) => ({
 		...state,
 		members: null,
+		loading: false,
+		error: action.error
+	})),
+)
+
+
+
+export const getMemberJoinedServersReducer = createReducer(
+	initialServerInvitationState.memberJoinedServers,
+
+	on(getServerMembers, (state) => ({
+		...state,
+		servers: null,
+		loading: true,
+		error: null
+	})),
+
+	on(getMemberJoinedServersSuccess, (state, action) => ({
+		...state,
+		servers: action.response,
+		loading: false,
+		error: null
+	})),
+
+	on(getMemberJoinedServersError, (state, action) => ({
+		...state,
+		servers: null,
 		loading: false,
 		error: action.error
 	})),

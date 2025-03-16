@@ -1,6 +1,7 @@
 package com.discord.SERVER.components.servers.management.serverJoinDemand.service;
 
 import com.discord.SERVER.components.individual.dto.IndividualResponseDTO;
+import com.discord.SERVER.components.servers.management.server.dto.ServerResponseDTO;
 import com.discord.SERVER.components.servers.management.serverJoinDemand.dto.ServerJoinDemandRequestDTO;
 import com.discord.SERVER.components.servers.management.serverJoinDemand.dto.ServerJoinDemandResponseDTO;
 import java.util.List;
@@ -10,5 +11,6 @@ public interface ServerJoinDemandService {
     ServerJoinDemandResponseDTO acceptRequest(ServerJoinDemandRequestDTO request);
     List<ServerJoinDemandResponseDTO> getIndividualInvitations(Long receiverId);
     List<IndividualResponseDTO> getServerMembers(Long serverId);
+    List<ServerResponseDTO> getMemberJoinedServers(Long memberId);
     void refuseRequest(Long requestId);
 }

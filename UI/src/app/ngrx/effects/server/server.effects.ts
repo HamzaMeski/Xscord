@@ -76,7 +76,6 @@ export class ServerEffects {
 				mergeMap(({serverId})=> {
 					return this.serverService.getServer(serverId).pipe(
 						map(response=> {
-							console.log('Effect get server: ', response)
 							return getServerSuccess({response})
 						}),
 						catchError(err => {

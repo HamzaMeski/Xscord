@@ -1,6 +1,7 @@
 import {createAction, props} from "@ngrx/store";
 import {ServerJoinDemandRequest, ServerJoinDemandResponse} from "../../../core/types/server/serverJoinDemand.types";
 import {IndividualResponse} from "../../../core/types/individual/individual.types";
+import {ServerResponse} from "../../../core/types/server/server.types";
 
 
 export const sendServerInvitation = createAction(
@@ -55,5 +56,19 @@ export const getServerMembersSuccess = createAction(
 )
 export const getServerMembersError = createAction(
 	'[Server Members] Get Server Members Error',
+	props<{error: string}>()
+)
+
+
+
+export const getMemberJoinedServers = createAction(
+	'[Member Joined Servers] Get Server Members'
+)
+export const getMemberJoinedServersSuccess = createAction(
+	'[Member Joined Servers] Get Server Members Success',
+	props<{response: ServerResponse[]}>()
+)
+export const getMemberJoinedServersError = createAction(
+	'[Member Joined Servers] Get Server Members Error',
 	props<{error: string}>()
 )

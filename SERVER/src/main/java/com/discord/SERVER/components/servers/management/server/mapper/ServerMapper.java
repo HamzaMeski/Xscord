@@ -13,5 +13,6 @@ public interface ServerMapper {
     Server toEntity(ServerRequestDTO requestDTO);
 
     @Mapping(target = "individualId", source = "individual.id")
+    @Mapping(target = "ownerName", source = "individual.displayName")
     ServerResponseDTO toResponse(Server server);
 }
