@@ -1,21 +1,36 @@
 import {Component, OnInit} from "@angular/core";
 import {FaIconComponent} from "@fortawesome/angular-fontawesome";
-import {AsyncPipe, NgIf} from "@angular/common";
+import {CommonModule} from "@angular/common";
 import {ReactiveFormsModule} from "@angular/forms";
 import {faDiscord} from "@fortawesome/free-brands-svg-icons";
-import {faCirclePlus} from "@fortawesome/free-solid-svg-icons";
+import {faCirclePlus, faSearch} from "@fortawesome/free-solid-svg-icons";
 import {Store} from "@ngrx/store";
-import {sendServerInvitation} from "../../../../ngrx/actions/server/serverInvitation.actions";
-import {ServerJoinDemandRequest} from "../../../../core/types/server/serverJoinDemand.types";
+import {getServerMembers} from "../../../../ngrx/actions/server/serverInvitation.actions";
+import {
+	selectServerMembersError,
+	selectServerMembersLoading,
+	selectServerMembersResponse
+} from "../../../../ngrx/selectors/server/serverInvitation.selectors";
+import {
+	selectUserProfile, selectUserProfileError,
+	selectUserProfileLoading
+} from "../../../../ngrx/selectors/userProfile/userProfile.selectors";
+import {loadUserProfile} from "../../../../ngrx/actions/userProfile/userProfile.actions";
+import {getServer} from "../../../../ngrx/actions/server/server.actions";
+import {Router} from "@angular/router";
+import {
+	selectServerFailure,
+	selectServerLoading,
+	selectServerResponse
+} from "../../../../ngrx/selectors/server/server.selectors";
 
 
 @Component({
 	standalone: true,
 	selector: 'group-chat',
 	imports: [
+		CommonModule,
 		FaIconComponent,
-		AsyncPipe,
-		NgIf,
 		ReactiveFormsModule
 
 	],
@@ -65,31 +80,52 @@ import {ServerJoinDemandRequest} from "../../../../core/types/server/serverJoinD
 		              </div>
 		          </div>
 
-                  <!-- Right Sidebar -->
-                  <div class="w-[340px] bg-[#2B2D31] border-l border-[#1F2023] flex-shrink-0">
-                      <div class="h-[180px] bg-[#1E1F22]"></div>
-                      <div class="flex flex-col px-4 -mt-16">
-                          <div class="w-[120px] h-[120px] rounded-full border-8 border-[#2B2D31] overflow-hidden bg-[#5865F2] flex items-center justify-center mb-3">
-                              <fa-icon [icon]="faDiscord" class="text-4xl text-white"></fa-icon>
+                  <!-- Server Members -->
+                  <div class="w-[240px] bg-[#2B2D31] flex-shrink-0">
+                      <!-- Search Bar -->
+                      <div class="p-3">
+                          <div class="relative">
+                              <input type="text"
+                                     placeholder="Search"
+                                     class="w-full bg-[#1E1F22] text-[#949BA4] text-sm px-2 py-1 rounded placeholder:text-[#949BA4] focus:outline-none">
+                              <fa-icon [icon]="faSearch" class="absolute right-2 top-1/2 -translate-y-1/2 text-[#949BA4] text-sm"></fa-icon>
                           </div>
-                          <h2 class="text-xl font-bold text-white mb-4">testing</h2>
+                      </div>
 
-                          <!-- About Section -->
-                          <div class="bg-[#232428] rounded-lg p-3 mb-4">
-                              <h3 class="text-[#949BA4] font-medium mb-2">ABOUT ME</h3>
-                              <p class="text-[#DBDEE1] text-sm">testin</p>
+                      <div *ngIf="serverMembersLoading$ | async" class="px-3 py-2 text-[#949BA4] text-sm">
+                          Loading members...
+                      </div>
+
+                      <div *ngIf="!(serverMembersLoading$ | async)" class="px-2">
+                          <!-- Server Owner -->
+                          <div class="mb-4">
+                              <h3 class="px-2 text-xs font-semibold text-[#949BA4] uppercase tracking-wide mb-2">Server Owner — 1</h3>
+                              <div *ngIf="server$ | async as server"
+                                   class="flex items-center gap-3 px-2 py-1.5 rounded hover:bg-[#35373C] transition-colors cursor-pointer group">
+                                  <div class="relative">
+                                      <div class="w-8 h-8 rounded-full overflow-hidden bg-[#5865F2] flex items-center justify-center">
+                                          <fa-icon [icon]="faDiscord" class="text-white text-sm"></fa-icon>
+                                      </div>
+                                      <div class="absolute bottom-0 right-0 w-3 h-3 bg-[#23A559] rounded-full border-2 border-[#2B2D31] group-hover:border-[#35373C]"></div>
+                                  </div>
+                                  <span class="text-[#DBDEE1] text-sm">{{server.ownerName}} <span class="text-[#FAA61A]">👑</span></span>
+                              </div>
                           </div>
 
-                          <!-- Member Since -->
-                          <div class="bg-[#232428] rounded-lg p-3">
-                              <h3 class="text-[#949BA4] font-medium mb-2">MEMBER SINCE</h3>
-                              <p class="text-[#DBDEE1] text-sm">testing</p>
+                          <!-- Members List -->
+                          <div *ngIf="serverMembers$ | async as members">
+                              <h3 class="px-2 text-xs font-semibold text-[#949BA4] uppercase tracking-wide mb-2">Members — {{members.length}}</h3>
+                              <div *ngFor="let member of members"
+                                   class="flex items-center gap-3 px-2 py-1.5 rounded hover:bg-[#35373C] transition-colors cursor-pointer group">
+                                  <div class="relative">
+                                      <div class="w-8 h-8 rounded-full overflow-hidden bg-[#5865F2] flex items-center justify-center">
+                                          <fa-icon [icon]="faDiscord" class="text-white text-sm"></fa-icon>
+                                      </div>
+                                      <div class="absolute bottom-0 right-0 w-3 h-3 bg-[#23A559] rounded-full border-2 border-[#2B2D31] group-hover:border-[#35373C]"></div>
+                                  </div>
+                                  <span class="text-[#949BA4] hover:text-[#DBDEE1] transition-colors text-sm">{{member.displayName}}</span>
+                              </div>
                           </div>
-
-                          <!-- View Profile Button -->
-                          <button class="mt-4 w-full px-4 py-2 bg-[#4E505C] text-white rounded hover:bg-[#6D6F7B] transition-colors">
-                              View Profile
-                          </button>
                       </div>
                   </div>
 		      </main>
@@ -97,15 +133,53 @@ import {ServerJoinDemandRequest} from "../../../../core/types/server/serverJoinD
     </section>
   `
 })
-export class GroupChatComponent implements OnInit{
+export class GroupChatComponent implements OnInit {
 	faDiscord = faDiscord
 	faCirclePlus = faCirclePlus
+	faSearch = faSearch
+
+	authUser$
+	authUserLoading$
+	authUserError$
+
+	serverMembers$
+	serverMembersLoading$
+	serverMembersError$
+
+	server$
+	serverLoading$
+	serverError$
 
 	constructor(
-		private store: Store
-	){}
+		private store: Store,
+		private router: Router
+	){
+		this.authUser$ = this.store.select(selectUserProfile)
+		this.authUserLoading$ = this.store.select(selectUserProfileLoading)
+		this.authUserError$ = this.store.select(selectUserProfileError)
+
+		this.serverMembers$ = this.store.select(selectServerMembersResponse)
+		this.serverMembersLoading$ = this.store.select(selectServerMembersLoading)
+		this.serverMembersError$ = this.store.select(selectServerMembersError)
+
+		this.server$ = this.store.select(selectServerResponse)
+		this.serverLoading$ = this.store.select(selectServerLoading)
+		this.serverError$ = this.store.select(selectServerFailure)
+	}
 
 	ngOnInit(): void {
+		this.store.dispatch(loadUserProfile())
 
+		this.store.dispatch(getServerMembers({serverId: this.getServerId()}))
+
+		this.store.dispatch(getServer({serverId: this.getServerId()}))
 	}
+
+	/* TODO: id shouldn't get server ID this way, I set it here just for testing purposes I will handle it later# */
+	getServerId(): number {
+		const urlSegments = this.router.url.split('/')
+		return Number(urlSegments[3])
+	}
+
+
 }

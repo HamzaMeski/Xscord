@@ -1,6 +1,10 @@
 package com.discord.SERVER.components.servers.management.serverJoinDemand.service;
 
+import com.discord.SERVER.components.individual.dto.IndividualResponseDTO;
+import com.discord.SERVER.components.individual.mapper.IndividualMapper;
 import com.discord.SERVER.components.individual.repository.IndividualRepository;
+import com.discord.SERVER.components.servers.management.server.dto.ServerResponseDTO;
+import com.discord.SERVER.components.servers.management.server.mapper.ServerMapper;
 import com.discord.SERVER.components.servers.management.server.repository.ServerRepository;
 import com.discord.SERVER.components.servers.management.serverJoinDemand.dto.ServerJoinDemandRequestDTO;
 import com.discord.SERVER.components.servers.management.serverJoinDemand.dto.ServerJoinDemandResponseDTO;
@@ -26,6 +30,8 @@ public class ServerJoinDemandServiceImpl implements ServerJoinDemandService {
     private final ServerJoinDemandMapper serverJoinDemandMapper;
     private final ServerRepository serverRepository;
     private final IndividualRepository individualRepository;
+    private final IndividualMapper individualMapper;
+    private final ServerMapper serverMapper;
 
     @Override
     public ServerJoinDemandResponseDTO sendRequest(ServerJoinDemandRequestDTO request) {
@@ -74,6 +80,27 @@ public class ServerJoinDemandServiceImpl implements ServerJoinDemandService {
 
         return serverJoinDemandRepository.individualInvitationsWithFalseAcceptation(receiver).stream()
                 .map(serverJoinDemandMapper::toResponse)
+                .toList();
+    }
+
+    @Override
+    public List<IndividualResponseDTO> getServerMembers(Long serverId) {
+        Server server = serverRepository.findById(serverId)
+                .orElseThrow(() -> new ResourceNotFoundException("server doesn't found with id "+serverId));
+
+
+        return serverJoinDemandRepository.getServerMembers(server).stream()
+                .map(individualMapper::toResponse)
+                .toList();
+    }
+
+    @Override
+    public List<ServerResponseDTO> getMemberJoinedServers(Long memberId) {
+        Individual member = individualRepository.findById(memberId)
+                .orElseThrow(() -> new ResourceNotFoundException("member doesn't not exist with id: "+memberId));
+
+        return serverJoinDemandRepository.getMemberJoinedServers(member).stream()
+                .map(serverMapper::toResponse)
                 .toList();
     }
 

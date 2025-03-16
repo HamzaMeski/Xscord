@@ -11,12 +11,13 @@ import {
 } from "../../../../ngrx/selectors/friends/friends.selectors";
 import {AsyncPipe, NgForOf, NgIf} from "@angular/common";
 import {
-	selectUserProfile, selectUserProfileError,
+	selectUserProfile,
+	selectUserProfileError,
 	selectUserProfileLoading
 } from "../../../../ngrx/selectors/userProfile/userProfile.selectors";
 import {getIndividualFriends} from "../../../../ngrx/actions/friends/friends.actions";
 import {ServerJoinDemandRequest} from "../../../../core/types/server/serverJoinDemand.types";
-import {ActivatedRoute, Router} from "@angular/router";
+import {Router} from "@angular/router";
 import {sendServerInvitation} from "../../../../ngrx/actions/server/serverInvitation.actions";
 import {sendMessage} from "../../../../ngrx/actions/peerChat/peerChat.actions";
 import {ServerResponse} from "../../../../core/types/server/server.types";

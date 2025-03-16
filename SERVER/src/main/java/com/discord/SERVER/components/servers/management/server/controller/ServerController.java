@@ -34,6 +34,8 @@ public class ServerController {
         return ResponseEntity.ok(serverService.getIndividualServers(authUser.getId()));
     }
 
+
+
     @GetMapping("/{serverId}")
     public ResponseEntity<ServerResponseDTO> getServer(
             @PathVariable Long serverId

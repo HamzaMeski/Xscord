@@ -1,8 +1,12 @@
 package com.discord.SERVER.components.servers.management.serverJoinDemand.controller;
 
+import com.discord.SERVER.components.individual.dto.IndividualResponseDTO;
+import com.discord.SERVER.components.servers.management.server.dto.ServerResponseDTO;
 import com.discord.SERVER.components.servers.management.serverJoinDemand.dto.ServerJoinDemandRequestDTO;
 import com.discord.SERVER.components.servers.management.serverJoinDemand.dto.ServerJoinDemandResponseDTO;
 import com.discord.SERVER.components.servers.management.serverJoinDemand.service.ServerJoinDemandService;
+import com.discord.SERVER.security.CurrentUser;
+import com.discord.SERVER.security.UserPrincipal;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -37,6 +41,21 @@ public class ServerJoinDemandController {
             @PathVariable Long receiverId
     ) {
         return ResponseEntity.ok(service.getIndividualInvitations(receiverId));
+    }
+
+    @GetMapping("/serverMembers/{serverId}")
+    public ResponseEntity<List<IndividualResponseDTO>> getServerMembers(
+            @PathVariable Long serverId
+    ) {
+        return ResponseEntity.ok(service.getServerMembers(serverId));
+    }
+
+    @GetMapping("/memberJoinedServers")
+    public ResponseEntity<List<ServerResponseDTO>> getMemberJoinedServers(
+            @CurrentUser UserPrincipal authUser
+            ) {
+        Long memberId = authUser.getId();
+        return ResponseEntity.ok(service.getMemberJoinedServers(memberId));
     }
 
     @DeleteMapping("/refuse/{requestId}")
