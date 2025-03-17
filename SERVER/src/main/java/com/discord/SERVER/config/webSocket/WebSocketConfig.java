@@ -58,9 +58,9 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
                             if (jwtService.isTokenValid(jwt, userPrincipal)) {
                                 // Set the authenticated user with the UserPrincipal
                                 accessor.setUser(new UsernamePasswordAuthenticationToken(
-                                        userPrincipal,  // Use the actual UserPrincipal
-                                        null,
-                                        userPrincipal.getAuthorities()
+                                    userPrincipal,
+                                    null,
+                                    userPrincipal.getAuthorities()
                                 ));
                             }
                         }
