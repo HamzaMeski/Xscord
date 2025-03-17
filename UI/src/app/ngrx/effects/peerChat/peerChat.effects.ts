@@ -9,7 +9,7 @@ import {
 	sendMessage
 } from "../../actions/peerChat/peerChat.actions";
 import {catchError, map, mergeMap, of, switchMap, tap} from "rxjs";
-import {PeerChatRestService} from "../../../core/services/restfull/backend/peerChatRest.service";
+import {PeerChatService} from "../../../core/services/restfull/backend/peerChat.service";
 
 
 @Injectable()
@@ -21,7 +21,7 @@ export class PeerChatEffects {
 	constructor(
 		private actions$: Actions,
 		private peerChatSocketService: PeerChatSocketService,
-		private peerChatRestService: PeerChatRestService,
+		private peerChatRestService: PeerChatService,
 	) {
 		this.connectToChat$ = createEffect(() =>
 			this.actions$.pipe(

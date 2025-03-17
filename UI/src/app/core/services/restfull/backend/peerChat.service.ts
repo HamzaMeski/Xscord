@@ -7,7 +7,7 @@ import {serverApiUrl} from "../../../../../environments/env";
 @Injectable({
 	providedIn: 'root'
 })
-export class PeerChatRestService {
+export class PeerChatService {
 	private readonly API_URL: string = serverApiUrl
 
 	constructor(private http: HttpClient) {

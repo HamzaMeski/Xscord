@@ -1,67 +1,62 @@
-import {Injectable} from "@angular/core";
+import {BaseSocketService} from "./baseSocket.service";
 import {Store} from "@ngrx/store";
 import {connectionEstablished, connectionLost, receiveMessage} from "../../../ngrx/actions/peerChat/peerChat.actions";
 import {Observable, throwError} from "rxjs";
-import {BaseSocketService} from "./baseSocket.service";
+import {Injectable} from "@angular/core";
 
 
 @Injectable({
 	providedIn: 'root'
 })
-export class PeerChatSocketService extends BaseSocketService {
+export class GroupChatSocketService extends BaseSocketService {
+	private activeSubscriptions: Map<number, { unsubscribe: () => void }> = new Map();
+
 	constructor(private store: Store) {
 		super();
 		this.stompClient.onConnect = () => {
 			this.connected = true;
 			this.store.dispatch(connectionEstablished());
-			this.subscribeToMessages();
 		};
 		this.stompClient.onDisconnect = () => {
 			this.connected = false;
 			this.store.dispatch(connectionLost());
+			this.activeSubscriptions.clear();
 		};
 	}
 
-	private subscribeToMessages(): void {
-		const token = localStorage.getItem('authUserToken');
-		const decodedToken = this.decodeJwt(token);
-		const userId = decodedToken?.userId;
-
-		if (!userId) {
-			console.error('No user ID found in token');
+	subscribeToGroup(groupId: number): void {
+		if (this.activeSubscriptions.has(groupId)) {
 			return;
 		}
 
-		this.stompClient.subscribe(`/topic/messages.${userId}`, message => {
+		const subscription = this.stompClient.subscribe(`/topic/messages.${groupId}`, message => {
 			try {
 				const newMessage = JSON.parse(message.body);
 				this.store.dispatch(receiveMessage({ response: newMessage }));
 			} catch (error) {
-				console.error('Error processing message:', error);
+				console.error('Error processing group message:', error);
 			}
 		});
+
+		this.activeSubscriptions.set(groupId, subscription);
 	}
 
-	private decodeJwt(token: string | null): any {
-		if (!token) return null;
-		try {
-			const base64Url = token.split('.')[1];
-			const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-			return JSON.parse(window.atob(base64));
-		} catch (error) {
-			console.error('Error decoding JWT:', error);
-			return null;
+	unsubscribeFromGroup(groupId: number): void {
+		const subscription = this.activeSubscriptions.get(groupId);
+		if (subscription) {
+			subscription.unsubscribe();
+			this.activeSubscriptions.delete(groupId);
 		}
 	}
 
-	sendMessage(receiverId: number, content: string): Observable<void> {
+	sendMessage(groupId: number, content: string): Observable<void> {
 		if (!this.stompClient.active || !this.connected) {
 			return throwError(() => new Error('No active connection'));
 		}
 
 		return new Observable(subscriber => {
 			try {
-				const message = { receiverId, content };
+				const message = { groupId, content };
 				this.stompClient.publish({
 					destination: '/app/chat.sendMessage',
 					body: JSON.stringify(message)

@@ -1,7 +1,7 @@
 import {Injectable} from "@angular/core";
 import {Actions, createEffect, ofType} from "@ngrx/effects";
 import {PeerChatSocketService} from "../../../core/services/socket/peerChatSocket.service";
-import {PeerChatRestService} from "../../../core/services/restfull/backend/peerChatRest.service";
+import {PeerChatService} from "../../../core/services/restfull/backend/peerChat.service";
 import {
 	connectToChat,
 	loadChatHistory, loadChatHistoryFailure,
@@ -9,7 +9,14 @@ import {
 	sendMessage
 } from "../../actions/peerChat/peerChat.actions";
 import {catchError, map, mergeMap, of, switchMap} from "rxjs";
-import {sendGroupMessage} from "../../actions/groupChat/groupChat.actions";
+import {
+	loadGroupMessages,
+	loadGroupMessagesFailure,
+	loadGroupMessagesSuccess,
+	sendGroupMessage
+} from "../../actions/groupChat/groupChat.actions";
+import {GroupChatSocketService} from "../../../core/services/socket/groupChatSocket.service";
+import {GroupChatService} from "../../../core/services/restfull/backend/groupChat.service";
 
 
 @Injectable()
@@ -19,15 +26,15 @@ export class PeerChatEffects {
 
 	constructor(
 		private actions$: Actions,
-		private peerChatSocketService: PeerChatSocketService,
-		private peerChatRestService: PeerChatRestService,
+		private groupChatSocketService: GroupChatSocketService,
+		private groupChatService: GroupChatService,
 	) {
 
 		this.sendGroupMessage$ = createEffect(() =>
 				this.actions$.pipe(
 					ofType(sendGroupMessage),
 					switchMap(({request})=> {
-						return this.peerChatSocketService.sendMessage(request.receiverId, request.content)
+						return this.groupChatSocketService.sendMessage(request.groupId, request.content)
 					})
 				),
 			{
@@ -38,21 +45,20 @@ export class PeerChatEffects {
 
 		this.loadGroupMessages$ = createEffect(() =>
 			this.actions$.pipe(
-				ofType(loadChatHistory),
-				mergeMap(({individual2Id}) =>
-					this.peerChatRestService.getChatHistory(individual2Id).pipe(
+				ofType(loadGroupMessages),
+				mergeMap(({groupId}) =>
+					this.groupChatService.getGroupMessages(groupId).pipe(
 						map(response => {
 							console.log('loadChatHistory effect')
-							return loadChatHistorySuccess({response})
+							return loadGroupMessagesSuccess({response})
 						}),
 						catchError(err =>{
 							const error: string = err.error.message
-							return of(loadChatHistoryFailure({error}))
+							return of(loadGroupMessagesFailure({error}))
 						})
 					)
 				)
 			)
 		)
-
 	}
 }
