@@ -25,9 +25,7 @@ public class GroupMessage {
     @JoinColumn(name = "sender_id")
     private Individual sender;
 
-    @OneToOne(mappedBy = "groupMessage")
-    private MessageResource messageResource;
-
+    private String content;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
