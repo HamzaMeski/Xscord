@@ -17,7 +17,6 @@ import {
 } from "../../../../ngrx/selectors/userProfile/userProfile.selectors";
 import {CommonModule} from "@angular/common";
 import {
-	selectMeIsConnected,
 	selectPeerChatHistoryConversation,
 	selectPeerChatHistoryError,
 	selectPeerChatHistoryLoading
@@ -32,7 +31,6 @@ import {FormsModule} from "@angular/forms";
 import {IndividualResponse} from "../../../../core/types/individual/individual.types";
 import {acceptServerInvitation, getReceiverInvitations} from "../../../../ngrx/actions/server/serverInvitation.actions";
 import {peerMessageResponse} from "../../../../core/types/peerChat/peerChat.types";
-import {ServerJoinDemandResponse} from "../../../../core/types/server/serverJoinDemand.types";
 import {
 	selectAcceptServerInvitationLoading,
 	selectAcceptServerInvitationResponse,
@@ -40,7 +38,6 @@ import {
 	selectReceiverInvitationsLoading,
 	selectReceiverInvitationsResponse
 } from "../../../../ngrx/selectors/server/serverInvitation.selectors";
-import {combineLatest} from "rxjs";
 
 
 @Component({
@@ -140,7 +137,7 @@ import {combineLatest} from "rxjs";
                             </button>
                         </div>
                     </div>
-                </main>
+                </main>conversation$
             </div>
         </section>
 
@@ -255,7 +252,8 @@ import {combineLatest} from "rxjs";
                                                                     </button>
                                                                 </div>
                                                             </div>
-                                                        </div>                                                    </div>
+                                                        </div>                                                    
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>

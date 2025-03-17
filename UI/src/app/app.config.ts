@@ -44,6 +44,7 @@ import {
 } from "./ngrx/reducers/server/serverInvitation.reducers";
 import {ServerInvitationEffects} from "./ngrx/effects/server/serverInvitation.effects";
 import {openAddPersonReducers} from "./ngrx/reducers/modal/addPerson.reducers";
+import {groupMessagesReducer} from "./ngrx/reducers/groupChat/groupChat.reducers";
 
 
 export const appConfig: ApplicationConfig = {
@@ -78,7 +79,8 @@ export const appConfig: ApplicationConfig = {
             getReceiverInvitations: getReceiverInvitationsReducer,
             acceptServerInvitation: acceptServerInvitationReducer,
             getServerMembers: getServerMembersReducer,
-            getMemberJoinedServers: getMemberJoinedServersReducer
+            getMemberJoinedServers: getMemberJoinedServersReducer,
+            getGroupMessages: groupMessagesReducer
         }),
         provideStoreDevtools({ maxAge: 25, logOnly: !isDevMode() }),
         provideEffects([
