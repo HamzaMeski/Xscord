@@ -12,7 +12,8 @@ import {
 	selectServerMembersResponse
 } from "../../../../ngrx/selectors/server/serverInvitation.selectors";
 import {
-	selectUserProfile, selectUserProfileError,
+	selectUserProfile,
+	selectUserProfileError,
 	selectUserProfileLoading
 } from "../../../../ngrx/selectors/userProfile/userProfile.selectors";
 import {loadUserProfile} from "../../../../ngrx/actions/userProfile/userProfile.actions";
@@ -40,7 +41,9 @@ import {
 		      <!-- Top Navigation Bar -->
 		      <div class="flex items-center gap-2 bg-[#1E1F22] px-4 py-3 shadow-md flex-shrink-0">
 		          <div>#</div>
-		          <strong class="text-white font-medium">Chelling Group</strong>
+			      <div *ngIf="server$ | async as server">
+                      <strong class="text-white font-medium">{{server.name}}</strong>
+                  </div>
 		      </div>
 		      
 		      <main class="flex flex-1 min-h-0">

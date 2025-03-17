@@ -347,8 +347,6 @@ export class FriendChatComponent  implements OnInit, AfterViewChecked, AfterView
 	joinServerResponse$
 	joinServerLoading$
 
-
-
 	@ViewChild('messageContainer') private messageContainer!: ElementRef
 	scrollDown(): void {
 		this.messageContainer.nativeElement.scrollTop = this.messageContainer.nativeElement.scrollHeight

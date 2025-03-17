@@ -22,6 +22,7 @@ import {
 import {getServerGroups} from "../../../ngrx/actions/group/group.actions";
 import {CommonModule} from "@angular/common";
 import {openAddPersonModal} from "../../../ngrx/actions/modal/addPerson.actions";
+import {selectUserProfile} from "../../../ngrx/selectors/userProfile/userProfile.selectors";
 
 @Component({
 	standalone: true,
@@ -52,7 +53,7 @@ import {openAddPersonModal} from "../../../ngrx/actions/modal/addPerson.actions"
                     </div>
 
                     <!-- Loading State -->
-                    <div *ngIf="(serverGroupsLoading$ | async)" class="px-2 py-1 text-[#949BA4] text-sm">
+                    <div *ngIf="(serverGroupsLoading$ | async)" class="px-2 py-1 text-[#949BA4] text-sm ">
                         Loading channels...
                     </div>
 
@@ -93,7 +94,9 @@ import {openAddPersonModal} from "../../../ngrx/actions/modal/addPerson.actions"
                             <div
                                 class="absolute bottom-0 right-0 w-2.5 h-2.5 bg-[#23A559] rounded-full border-2 border-[#232428]"></div>
                         </div>
-                        <span class="text-sm font-medium text-white">Hamza Meski</span>
+	                    <div *ngIf="authUser$ | async as authUser">
+                            <span class="text-sm font-medium text-white">{{authUser.displayName}}</span>
+                        </div>
                     </div>
                     <div class="flex items-center gap-2">
                         <button class="text-[#949BA4] hover:text-white transition-colors">
@@ -119,6 +122,8 @@ export class ServerComponent implements OnInit{
 	serverGroupsLoading$
 	serverGroupsFailure$
 
+	authUser$
+
 	constructor(
 		private route: ActivatedRoute,
 		private store: Store,
@@ -127,6 +132,8 @@ export class ServerComponent implements OnInit{
 		this.serverGroups$ = this.store.select(selectServerGroupsResponse)
 		this.serverGroupsLoading$ = this.store.select(selectServerGroupsLoading)
 		this.serverGroupsFailure$ = this.store.select(selectServerGroupsFailure)
+
+		this.authUser$ = this.store.select(selectUserProfile)
 	}
 
 	ngOnInit(): void{
