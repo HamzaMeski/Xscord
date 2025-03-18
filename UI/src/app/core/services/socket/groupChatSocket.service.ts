@@ -1,8 +1,8 @@
 import {BaseSocketService} from "./baseSocket.service";
 import {Store} from "@ngrx/store";
-import {connectionEstablished, connectionLost, receiveMessage} from "../../../ngrx/actions/peerChat/peerChat.actions";
 import {Observable, throwError} from "rxjs";
 import {Injectable} from "@angular/core";
+import {receiveGroupMessage} from "../../../ngrx/actions/groupChat/groupChat.actions";
 
 
 @Injectable({
@@ -15,11 +15,9 @@ export class GroupChatSocketService extends BaseSocketService {
 		super();
 		this.stompClient.onConnect = () => {
 			this.connected = true;
-			this.store.dispatch(connectionEstablished());
 		};
 		this.stompClient.onDisconnect = () => {
 			this.connected = false;
-			this.store.dispatch(connectionLost());
 			this.activeSubscriptions.clear();
 		};
 	}
@@ -29,10 +27,10 @@ export class GroupChatSocketService extends BaseSocketService {
 			return;
 		}
 
-		const subscription = this.stompClient.subscribe(`/topic/messages.${groupId}`, message => {
+		const subscription = this.stompClient.subscribe(`/topic/group.messages.${groupId}`, message => {
 			try {
 				const newMessage = JSON.parse(message.body);
-				this.store.dispatch(receiveMessage({ response: newMessage }));
+				this.store.dispatch(receiveGroupMessage({ response: newMessage }));
 			} catch (error) {
 				console.error('Error processing group message:', error);
 			}
@@ -58,7 +56,7 @@ export class GroupChatSocketService extends BaseSocketService {
 			try {
 				const message = { groupId, content };
 				this.stompClient.publish({
-					destination: '/app/chat.sendMessage',
+					destination: '/app/group.chat.sendMessage',
 					body: JSON.stringify(message)
 				});
 				subscriber.next();
