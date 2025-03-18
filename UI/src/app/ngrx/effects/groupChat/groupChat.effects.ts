@@ -25,7 +25,6 @@ export class GroupChatEffects {
 		private groupChatService: GroupChatService,
 		private groupService: GroupService
 	) {
-
 		this.sendGroupMessage$ = createEffect(() =>
 				this.actions$.pipe(
 					ofType(sendGroupMessage),
@@ -37,7 +36,6 @@ export class GroupChatEffects {
 				dispatch: false
 			}
 		)
-
 
 		this.loadGroupMessages$ = createEffect(() =>
 			this.actions$.pipe(

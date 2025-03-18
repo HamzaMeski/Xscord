@@ -31,7 +31,8 @@ import {
 } from "../../../../ngrx/selectors/groupChat/groupChat.selectors";
 import {
 	addSenderGroupMessageToConversation,
-	loadGroupMessages, sendGroupMessage
+	loadGroupMessages,
+	sendGroupMessage
 } from "../../../../ngrx/actions/groupChat/groupChat.actions";
 import {IndividualResponse} from "../../../../core/types/individual/individual.types";
 import {GroupResponse} from "../../../../core/types/group/group.types";
@@ -40,6 +41,8 @@ import {
 	selectGroupLoading,
 	selectGroupResponse
 } from "../../../../ngrx/selectors/group/group.selectors";
+import {GroupChatSocketService} from "../../../../core/services/socket/groupChatSocket.service";
+import {Subscription} from "rxjs";
 
 
 @Component({
@@ -203,6 +206,8 @@ export class GroupChatComponent implements OnInit, OnDestroy {
 	faCirclePlus = faCirclePlus
 	faSearch = faSearch
 
+	private subscriptions: Subscription[] = []
+
 	authUser$
 	authUserLoading$
 	authUserError$
@@ -234,7 +239,8 @@ export class GroupChatComponent implements OnInit, OnDestroy {
 	constructor(
 		private store: Store,
 		private router: Router,
-		private route: ActivatedRoute
+		private route: ActivatedRoute,
+		private groupChatSocketService: GroupChatSocketService
 	){
 		this.authUser$ = this.store.select(selectUserProfile)
 		this.authUserLoading$ = this.store.select(selectUserProfileLoading)
@@ -266,33 +272,39 @@ export class GroupChatComponent implements OnInit, OnDestroy {
 
 		this.store.dispatch(getServer({serverId: this.getServerId()}))
 
-		this.route.params.subscribe(params => {
-			const groupId = +params['groupId'];
-			this.groupId = groupId
-			this.store.dispatch(loadGroupMessages({groupId: groupId}))
-		});
+		this.subscriptions.push(
+			this.route.params.subscribe(params => {
+				const groupId = +params['groupId'];
+				this.groupId = groupId
+				console.log('chat init: ', groupId)
+				this.store.dispatch(loadGroupMessages({groupId: groupId}))
 
-		this.authUser$.subscribe(user => {
-			if(user) {
-				this.authUser = user
-				this.authUserId = user.id
-			}
-		})
+				// Subscribe to group messages
+				this.groupChatSocketService.subscribeToGroup(groupId)
+			}),
 
-		this.group$.subscribe(group=> {
-			if(group) {
-				this.group = group
-			}
-		})
-
-		this.messages$.subscribe(
-			con=>{
-				if(con.length > 0) {
-					this.submittedMessageId = con[con.length - 1].id + 1
-				}else {
-					this.submittedMessageId = 1
+			this.authUser$.subscribe(user => {
+				if(user) {
+					this.authUser = user
+					this.authUserId = user.id
 				}
-			}
+			}),
+
+			this.group$.subscribe(group=> {
+				if(group) {
+					this.group = group
+				}
+			}),
+
+			this.messages$.subscribe(
+				con=>{
+					if(con.length > 0) {
+						this.submittedMessageId = con[con.length - 1].id + 1
+					}else {
+						this.submittedMessageId = 1
+					}
+				}
+			)
 		)
 	}
 
@@ -327,8 +339,8 @@ export class GroupChatComponent implements OnInit, OnDestroy {
 		}
 	}
 
-
 	ngOnDestroy(): void {
-		console.log('chat destroyed')
+		console.log('chat destroyed: ', this.groupId)
+		this.subscriptions.forEach(sub => sub.unsubscribe());
 	}
 }

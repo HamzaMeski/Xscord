@@ -65,6 +65,5 @@ export class PeerChatEffects {
 				)
 			)
 		)
-
 	}
 }

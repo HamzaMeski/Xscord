@@ -1,6 +1,6 @@
 import {BaseSocketService} from "./baseSocket.service";
 import {Store} from "@ngrx/store";
-import {Observable, throwError} from "rxjs";
+import {Observable} from "rxjs";
 import {Injectable} from "@angular/core";
 import {receiveGroupMessage} from "../../../ngrx/actions/groupChat/groupChat.actions";
 
@@ -10,11 +10,16 @@ import {receiveGroupMessage} from "../../../ngrx/actions/groupChat/groupChat.act
 })
 export class GroupChatSocketService extends BaseSocketService {
 	private activeSubscriptions: Map<number, { unsubscribe: () => void }> = new Map();
+	private pendingGroupId: number | null = null;
 
 	constructor(private store: Store) {
 		super();
 		this.stompClient.onConnect = () => {
 			this.connected = true;
+			if (this.pendingGroupId !== null) {
+				this.doSubscribeToGroup(this.pendingGroupId);
+				this.pendingGroupId = null;
+			}
 		};
 		this.stompClient.onDisconnect = () => {
 			this.connected = false;
@@ -27,6 +32,15 @@ export class GroupChatSocketService extends BaseSocketService {
 			return;
 		}
 
+		if (this.connected) {
+			this.doSubscribeToGroup(groupId);
+		} else {
+			this.pendingGroupId = groupId;
+			this.connect();
+		}
+	}
+
+	private doSubscribeToGroup(groupId: number): void {
 		const subscription = this.stompClient.subscribe(`/topic/group.messages.${groupId}`, message => {
 			try {
 				const newMessage = JSON.parse(message.body);
@@ -48,8 +62,21 @@ export class GroupChatSocketService extends BaseSocketService {
 	}
 
 	sendMessage(groupId: number, content: string): Observable<void> {
-		if (!this.stompClient.active || !this.connected) {
-			return throwError(() => new Error('No active connection'));
+		if (!this.connected) {
+			return new Observable(subscriber => {
+				this.connect().subscribe({
+					next: () => {
+						const message = { groupId, content };
+						this.stompClient.publish({
+							destination: '/app/group.chat.sendMessage',
+							body: JSON.stringify(message)
+						});
+						subscriber.next();
+						subscriber.complete();
+					},
+					error: (error) => subscriber.error(error)
+				});
+			});
 		}
 
 		return new Observable(subscriber => {
