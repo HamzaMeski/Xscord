@@ -23,7 +23,6 @@ import {
 } from "../../../../ngrx/selectors/peerChat/peerChat.selectors";
 import {
 	addSenderMessageToConversation,
-	connectToChat,
 	loadChatHistory,
 	sendMessage
 } from "../../../../ngrx/actions/peerChat/peerChat.actions";

@@ -1,7 +1,7 @@
-import {Component, OnInit} from "@angular/core";
+import {Component, OnDestroy, OnInit} from "@angular/core";
 import {FaIconComponent} from "@fortawesome/angular-fontawesome";
 import {CommonModule} from "@angular/common";
-import {ReactiveFormsModule} from "@angular/forms";
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {faDiscord} from "@fortawesome/free-brands-svg-icons";
 import {faCirclePlus, faSearch} from "@fortawesome/free-solid-svg-icons";
 import {Store} from "@ngrx/store";
@@ -18,13 +18,31 @@ import {
 } from "../../../../ngrx/selectors/userProfile/userProfile.selectors";
 import {loadUserProfile} from "../../../../ngrx/actions/userProfile/userProfile.actions";
 import {getServer} from "../../../../ngrx/actions/server/server.actions";
-import {Router} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 import {
 	selectServerFailure,
 	selectServerLoading,
 	selectServerResponse
 } from "../../../../ngrx/selectors/server/server.selectors";
-import {combineLatest, map, Observable} from "rxjs";
+import {
+	selectGroupMessagesError,
+	selectGroupMessagesLoading,
+	selectGroupMessagesResponse
+} from "../../../../ngrx/selectors/groupChat/groupChat.selectors";
+import {
+	addSenderGroupMessageToConversation,
+	loadGroupMessages,
+	sendGroupMessage
+} from "../../../../ngrx/actions/groupChat/groupChat.actions";
+import {IndividualResponse} from "../../../../core/types/individual/individual.types";
+import {GroupResponse} from "../../../../core/types/group/group.types";
+import {
+	selectGroupError,
+	selectGroupLoading,
+	selectGroupResponse
+} from "../../../../ngrx/selectors/group/group.selectors";
+import {GroupChatSocketService} from "../../../../core/services/socket/groupChatSocket.service";
+import {Subscription} from "rxjs";
 
 
 @Component({
@@ -33,8 +51,8 @@ import {combineLatest, map, Observable} from "rxjs";
 	imports: [
 		CommonModule,
 		FaIconComponent,
-		ReactiveFormsModule
-
+		ReactiveFormsModule,
+		FormsModule
 	],
 	template: `
     <section class="h-screen flex flex-col bg-[#313338]">
@@ -62,9 +80,52 @@ import {combineLatest, map, Observable} from "rxjs";
 		                      </div>
 		
 		                      <!--Messages-->
-		                      <div>
-		
+		                      <div *ngIf="(messagesLoading$ | async)">
+									messages loading...
 		                      </div>
+                              <div *ngIf="!(messagesLoading$ | async)">
+	                              <div *ngIf="authUser$ | async as authUser">
+                                      <div *ngIf="messages$ | async as messages">
+                                          <div *ngFor="let message of messages">
+                                              <div *ngIf="messages.length">
+                                                  <!-- Current User Message -->
+                                                  <div *ngIf="message.sender.id == authUser.id"
+                                                       class="flex gap-4 items-start">
+                                                      <div class="w-10 h-10 rounded-full overflow-hidden flex-shrink-0">
+                                                          <div class="w-full h-full bg-red-500 flex items-center justify-center">
+                                                              <fa-icon [icon]="faDiscord" class="text-lg text-white"></fa-icon>
+                                                          </div>
+                                                      </div>
+                                                      <div class="flex-1 min-w-0">
+                                                          <div class="flex items-center gap-2 mb-1">
+                                                              <span class="font-medium text-white">{{ message.sender.displayName }}</span>
+                                                              <span class="text-xs text-[#949BA4]">{{ message.createdAt }}</span>
+                                                          </div>
+                                                          <p  class="text-[#DBDEE1] break-words">{{ message.content }}</p>
+                                                      </div>
+                                                  </div>
+
+                                                  <!-- Other User Messages -->
+                                                  <div *ngIf="message.sender.id != authUser.id"
+                                                       class="flex gap-4 items-start">
+                                                      <div class="w-10 h-10 rounded-full overflow-hidden flex-shrink-0">
+                                                          <div class="w-full h-full bg-[#5865F2]flex items-center justify-center">
+                                                              <fa-icon [icon]="faDiscord" class="text-lg text-white"></fa-icon>
+                                                          </div>
+                                                      </div>
+                                                      <div class="flex-1 min-w-0">
+                                                          <div class="flex items-center gap-2 mb-1">
+                                                              <span class="font-medium text-white">{{ message.sender.displayName }}</span>
+                                                              <span class="text-xs text-[#949BA4]">{{ message.createdAt }}</span>
+                                                          </div>
+                                                          <p  class="text-[#DBDEE1] break-words">{{ message.content }}</p>
+                                                      </div>
+                                                  </div>
+                                              </div>
+                                          </div>
+                                      </div>
+	                              </div>
+                              </div>
 		                  </div>
 		
 		                  <!-- Message Input -->
@@ -73,12 +134,15 @@ import {combineLatest, map, Observable} from "rxjs";
 		                          <button class="text-[#B5BAC1] hover:text-white transition-colors">
 		                              <fa-icon [icon]="faCirclePlus" class="text-xl"></fa-icon>
 		                          </button>
-		                          <input type="text"
-		                                 class="flex-1 text-[#DBDEE1] placeholder-[#949BA4] focus:outline-none">
-		                          <button 
-		                                  class="px-4 py-1 bg-[#5865F2] text-white rounded hover:bg-[#4752C4] transition-colors">
-		                              Send
-		                          </button>
+                                  <input type="text"
+                                         [(ngModel)]="newMessage"
+                                         (keyup.enter)="sendMessage()"
+                                         placeholder="Message Your Group..."
+                                         class="flex-1 text-[#DBDEE1] placeholder-[#949BA4] focus:outline-none">
+                                  <button (click)="sendMessage()"
+                                          class="px-4 py-1 bg-[#5865F2] text-white rounded hover:bg-[#4752C4] transition-colors">
+                                      Send
+                                  </button>
 		                      </div>
 		                  </div>
 		              </div>
@@ -137,10 +201,12 @@ import {combineLatest, map, Observable} from "rxjs";
     </section>
   `
 })
-export class GroupChatComponent implements OnInit {
+export class GroupChatComponent implements OnInit, OnDestroy {
 	faDiscord = faDiscord
 	faCirclePlus = faCirclePlus
 	faSearch = faSearch
+
+	private subscriptions: Subscription[] = []
 
 	authUser$
 	authUserLoading$
@@ -150,15 +216,31 @@ export class GroupChatComponent implements OnInit {
 	serverMembersLoading$
 	serverMembersError$
 
+	group$
+	groupLoading$
+	groupError$
+
 	server$
 	serverLoading$
 	serverError$
 
-	isLoading$!: Observable<boolean>
+	messages$
+	messagesLoading$
+	messagesError$
+
+	newMessage: string  = ''
+	groupId!:number
+	authUser!: IndividualResponse
+	authUserId!:number
+	group!:GroupResponse
+	submittedMessageId!:number
+
 
 	constructor(
 		private store: Store,
-		private router: Router
+		private router: Router,
+		private route: ActivatedRoute,
+		private groupChatSocketService: GroupChatSocketService
 	){
 		this.authUser$ = this.store.select(selectUserProfile)
 		this.authUserLoading$ = this.store.select(selectUserProfileLoading)
@@ -172,13 +254,15 @@ export class GroupChatComponent implements OnInit {
 		this.serverLoading$ = this.store.select(selectServerLoading)
 		this.serverError$ = this.store.select(selectServerFailure)
 
-		this.isLoading$ = combineLatest([
-			this.authUserLoading$,
-			this.serverLoading$,
-			this.serverMembersLoading$
-		]).pipe(
-			map(([authUserLoading, serverLoading, serverMembersLoading])=> authUserLoading || serverLoading || serverMembersLoading)
-		)
+		this.group$ = this.store.select(selectGroupResponse)
+		this.groupLoading$ = this.store.select(selectGroupLoading)
+		this.groupError$ = this.store.select(selectGroupError)
+
+		this.messages$ = this.store.select(selectGroupMessagesResponse)
+		this.messagesLoading$ = this.store.select(selectGroupMessagesLoading)
+		this.messagesError$ = this.store.select(selectGroupMessagesError)
+
+
 	}
 
 	ngOnInit(): void {
@@ -187,6 +271,42 @@ export class GroupChatComponent implements OnInit {
 		this.store.dispatch(getServerMembers({serverId: this.getServerId()}))
 
 		this.store.dispatch(getServer({serverId: this.getServerId()}))
+
+		this.subscriptions.push(
+			this.route.params.subscribe(params => {
+				const groupId = +params['groupId'];
+				this.groupId = groupId
+				console.log('chat init: ', groupId)
+				this.store.dispatch(loadGroupMessages({groupId: groupId}))
+
+				// Subscribe to group messages
+				this.groupChatSocketService.subscribeToGroup(groupId)
+			}),
+
+			this.authUser$.subscribe(user => {
+				if(user) {
+					this.authUser = user
+					this.authUserId = user.id
+				}
+			}),
+
+			this.group$.subscribe(group=> {
+				if(group) {
+					this.group = group
+				}
+			}),
+
+			this.messages$.subscribe(
+				con=>{
+					console.log('MESSAGES:',con)
+					if(con.length > 0) {
+						this.submittedMessageId = con[con.length - 1].id + 1
+					}else {
+						this.submittedMessageId = 1
+					}
+				}
+			)
+		)
 	}
 
 	/* TODO: id shouldn't get server ID this way, I set it here just for testing purposes I will handle it later# */
@@ -195,5 +315,20 @@ export class GroupChatComponent implements OnInit {
 		return Number(urlSegments[3])
 	}
 
+	sendMessage() {
+		if(this.newMessage.trim()) {
+			this.store.dispatch(sendGroupMessage({
+				request: {
+					groupId: this.groupId,
+					content: this.newMessage.trim()
+				}
+			}))
 
+			this.newMessage = ''
+		}
+	}
+
+	ngOnDestroy(): void {
+		this.subscriptions.forEach(sub => sub.unsubscribe());
+	}
 }
