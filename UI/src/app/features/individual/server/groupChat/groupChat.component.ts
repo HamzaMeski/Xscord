@@ -298,6 +298,7 @@ export class GroupChatComponent implements OnInit, OnDestroy {
 
 			this.messages$.subscribe(
 				con=>{
+					console.log('MESSAGES:',con)
 					if(con.length > 0) {
 						this.submittedMessageId = con[con.length - 1].id + 1
 					}else {
@@ -323,24 +324,11 @@ export class GroupChatComponent implements OnInit, OnDestroy {
 				}
 			}))
 
-			// add sender message to conversation
-			this.store.dispatch(addSenderGroupMessageToConversation({
-				expectedResponse: {
-					id: this.submittedMessageId,
-					sender: this.authUser,
-					group: this.group,
-					content: this.newMessage,
-					createdAt: new Date(),
-					updatedAt: new Date()
-				}
-			}))
-
 			this.newMessage = ''
 		}
 	}
 
 	ngOnDestroy(): void {
-		console.log('chat destroyed: ', this.groupId)
 		this.subscriptions.forEach(sub => sub.unsubscribe());
 	}
 }

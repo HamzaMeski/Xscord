@@ -36,7 +36,17 @@ export class GroupChatSocketService extends BaseSocketService {
 			this.doSubscribeToGroup(groupId);
 		} else {
 			this.pendingGroupId = groupId;
-			this.connect();
+			// Make sure to wait for the connection before proceeding
+			this.connect().subscribe({
+				next: () => {
+					// Now we're connected, do the subscription
+					if (this.pendingGroupId === groupId) {
+						this.doSubscribeToGroup(groupId);
+						this.pendingGroupId = null;
+					}
+				},
+				error: (error) => console.error('Error connecting:', error)
+			});
 		}
 	}
 
