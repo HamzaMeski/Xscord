@@ -1,4 +1,4 @@
-import {Component, OnInit} from "@angular/core";
+import {Component, OnDestroy, OnInit} from "@angular/core";
 import {FaIconComponent} from "@fortawesome/angular-fontawesome";
 import {CommonModule} from "@angular/common";
 import {ReactiveFormsModule} from "@angular/forms";
@@ -18,13 +18,30 @@ import {
 } from "../../../../ngrx/selectors/userProfile/userProfile.selectors";
 import {loadUserProfile} from "../../../../ngrx/actions/userProfile/userProfile.actions";
 import {getServer} from "../../../../ngrx/actions/server/server.actions";
-import {Router} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 import {
 	selectServerFailure,
 	selectServerLoading,
 	selectServerResponse
 } from "../../../../ngrx/selectors/server/server.selectors";
 import {combineLatest, map, Observable} from "rxjs";
+import {
+	selectGroupMessagesError,
+	selectGroupMessagesLoading,
+	selectGroupMessagesResponse
+} from "../../../../ngrx/selectors/groupChat/groupChat.selectors";
+import {
+	addSenderGroupMessageToConversation,
+	loadGroupMessages, sendGroupMessage
+} from "../../../../ngrx/actions/groupChat/groupChat.actions";
+import {addSenderMessageToConversation} from "../../../../ngrx/actions/peerChat/peerChat.actions";
+import {IndividualResponse} from "../../../../core/types/individual/individual.types";
+import {GroupResponse} from "../../../../core/types/group/group.types";
+import {
+	selectGroupError,
+	selectGroupLoading,
+	selectGroupResponse
+} from "../../../../ngrx/selectors/group/group.selectors";
 
 
 @Component({
@@ -34,7 +51,6 @@ import {combineLatest, map, Observable} from "rxjs";
 		CommonModule,
 		FaIconComponent,
 		ReactiveFormsModule
-
 	],
 	template: `
     <section class="h-screen flex flex-col bg-[#313338]">
@@ -62,9 +78,20 @@ import {combineLatest, map, Observable} from "rxjs";
 		                      </div>
 		
 		                      <!--Messages-->
-		                      <div>
-		
+		                      <div *ngIf="(messagesLoading$ | async)">
+									messages loading...
 		                      </div>
+                              <div *ngIf="!(messagesLoading$ | async)">
+	                              <div *ngIf="authUser$ | async as authUser">
+                                      <div *ngIf="messages$ | async as messages">
+                                          <div *ngFor="let message of messages">
+                                              <div *ngIf="messages.length">
+	                                              <p>{{message.content}}</p>
+                                              </div>
+                                          </div>
+                                      </div>
+	                              </div>
+                              </div>
 		                  </div>
 		
 		                  <!-- Message Input -->
@@ -73,12 +100,15 @@ import {combineLatest, map, Observable} from "rxjs";
 		                          <button class="text-[#B5BAC1] hover:text-white transition-colors">
 		                              <fa-icon [icon]="faCirclePlus" class="text-xl"></fa-icon>
 		                          </button>
-		                          <input type="text"
-		                                 class="flex-1 text-[#DBDEE1] placeholder-[#949BA4] focus:outline-none">
-		                          <button 
-		                                  class="px-4 py-1 bg-[#5865F2] text-white rounded hover:bg-[#4752C4] transition-colors">
-		                              Send
-		                          </button>
+                                  <input type="text"
+                                         [(ngModel)]="newMessage"
+                                         (keyup.enter)="sendMessage()"
+                                         placeholder="Message Your Group..."
+                                         class="flex-1 text-[#DBDEE1] placeholder-[#949BA4] focus:outline-none">
+                                  <button (click)="sendMessage()"
+                                          class="px-4 py-1 bg-[#5865F2] text-white rounded hover:bg-[#4752C4] transition-colors">
+                                      Send
+                                  </button>
 		                      </div>
 		                  </div>
 		              </div>
@@ -137,7 +167,7 @@ import {combineLatest, map, Observable} from "rxjs";
     </section>
   `
 })
-export class GroupChatComponent implements OnInit {
+export class GroupChatComponent implements OnInit, OnDestroy {
 	faDiscord = faDiscord
 	faCirclePlus = faCirclePlus
 	faSearch = faSearch
@@ -150,15 +180,30 @@ export class GroupChatComponent implements OnInit {
 	serverMembersLoading$
 	serverMembersError$
 
+	group$
+	groupLoading$
+	groupError$
+
 	server$
 	serverLoading$
 	serverError$
 
-	isLoading$!: Observable<boolean>
+	messages$
+	messagesLoading$
+	messagesError$
+
+	newMessage: string  = ''
+	groupId!:number
+	authUser!: IndividualResponse
+	authUserId!:number
+	group!:GroupResponse
+	submittedMessageId!:number
+
 
 	constructor(
 		private store: Store,
-		private router: Router
+		private router: Router,
+		private route: ActivatedRoute
 	){
 		this.authUser$ = this.store.select(selectUserProfile)
 		this.authUserLoading$ = this.store.select(selectUserProfileLoading)
@@ -172,13 +217,15 @@ export class GroupChatComponent implements OnInit {
 		this.serverLoading$ = this.store.select(selectServerLoading)
 		this.serverError$ = this.store.select(selectServerFailure)
 
-		this.isLoading$ = combineLatest([
-			this.authUserLoading$,
-			this.serverLoading$,
-			this.serverMembersLoading$
-		]).pipe(
-			map(([authUserLoading, serverLoading, serverMembersLoading])=> authUserLoading || serverLoading || serverMembersLoading)
-		)
+		this.group$ = this.store.select(selectGroupResponse)
+		this.groupLoading$ = this.store.select(selectGroupLoading)
+		this.groupError$ = this.store.select(selectGroupError)
+
+		this.messages$ = this.store.select(selectGroupMessagesResponse)
+		this.messagesLoading$ = this.store.select(selectGroupMessagesLoading)
+		this.messagesError$ = this.store.select(selectGroupMessagesError)
+
+
 	}
 
 	ngOnInit(): void {
@@ -187,6 +234,35 @@ export class GroupChatComponent implements OnInit {
 		this.store.dispatch(getServerMembers({serverId: this.getServerId()}))
 
 		this.store.dispatch(getServer({serverId: this.getServerId()}))
+
+		this.route.params.subscribe(params => {
+			const groupId = +params['groupId'];
+			this.groupId = groupId
+			this.store.dispatch(loadGroupMessages({groupId: groupId}))
+		});
+
+		this.authUser$.subscribe(user => {
+			if(user) {
+				this.authUser = user
+				this.authUserId = user.id
+			}
+		})
+
+		this.group$.subscribe(group=> {
+			if(group) {
+				this.group = group
+			}
+		})
+
+		this.messages$.subscribe(
+			con=>{
+				if(con.length > 0) {
+					this.submittedMessageId = con[con.length - 1].id + 1
+				}else {
+					this.submittedMessageId = 1
+				}
+			}
+		)
 	}
 
 	/* TODO: id shouldn't get server ID this way, I set it here just for testing purposes I will handle it later# */
@@ -195,5 +271,33 @@ export class GroupChatComponent implements OnInit {
 		return Number(urlSegments[3])
 	}
 
+	sendMessage() {
+		if(this.newMessage.trim()) {
+			this.store.dispatch(sendGroupMessage({
+				request: {
+					groupId: this.groupId,
+					content: this.newMessage.trim()
+				}
+			}))
 
+			// add sender message to conversation
+			this.store.dispatch(addSenderGroupMessageToConversation({
+				expectedResponse: {
+					id: this.submittedMessageId,
+					sender: this.authUser,
+					group: this.group,
+					content: this.newMessage,
+					createdAt: new Date(),
+					updatedAt: new Date()
+				}
+			}))
+
+			this.newMessage = ''
+		}
+	}
+
+
+	ngOnDestroy(): void {
+		console.log('chat destroyed')
+	}
 }

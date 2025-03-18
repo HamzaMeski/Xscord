@@ -16,5 +16,9 @@ export class GroupService {
 	getServerGroups(serverId: number): Observable<GroupResponse[]> {
 		return this.http.get<GroupResponse[]>(`${this.API_URL}/groups/server/${serverId}`, {})
 	}
+
+	getGroup(groupId: number): Observable<GroupResponse> {
+		return this.http.get<GroupResponse>(`${this.API_URL}/groups/${groupId}`, {})
+	}
 }
 

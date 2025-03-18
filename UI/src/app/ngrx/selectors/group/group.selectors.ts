@@ -18,3 +18,20 @@ export const selectServerGroupsFailure = createSelector(
 	selectServerGroupsState,
 	(state:GroupsState['getServerGroups'])=> state.error
 )
+
+
+// get group
+export const selectGroupState = createFeatureSelector<GroupsState['getGroup']>('getGroup')
+
+export const selectGroupResponse = createSelector(
+	selectGroupState,
+	(state:GroupsState['getGroup'])=>state.group
+)
+export const selectGroupLoading = createSelector(
+	selectGroupState,
+	(state:GroupsState['getGroup'])=>state.loading
+)
+export const selectGroupError = createSelector(
+	selectGroupState,
+	(state:GroupsState['getGroup'])=>state.error
+)
