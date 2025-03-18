@@ -1,7 +1,7 @@
 import {Component, OnDestroy, OnInit} from "@angular/core";
 import {FaIconComponent} from "@fortawesome/angular-fontawesome";
 import {CommonModule} from "@angular/common";
-import {ReactiveFormsModule} from "@angular/forms";
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {faDiscord} from "@fortawesome/free-brands-svg-icons";
 import {faCirclePlus, faSearch} from "@fortawesome/free-solid-svg-icons";
 import {Store} from "@ngrx/store";
@@ -24,7 +24,6 @@ import {
 	selectServerLoading,
 	selectServerResponse
 } from "../../../../ngrx/selectors/server/server.selectors";
-import {combineLatest, map, Observable} from "rxjs";
 import {
 	selectGroupMessagesError,
 	selectGroupMessagesLoading,
@@ -34,7 +33,6 @@ import {
 	addSenderGroupMessageToConversation,
 	loadGroupMessages, sendGroupMessage
 } from "../../../../ngrx/actions/groupChat/groupChat.actions";
-import {addSenderMessageToConversation} from "../../../../ngrx/actions/peerChat/peerChat.actions";
 import {IndividualResponse} from "../../../../core/types/individual/individual.types";
 import {GroupResponse} from "../../../../core/types/group/group.types";
 import {
@@ -50,7 +48,8 @@ import {
 	imports: [
 		CommonModule,
 		FaIconComponent,
-		ReactiveFormsModule
+		ReactiveFormsModule,
+		FormsModule
 	],
 	template: `
     <section class="h-screen flex flex-col bg-[#313338]">
@@ -86,7 +85,39 @@ import {
                                       <div *ngIf="messages$ | async as messages">
                                           <div *ngFor="let message of messages">
                                               <div *ngIf="messages.length">
-	                                              <p>{{message.content}}</p>
+                                                  <!-- Current User Message -->
+                                                  <div *ngIf="message.sender.id == authUser.id"
+                                                       class="flex gap-4 items-start">
+                                                      <div class="w-10 h-10 rounded-full overflow-hidden flex-shrink-0">
+                                                          <div class="w-full h-full bg-red-500 flex items-center justify-center">
+                                                              <fa-icon [icon]="faDiscord" class="text-lg text-white"></fa-icon>
+                                                          </div>
+                                                      </div>
+                                                      <div class="flex-1 min-w-0">
+                                                          <div class="flex items-center gap-2 mb-1">
+                                                              <span class="font-medium text-white">{{ message.sender.displayName }}</span>
+                                                              <span class="text-xs text-[#949BA4]">{{ message.createdAt }}</span>
+                                                          </div>
+                                                          <p  class="text-[#DBDEE1] break-words">{{ message.content }}</p>
+                                                      </div>
+                                                  </div>
+
+                                                  <!-- Other User Messages -->
+                                                  <div *ngIf="message.sender.id != authUser.id"
+                                                       class="flex gap-4 items-start">
+                                                      <div class="w-10 h-10 rounded-full overflow-hidden flex-shrink-0">
+                                                          <div class="w-full h-full bg-[#5865F2]flex items-center justify-center">
+                                                              <fa-icon [icon]="faDiscord" class="text-lg text-white"></fa-icon>
+                                                          </div>
+                                                      </div>
+                                                      <div class="flex-1 min-w-0">
+                                                          <div class="flex items-center gap-2 mb-1">
+                                                              <span class="font-medium text-white">{{ message.sender.displayName }}</span>
+                                                              <span class="text-xs text-[#949BA4]">{{ message.createdAt }}</span>
+                                                          </div>
+                                                          <p  class="text-[#DBDEE1] break-words">{{ message.content }}</p>
+                                                      </div>
+                                                  </div>
                                               </div>
                                           </div>
                                       </div>
