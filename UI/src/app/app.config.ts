@@ -45,6 +45,7 @@ import {
 import {ServerInvitationEffects} from "./ngrx/effects/server/serverInvitation.effects";
 import {openAddPersonReducers} from "./ngrx/reducers/modal/addPerson.reducers";
 import {groupMessagesReducer} from "./ngrx/reducers/groupChat/groupChat.reducers";
+import {GroupChatEffects} from "./ngrx/effects/groupChat/groupChat.effects";
 
 
 export const appConfig: ApplicationConfig = {
@@ -91,7 +92,8 @@ export const appConfig: ApplicationConfig = {
             PeerChatEffects,
             ServerEffects,
             GroupEffects,
-            ServerInvitationEffects
+            ServerInvitationEffects,
+            GroupChatEffects
         ])
     ]
 };

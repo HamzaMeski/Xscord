@@ -1,13 +1,5 @@
 import {Injectable} from "@angular/core";
 import {Actions, createEffect, ofType} from "@ngrx/effects";
-import {PeerChatSocketService} from "../../../core/services/socket/peerChatSocket.service";
-import {PeerChatService} from "../../../core/services/restfull/backend/peerChat.service";
-import {
-	connectToChat,
-	loadChatHistory, loadChatHistoryFailure,
-	loadChatHistorySuccess,
-	sendMessage
-} from "../../actions/peerChat/peerChat.actions";
 import {catchError, map, mergeMap, of, switchMap} from "rxjs";
 import {
 	loadGroupMessages,
@@ -20,7 +12,7 @@ import {GroupChatService} from "../../../core/services/restfull/backend/groupCha
 
 
 @Injectable()
-export class PeerChatEffects {
+export class GroupChatEffects {
 	sendGroupMessage$
 	loadGroupMessages$
 
