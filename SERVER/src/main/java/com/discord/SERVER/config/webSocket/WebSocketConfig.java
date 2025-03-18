@@ -17,15 +17,7 @@ import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBr
 import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
 
-import java.util.Collections;
 
-
-/*
-    .How messages are routed
-    .Where clients connect
-    .security settings
-    .Messages destinations
-*/
 @Configuration
 @EnableWebSocketMessageBroker
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
@@ -66,9 +58,9 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
                             if (jwtService.isTokenValid(jwt, userPrincipal)) {
                                 // Set the authenticated user with the UserPrincipal
                                 accessor.setUser(new UsernamePasswordAuthenticationToken(
-                                        userPrincipal,  // Use the actual UserPrincipal
-                                        null,
-                                        userPrincipal.getAuthorities()
+                                    userPrincipal,
+                                    null,
+                                    userPrincipal.getAuthorities()
                                 ));
                             }
                         }
@@ -83,6 +75,5 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     public void configureMessageBroker(MessageBrokerRegistry registry) {
         registry.setApplicationDestinationPrefixes("/app");
         registry.enableSimpleBroker("/topic");  // Change to topic
-        // Remove user destination prefix
     }
 }

@@ -80,7 +80,6 @@ import {selectUserProfile} from "../../../ngrx/selectors/userProfile/userProfile
                             </div>
                         </div>
                     </div>
-	                
                 </div>
 
                 <!-- User Profile Bar -->
@@ -94,9 +93,9 @@ import {selectUserProfile} from "../../../ngrx/selectors/userProfile/userProfile
                             <div
                                 class="absolute bottom-0 right-0 w-2.5 h-2.5 bg-[#23A559] rounded-full border-2 border-[#232428]"></div>
                         </div>
-	                    <div *ngIf="authUser$ | async as authUser">
+	                   <!-- <div *ngIf="authUser$ | async as authUser">
                             <span class="text-sm font-medium text-white">{{authUser.displayName}}</span>
-                        </div>
+                        </div>-->
                     </div>
                     <div class="flex items-center gap-2">
                         <button class="text-[#949BA4] hover:text-white transition-colors">

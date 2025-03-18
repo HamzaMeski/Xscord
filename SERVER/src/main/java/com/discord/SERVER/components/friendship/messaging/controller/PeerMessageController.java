@@ -34,23 +34,14 @@ public class PeerMessageController {
             Message<?> message
     ) {
         StompHeaderAccessor accessor = MessageHeaderAccessor.getAccessor(message, StompHeaderAccessor.class);
+        log.info("accessor:: {}", accessor);
         UsernamePasswordAuthenticationToken authentication = (UsernamePasswordAuthenticationToken)accessor.getUser();
         UserPrincipal authUser = (UserPrincipal)authentication.getPrincipal();
 
-        log.info("Received message request from user {} to user {}", authUser.getId(), requestDTO.receiverId());
-
         PeerMessageResponseDTO responseDTO = peerMessageService.sendMessage(authUser.getId(), requestDTO);
+        String destination = "/topic/messages." + requestDTO.receiverId();
 
-        try {
-            String destination = "/topic/messages." + requestDTO.receiverId();
-            log.info("Sending message to destination: {}", destination);
-
-            messagingTemplate.convertAndSend(destination, responseDTO);
-
-        } catch (Exception e) {
-            log.error("Failed to send WebSocket message", e);
-            e.printStackTrace();
-        }
+        messagingTemplate.convertAndSend(destination, responseDTO);
     }
 
     

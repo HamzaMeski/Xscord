@@ -24,6 +24,7 @@ import {
 	selectServerLoading,
 	selectServerResponse
 } from "../../../../ngrx/selectors/server/server.selectors";
+import {combineLatest, map, Observable} from "rxjs";
 
 
 @Component({
@@ -46,9 +47,9 @@ import {
                   </div>
 		      </div>
 		      
-		      <main class="flex flex-1 min-h-0">
+		      <main *ngIf="serverMembers$ | async as members" class="flex flex-1 min-h-0">
 		          <!-- Main Chat Area -->
-		          <div class="flex-1 flex flex-col min-h-0">
+		          <div *ngIf="authUser$ | async as authUser" class="flex-1 flex flex-col min-h-0">
 		              <!-- Chat Content -->
 		              <div class="flex flex-col flex-1 min-h-0">
 		                  <!-- Messages Container -->
@@ -56,7 +57,7 @@ import {
 		                      <div class="px-4 py-6">
 		                          <!-- Welcome Message -->
 			                      <div class="mb-8">
-				                      INVITE YOUR FRIEND
+				                      WELCOME TO CHANNEL
 			                      </div>
 		                      </div>
 		
@@ -116,7 +117,7 @@ import {
                           </div>
 
                           <!-- Members List -->
-                          <div *ngIf="serverMembers$ | async as members">
+                          <div >
                               <h3 class="px-2 text-xs font-semibold text-[#949BA4] uppercase tracking-wide mb-2">Members — {{members.length}}</h3>
                               <div *ngFor="let member of members"
                                    class="flex items-center gap-3 px-2 py-1.5 rounded hover:bg-[#35373C] transition-colors cursor-pointer group">
@@ -153,6 +154,8 @@ export class GroupChatComponent implements OnInit {
 	serverLoading$
 	serverError$
 
+	isLoading$!: Observable<boolean>
+
 	constructor(
 		private store: Store,
 		private router: Router
@@ -168,6 +171,14 @@ export class GroupChatComponent implements OnInit {
 		this.server$ = this.store.select(selectServerResponse)
 		this.serverLoading$ = this.store.select(selectServerLoading)
 		this.serverError$ = this.store.select(selectServerFailure)
+
+		this.isLoading$ = combineLatest([
+			this.authUserLoading$,
+			this.serverLoading$,
+			this.serverMembersLoading$
+		]).pipe(
+			map(([authUserLoading, serverLoading, serverMembersLoading])=> authUserLoading || serverLoading || serverMembersLoading)
+		)
 	}
 
 	ngOnInit(): void {
