@@ -277,7 +277,6 @@ export class GroupChatComponent implements OnInit, AfterViewChecked, AfterViewIn
 			this.route.params.subscribe(params => {
 				const groupId = +params['groupId'];
 				this.groupId = groupId
-				console.log('chat init: ', groupId)
 				this.store.dispatch(loadGroupMessages({groupId: groupId}))
 
 				// Subscribe to group messages
@@ -299,7 +298,6 @@ export class GroupChatComponent implements OnInit, AfterViewChecked, AfterViewIn
 
 			this.messages$.subscribe(
 				con=>{
-					console.log('MESSAGES:',con)
 					if(con.length > 0) {
 						this.submittedMessageId = con[con.length - 1].id + 1
 					}else {
@@ -334,10 +332,10 @@ export class GroupChatComponent implements OnInit, AfterViewChecked, AfterViewIn
 	}
 
 	ngAfterViewChecked(): void {
-		this.scrollDown()
+		// this.scrollDown()
 	}
 
 	ngAfterViewInit(): void {
-		this.scrollDown()
+		// this.scrollDown()
 	}
 }
