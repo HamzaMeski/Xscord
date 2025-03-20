@@ -41,6 +41,5 @@ export class UpdateProfileEffects {
 				map(() => loadUserProfile())
 			)
 		)
-
 	}
 }

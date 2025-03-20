@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Output} from "@angular/core";
+import {Component, EventEmitter, OnInit, Output} from "@angular/core";
 import {faXmark} from "@fortawesome/free-solid-svg-icons";
 import {FaIconComponent} from "@fortawesome/angular-fontawesome";
 import {AsyncPipe, CommonModule} from "@angular/common";
@@ -88,7 +88,7 @@ import {
         </form>
 	`
 })
-export class CreateServerComponent {
+export class CreateServerComponent implements OnInit{
 	faXmark = faXmark
 
 	@Output() checker: EventEmitter<{
@@ -102,33 +102,14 @@ export class CreateServerComponent {
 	}>()
 	@Output() close = new EventEmitter<boolean>()
 
-	back() {
-		this.checker.emit({
-			choiceModalChecker: true,
-			createServerModalChecker: false,
-			joinServerModalChecker: false
-		})
-	}
-	closeModal() {
-		this.close.emit(true)
-	}
+	createServerResponse$
+	createServerLoading$
+	createServerFailure$
 
 	authUser$
 	authUser!: IndividualResponse | null
 
-	myForm = new FormGroup({
-		name: new FormControl(`${this.authUser?.firstName + ' ' + this.authUser?.lastName}'s server`, [Validators.required, Validators.minLength(5)])
-	})
-	onSubmit() {
-		if(this.myForm.valid) {
-			const request: ServerRequest = this.myForm.value as ServerRequest
-			this.store.dispatch(createServer({request}))
-		}
-	}
-
-	createServerResponse$
-	createServerLoading$
-	createServerFailure$
+	myForm!:any
 
 	constructor(private store:Store) {
 		this.authUser$ = this.store.select(selectUserProfile)
@@ -141,5 +122,33 @@ export class CreateServerComponent {
 		this.createServerResponse$.subscribe(value => {
 			if(value) this.closeModal()
 		})
+	}
+
+	ngOnInit(): void {
+		this.authUser$.subscribe(user=> {
+			if(user) {
+				this.myForm = new FormGroup({
+					name: new FormControl(`${this.authUser?.firstName + ' ' + this.authUser?.lastName}'s server`, [Validators.required, Validators.minLength(5)])
+				})
+			}
+		})
+	}
+
+	back() {
+		this.checker.emit({
+			choiceModalChecker: true,
+			createServerModalChecker: false,
+			joinServerModalChecker: false
+		})
+	}
+	closeModal() {
+		this.close.emit(true)
+	}
+
+	onSubmit() {
+		if(this.myForm.valid) {
+			const request: ServerRequest = this.myForm.value as ServerRequest
+			this.store.dispatch(createServer({request}))
+		}
 	}
 }
