@@ -129,7 +129,7 @@ import {loadChatHistory} from "../../../ngrx/actions/peerChat/peerChat.actions";
                     </div>
                     <div class="flex items-center gap-2">
                         <button class="text-[#949BA4] hover:text-white transition-colors">
-                            <fa-icon [icon]="faGear" class="w-4 h-4"></fa-icon>
+                            <fa-icon [icon]="faGear" class="w-4 h-4" [routerLink]="['/individual/profile']" ></fa-icon>
                         </button>
                     </div>
                 </div>
