@@ -107,7 +107,7 @@ import {register} from "../../../ngrx/actions/auth/register.actions";
                     </div>
                 </div>  
             </div>
-           
+            
             <div
                 [style.background-image]="'url(authImages/dark_road.jpg)'"
                 [style.position]="'center'"
