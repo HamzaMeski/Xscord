@@ -2,7 +2,7 @@ import {Component, OnInit} from "@angular/core";
 import {NavigationEnd, Router, RouterLink, RouterOutlet} from "@angular/router";
 import {faDiscord} from "@fortawesome/free-brands-svg-icons";
 import {FontAwesomeModule} from "@fortawesome/angular-fontawesome";
-import {faGear, faUser} from "@fortawesome/free-solid-svg-icons";
+import {faArrowRightFromBracket, faGear, faUser} from "@fortawesome/free-solid-svg-icons";
 import {Store} from "@ngrx/store";
 import {
 	selectGetIndividualFriendsError,
@@ -19,6 +19,7 @@ import {AsyncPipe, NgForOf, NgIf} from "@angular/common";
 import {IndividualResponse} from "../../../core/types/individual/individual.types";
 import {filter} from "rxjs";
 import {loadChatHistory} from "../../../ngrx/actions/peerChat/peerChat.actions";
+import {LogoutService} from "../../../core/services/helpers/logout.service";
 
 
 @Component({
@@ -128,10 +129,12 @@ import {loadChatHistory} from "../../../ngrx/actions/peerChat/peerChat.actions";
                         <span class="text-sm font-medium text-white">{{ currentAuthUser.displayName }}</span>
                     </div>
                     <div class="flex items-center gap-2">
-                        <button class="text-[#949BA4] hover:text-white transition-colors">
-                            <fa-icon [icon]="faGear" class="w-4 h-4" [routerLink]="['/individual/profile']" ></fa-icon>
+                        <button class="text-[#949BA4]  transition-colors">
+                            <fa-icon [icon]="faArrowRightFromBracket" (click)="logout()" class="w-4 h-4 mr-2 hover:text-white"></fa-icon>
+                            <fa-icon [icon]="faGear" class="w-4 h-4 hover:text-white" [routerLink]="['/individual/profile']" ></fa-icon>
                         </button>
                     </div>
+
                 </div>
             </div>
             <div class="flex-1">
@@ -144,6 +147,7 @@ export class FriendComponent implements OnInit {
 	faDiscord = faDiscord
 	faUser = faUser
 	faGear = faGear
+	faArrowRightFromBracket = faArrowRightFromBracket
 
 	individualFriends$
 	individualFriendsLoading$
@@ -157,7 +161,9 @@ export class FriendComponent implements OnInit {
 
 	constructor(
 		private store: Store,
-		private router: Router
+		private router: Router,
+		private logoutService: LogoutService
+
 	) {
 		this.individualFriends$ = store.select(selectGetIndividualFriendsResponse)
 		this.individualFriendsLoading$ = store.select(selectGetIndividualFriendsLoading)
@@ -185,5 +191,9 @@ export class FriendComponent implements OnInit {
 				// this.router.navigate(['/individual/friend/mng/allFriends'])
 			}
 		})
+	}
+
+	logout() {
+		this.logoutService.logout()
 	}
 }

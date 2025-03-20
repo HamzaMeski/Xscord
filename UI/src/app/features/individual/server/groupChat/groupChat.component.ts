@@ -82,7 +82,7 @@ import {Subscription} from "rxjs";
 		                      <div *ngIf="(messagesLoading$ | async)">
 									messages loading...
 		                      </div>
-                              <div *ngIf="!(messagesLoading$ | async)">
+                              <div *ngIf="!(messagesLoading$ | async)" class="px-2">
 	                              <div *ngIf="authUser$ | async as authUser">
                                       <div *ngIf="messages$ | async as messages">
                                           <div *ngFor="let message of messages">
