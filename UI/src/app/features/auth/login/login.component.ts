@@ -19,8 +19,8 @@ import {selectLoginError, selectLoginLoading} from "../../../ngrx/selectors/auth
     ],
     template: `
         <section class="flex h-dvh">
-            <div class="grow-6 self-center p-8 ">
-                <div class="p-2 border-1 rounded-lg">
+            <div class="grow-4 self-center p-8 ">
+                <div class="p-2  rounded-lg">
                     <form [formGroup]="myForm" (ngSubmit)="onSubmit()" class="flex flex-col p-2 gap-8">
                         <h1 class="text-3xl font-bold text-center">LOGIN</h1>
 
@@ -47,32 +47,40 @@ import {selectLoginError, selectLoginLoading} from "../../../ngrx/selectors/auth
                                 <small *ngIf="myForm.get('password')?.errors?.['minlength']" class="text-red-500">min length is 3</small>
                             </div>
                         </div>
+                        <div class="flex flex-col gap-4 items-center mt-6">
+                            <a
+                                routerLink="/auth/register"
+                                class="text-blue-500 hover:underline hover:text-blue-700 transition"
+                            >
+                                Create an account
+                            </a>
+                            <a
+                                routerLink="/"
+                                class="text-gray-500 hover:underline hover:text-gray-700 transition"
+                            >
+                                Back home
+                            </a>
+                            <button
+                                type="submit"
+                                class="rounded-full py-2 px-10 text-white shadow-md transition-all duration-300 disabled:cursor-not-allowed"
+                                [disabled]="myForm.invalid"
+                                [ngClass]="myForm.invalid ? 'bg-blue-300 text-gray-600' : 'bg-blue-500 hover:bg-blue-600 cursor-pointer'"
+                            >
+                                Submit
+                            </button>
+                        </div>
 
-                        <button
-                            type="submit"
-                            class="rounded-md py-2 px-8 self-center "
-                            [disabled]="myForm.invalid"
-                            [ngClass]="myForm.invalid ? 'bg-green-300 text-gray-600' : 'bg-green-400 cursor-pointer'"
-                        >
-                            submit
-                        </button>
                     </form>
-
-                    <div class="underline">
-                        <a routerLink="/auth/register">Create account account</a>
-                        <br>
-                        <a routerLink="/">Back home</a>
-                    </div>
                 </div>
             </div>
             <div
-                [style.background-image]="'url(authImages/dark_road.jpg)'"
-                [style.position]="'center'"
-                class="bg-red-500 grow-4"
+                [style.background-image]="'url(authImages/discordimage.jpg)'"
+                [style.background-position]="'center'"
+                [style.background-size]="'cover'"
+                class="grow-6"
             >
             </div>
         </section>
- 
     `
 })
 export class LoginComponent  {

@@ -40,7 +40,7 @@ export class LoginEffects {
 				concatMap(({response})=> {
 					const authUserToken = response.token
 					localStorage.setItem('authUserToken', authUserToken)
-					this.router.navigate(['/individual'])
+					this.router.navigate(['/individual/friend/mng/allFriends'])
 
 					console.log(localStorage.getItem('authUserToken'))
 					console.log('before connecting in login effect:')

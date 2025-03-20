@@ -35,6 +35,8 @@ import {getServer} from "../../../../ngrx/actions/server/server.actions";
 	],
 	template: `
         <section class="bg-[#313338] w-[440px] p-4 rounded-md">
+	        
+	        <div *ngIf="invitSend" class="mt-2 text-green-500 text-[15px]">invitation send successfully</div>
             <!-- Header -->
             <div class="flex justify-between items-center mb-4">
                 <h2 class="text-white font-semibold">Invite friends to hamza me ski's server</h2>
@@ -97,12 +99,12 @@ import {getServer} from "../../../../ngrx/actions/server/server.actions";
 
                                         <!-- Invite Button -->
                                         <div  *ngIf="currentAuthUser.id == friend.individual1.id">
-                                            <button (click)="sendServerInvitation(friend.individual2.id)" class="bg-[#248046] text-white px-4 py-1 text-sm rounded-md hover:bg-[#1a6334]">
+                                            <button (click)="sendServerInvitation(friend.individual2.id)" class="bg-[#248046] cursor-pointer text-white px-4 py-1 text-sm rounded-md hover:bg-[#1a6334]">
                                                 Invite
                                             </button>
                                         </div>
                                         <div  *ngIf="currentAuthUser.id == friend.individual2.id">
-                                            <button (click)="sendServerInvitation(friend.individual1.id)" class="bg-[#248046] text-white px-4 py-1 text-sm rounded-md hover:bg-[#1a6334]">
+                                            <button (click)="sendServerInvitation(friend.individual1.id)" class="bg-[#248046] cursor-pointer text-white px-4 py-1 text-sm rounded-md hover:bg-[#1a6334]">
                                                 Invite
                                             </button>
                                         </div>
@@ -120,7 +122,6 @@ import {getServer} from "../../../../ngrx/actions/server/server.actions";
                         Encountered an error while loading your profile. Please try again later.
                     </div>
                 </div>
-
             </div>
 
             <!-- Invite Link Section -->
@@ -156,6 +157,8 @@ export class addPersonComponent implements OnInit{
 
 	server$
 	server!: ServerResponse | null
+
+	invitSend: boolean = false
 
 	constructor(
 		private store: Store,
@@ -207,6 +210,12 @@ export class addPersonComponent implements OnInit{
 				content: this.generateInvitationLink()
 			}
 		}))
+
+		this.invitSend = true
+		setTimeout(() => {
+			this.invitSend = false
+		}, 1000)
+
 	}
 
 	generateInvitationLink() {
