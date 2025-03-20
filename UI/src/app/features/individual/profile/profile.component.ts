@@ -1,4 +1,4 @@
-import {Component} from "@angular/core";
+import {Component, OnInit} from "@angular/core";
 import {RouterLink, RouterOutlet} from "@angular/router";
 import {FontAwesomeModule} from "@fortawesome/angular-fontawesome";
 import {CommonModule} from "@angular/common";
@@ -10,6 +10,12 @@ import {Store} from "@ngrx/store";
 import {selectRegisterError, selectRegisterLoading} from "../../../ngrx/selectors/auth/register.selectors";
 import {RegisterRequest} from "../../../core/types/auth/register.types";
 import {register} from "../../../ngrx/actions/auth/register.actions";
+import {
+	selectUserProfile,
+	selectUserProfileError,
+	selectUserProfileLoading
+} from "../../../ngrx/selectors/userProfile/userProfile.selectors";
+import {update} from "../../../ngrx/actions/profile/profile.actions";
 
 
 @Component({
@@ -65,7 +71,7 @@ import {register} from "../../../ngrx/actions/auth/register.actions";
 
                         <div class="flex flex-col">
                             <label for="">password:</label>
-                            <input type="password" formControlName="password" class="bg-gray-200 text-black p-1 rounded-md">
+                            <input  formControlName="password" class="bg-gray-200 text-black p-1 rounded-md">
                             <div *ngIf="myForm.get('password')?.invalid && myForm.get('password')?.touched">
                                 <small *ngIf="myForm.get('password')?.errors?.['required']" class="text-red-500">password is required</small>
                                 <small *ngIf="myForm.get('password')?.errors?.['minlength']" class="text-red-500">min length is 3</small>
@@ -112,29 +118,48 @@ import {register} from "../../../ngrx/actions/auth/register.actions";
         </section>
 	`
 })
-export class ProfileComponent {
+export class ProfileComponent implements OnInit {
 	loading$: Observable<boolean>;
 	error$: Observable<any>;
 
-	myForm = new FormGroup({
-		firstName: new FormControl('', [Validators.required, Validators.minLength(3)]),
-		lastName: new FormControl('', [Validators.required, Validators.minLength(3)]),
-		email: new FormControl('', [Validators.required, Validators.email]),
-		password: new FormControl('', [Validators.required, Validators.minLength(8)]),
-		displayName: new FormControl('', [Validators.required, Validators.minLength(3)]),
-		phone: new FormControl('', [Validators.required, Validators.minLength(10)]),
-		bio: new FormControl('', []),
-	})
+	authUser$
+	authUserLoading$
+	authUserError$
+	userId!:number
+
+	myForm!: any
 
 	constructor(private store: Store) {
 		this.loading$ = this.store.select(selectRegisterLoading)
 		this.error$ = this.store.select(selectRegisterError)
+
+		this.authUser$ = this.store.select(selectUserProfile)
+		this.authUserLoading$ = this.store.select(selectUserProfileLoading)
+		this.authUserError$ = this.store.select(selectUserProfileError)
+
 	}
 
 	onSubmit() {
 		if(this.myForm.valid) {
 			const request: RegisterRequest = this.myForm.value as RegisterRequest
-			this.store.dispatch(register({request}))
+			this.store.dispatch(update({request: request, userId: this.userId}))
 		}
+	}
+
+	ngOnInit(): void {
+		this.authUser$.subscribe(user => {
+			if(user) {
+				this.userId = user.id
+				this.myForm = new FormGroup({
+					firstName: new FormControl(user.firstName, [Validators.required, Validators.minLength(3)]),
+					lastName: new FormControl(user.lastName, [Validators.required, Validators.minLength(3)]),
+					email: new FormControl(user.email, [Validators.required, Validators.email]),
+					password: new FormControl(user.password, [Validators.required, Validators.minLength(8)]),
+					displayName: new FormControl(user.displayName, [Validators.required, Validators.minLength(3)]),
+					phone: new FormControl(user.phone, [Validators.required, Validators.minLength(10)]),
+					bio: new FormControl(user.bio, []),
+				})
+			}
+		})
 	}
 }
