@@ -4,11 +4,13 @@ import {registerFailure} from "../../actions/auth/register.actions";
 import {catchError, map, mergeMap, of, tap} from "rxjs";
 import {update, updateSuccess} from "../../actions/profile/profile.actions";
 import {IndividualsService} from "../../../core/services/restfull/backend/individuals.service";
+import {loadUserProfile} from "../../actions/userProfile/userProfile.actions";
 
 
 @Injectable()
 export class UpdateProfileEffects {
 	update$
+	updateSuccess$
 
 	constructor(
 		private actions$ : Actions,
@@ -33,13 +35,12 @@ export class UpdateProfileEffects {
 			)
 		)
 
-/*
-		this.registerSuccess$ = createEffect(() =>
-				this.actions$.pipe(
-					ofType(registerSuccess),
-					tap(() => )
-				),
-			{dispatch: false}
-		)*/
+		this.updateSuccess$ = createEffect(() =>
+			this.actions$.pipe(
+				ofType(updateSuccess),
+				map(() => loadUserProfile())
+			)
+		)
+
 	}
 }
