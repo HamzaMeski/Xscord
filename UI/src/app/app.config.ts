@@ -46,6 +46,8 @@ import {ServerInvitationEffects} from "./ngrx/effects/server/serverInvitation.ef
 import {openAddPersonReducers} from "./ngrx/reducers/modal/addPerson.reducers";
 import {groupMessagesReducer} from "./ngrx/reducers/groupChat/groupChat.reducers";
 import {GroupChatEffects} from "./ngrx/effects/groupChat/groupChat.effects";
+import {updateReducer} from "./ngrx/reducers/profile/profile.reducers";
+import {UpdateProfileEffects} from "./ngrx/effects/profile/profile.effects";
 
 
 export const appConfig: ApplicationConfig = {
@@ -82,7 +84,8 @@ export const appConfig: ApplicationConfig = {
             getServerMembers: getServerMembersReducer,
             getMemberJoinedServers: getMemberJoinedServersReducer,
             getGroupMessages: groupMessagesReducer,
-            getGroup: getGroupReducer
+            getGroup: getGroupReducer,
+            updateProfile: updateReducer
         }),
         provideStoreDevtools({ maxAge: 25, logOnly: !isDevMode() }),
         provideEffects([
@@ -94,7 +97,8 @@ export const appConfig: ApplicationConfig = {
             ServerEffects,
             GroupEffects,
             ServerInvitationEffects,
-            GroupChatEffects
+            GroupChatEffects,
+            UpdateProfileEffects
         ])
     ]
 };

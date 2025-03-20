@@ -25,6 +25,7 @@ export class ServerInvitationEffects {
 	sendServerInvitation$
     getReceiverInvitations$
 	acceptServerInvitation$
+	acceptServerInvitationSuccess$
 	serverMembers$
 	memberJoinedServers$
 
@@ -80,6 +81,13 @@ export class ServerInvitationEffects {
 						})
 					)
 				})
+			)
+		)
+
+		this.acceptServerInvitationSuccess$ = createEffect(() =>
+			this.actions$.pipe(
+				ofType(acceptServerInvitationSuccess),
+				map(() => getMemberJoinedServers())
 			)
 		)
 

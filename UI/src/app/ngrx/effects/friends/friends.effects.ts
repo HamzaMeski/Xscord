@@ -31,6 +31,7 @@ export class FriendsEffects {
 	friendShipDemand$
 	pendingRequests$
 	acceptFriendShipReq$
+	acceptFriendShipSuccess$
 	refreshPendingRequests$
 	ignoreFriendShipReq$
 	individualFriends$
@@ -98,6 +99,12 @@ export class FriendsEffects {
 			)
 		)
 
+		this.acceptFriendShipSuccess$ = createEffect(()  =>
+			this.actions$.pipe(
+				ofType(acceptFriendShipReqSuccess),
+				map(()=> getIndividualFriends())
+			)
+		)
 
 		// ignore friend request
 		this.ignoreFriendShipReq$ = createEffect(() =>

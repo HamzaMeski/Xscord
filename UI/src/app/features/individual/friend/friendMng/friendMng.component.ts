@@ -12,10 +12,10 @@ import {filter, Subject, takeUntil} from "rxjs";
 	template: `
 	    <section class="flex flex-col h-full">
             <nav class="flex items-center gap-8 px-4 py-3 bg-[#313338] border-b border-[#1E1F22]">
-                <a routerLink="/individual/friend/mng/onlineFriends"
+             <!--   <a routerLink="/individual/friend/mng/onlineFriends"
                    class="text-[#949BA4] hover:text-white text-sm font-medium px-3 py-1 rounded transition-colors">
                     Online
-                </a>
+                </a>-->
                 <a routerLink="/individual/friend/mng/allFriends"
                    class="text-[#949BA4] hover:text-white text-sm font-medium px-3 py-1 rounded transition-colors">
                     All

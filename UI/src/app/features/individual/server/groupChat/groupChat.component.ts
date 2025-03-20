@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit} from "@angular/core";
+import {AfterViewChecked, AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild} from "@angular/core";
 import {FaIconComponent} from "@fortawesome/angular-fontawesome";
 import {CommonModule} from "@angular/common";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
@@ -30,7 +30,6 @@ import {
 	selectGroupMessagesResponse
 } from "../../../../ngrx/selectors/groupChat/groupChat.selectors";
 import {
-	addSenderGroupMessageToConversation,
 	loadGroupMessages,
 	sendGroupMessage
 } from "../../../../ngrx/actions/groupChat/groupChat.actions";
@@ -109,7 +108,7 @@ import {Subscription} from "rxjs";
                                                   <div *ngIf="message.sender.id != authUser.id"
                                                        class="flex gap-4 items-start">
                                                       <div class="w-10 h-10 rounded-full overflow-hidden flex-shrink-0">
-                                                          <div class="w-full h-full bg-[#5865F2]flex items-center justify-center">
+                                                          <div class="w-full h-full bg-[#5865F2] flex items-center justify-center">
                                                               <fa-icon [icon]="faDiscord" class="text-lg text-white"></fa-icon>
                                                           </div>
                                                       </div>
@@ -201,7 +200,7 @@ import {Subscription} from "rxjs";
     </section>
   `
 })
-export class GroupChatComponent implements OnInit, OnDestroy {
+export class GroupChatComponent implements OnInit, AfterViewChecked, AfterViewInit, OnDestroy {
 	faDiscord = faDiscord
 	faCirclePlus = faCirclePlus
 	faSearch = faSearch
@@ -235,6 +234,10 @@ export class GroupChatComponent implements OnInit, OnDestroy {
 	group!:GroupResponse
 	submittedMessageId!:number
 
+	@ViewChild('messageContainer') private messageContainer!: ElementRef
+	scrollDown(): void {
+		this.messageContainer.nativeElement.scrollTop = this.messageContainer.nativeElement.scrollHeight
+	}
 
 	constructor(
 		private store: Store,
@@ -261,8 +264,6 @@ export class GroupChatComponent implements OnInit, OnDestroy {
 		this.messages$ = this.store.select(selectGroupMessagesResponse)
 		this.messagesLoading$ = this.store.select(selectGroupMessagesLoading)
 		this.messagesError$ = this.store.select(selectGroupMessagesError)
-
-
 	}
 
 	ngOnInit(): void {
@@ -276,7 +277,6 @@ export class GroupChatComponent implements OnInit, OnDestroy {
 			this.route.params.subscribe(params => {
 				const groupId = +params['groupId'];
 				this.groupId = groupId
-				console.log('chat init: ', groupId)
 				this.store.dispatch(loadGroupMessages({groupId: groupId}))
 
 				// Subscribe to group messages
@@ -298,7 +298,6 @@ export class GroupChatComponent implements OnInit, OnDestroy {
 
 			this.messages$.subscribe(
 				con=>{
-					console.log('MESSAGES:',con)
 					if(con.length > 0) {
 						this.submittedMessageId = con[con.length - 1].id + 1
 					}else {
@@ -330,5 +329,13 @@ export class GroupChatComponent implements OnInit, OnDestroy {
 
 	ngOnDestroy(): void {
 		this.subscriptions.forEach(sub => sub.unsubscribe());
+	}
+
+	ngAfterViewChecked(): void {
+		// this.scrollDown()
+	}
+
+	ngAfterViewInit(): void {
+		// this.scrollDown()
 	}
 }

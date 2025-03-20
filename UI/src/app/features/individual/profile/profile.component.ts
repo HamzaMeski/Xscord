@@ -1,28 +1,33 @@
-import {Component} from '@angular/core';
-import {RouterLink} from "@angular/router";
-import {FormControl, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
-import {CommonModule, NgClass} from "@angular/common";
+import {Component, OnInit} from "@angular/core";
+import {FontAwesomeModule} from "@fortawesome/angular-fontawesome";
+import {CommonModule} from "@angular/common";
+import {FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators} from "@angular/forms";
+import {Observable} from "rxjs";
 import {Store} from "@ngrx/store";
 import {selectRegisterError, selectRegisterLoading} from "../../../ngrx/selectors/auth/register.selectors";
-import {Observable} from "rxjs";
 import {RegisterRequest} from "../../../core/types/auth/register.types";
-import {register} from "../../../ngrx/actions/auth/register.actions";
+import {
+	selectUserProfile,
+	selectUserProfileError,
+	selectUserProfileLoading
+} from "../../../ngrx/selectors/userProfile/userProfile.selectors";
+import {update} from "../../../ngrx/actions/profile/profile.actions";
+
 
 @Component({
-    standalone: true,
-    selector: 'register',
-    imports: [
-        RouterLink,
-        ReactiveFormsModule,
-        NgClass,
-        CommonModule
-    ],
-    template: `
-        <section class="flex h-dvh">
-            <div class="grow-4 self-center p-8 ">
+	standalone: true,
+	selector: 'profile',
+	imports: [
+		FontAwesomeModule,
+		CommonModule,
+		FormsModule,
+		ReactiveFormsModule,
+	],
+	template: `
+        <section class="flex bg-[#2B2D31] h-dvh">
+            <div class="grow-6 self-center p-8 ">
                 <div class="p-2  rounded-lg">
                     <form [formGroup]="myForm" (ngSubmit)="onSubmit()" class="flex flex-col p-2 gap-8">
-                        <h1 class="text-3xl font-bold text-center">REGISTER</h1>
 
                         <div>
                             <div *ngIf="loading$ | async" class="text-lg">...</div>
@@ -58,7 +63,7 @@ import {register} from "../../../ngrx/actions/auth/register.actions";
 
                         <div class="flex flex-col">
                             <label for="">password:</label>
-                            <input type="password" formControlName="password" class="bg-gray-200 text-black p-1 rounded-md">
+                            <input  formControlName="password" class="bg-gray-200 text-black p-1 rounded-md">
                             <div *ngIf="myForm.get('password')?.invalid && myForm.get('password')?.touched">
                                 <small *ngIf="myForm.get('password')?.errors?.['required']" class="text-red-500">password is required</small>
                                 <small *ngIf="myForm.get('password')?.errors?.['minlength']" class="text-red-500">min length is 3</small>
@@ -89,66 +94,73 @@ import {register} from "../../../ngrx/actions/auth/register.actions";
                             <small>optional</small>
                         </div>
 
-                        <div class="flex flex-col gap-4 items-center mt-6">
-                            <a
-                                routerLink="/auth/login"
-                                class="text-blue-500 hover:underline hover:text-blue-700 transition"
-                            >
-                                Already have an account?
-                            </a>
-                            <a
-                                routerLink="/"
-                                class="text-gray-500 hover:underline hover:text-gray-700 transition"
-                            >
-                                Back home
-                            </a>
-                            <button
-                                type="submit"
-                                class="rounded-full py-2 px-10 text-white transition-all duration-300 disabled:cursor-not-allowed"
-                                [disabled]="myForm.invalid"
-                                [ngClass]="myForm.invalid ? 'bg-blue-300 text-gray-600': 'bg-blue-500 hover:bg-blue-600 cursor-pointer'"
-                            >
-                                Submit
-                            </button>
-                        </div>
+
+                        <button
+                            type="submit"
+                            class="rounded-md py-2 px-8 self-center "
+                            [disabled]="myForm.invalid"
+                            [ngClass]="myForm.invalid ? ' text-gray-600' : 'text-gray-100 cursor-pointer'"
+                        >
+                            submit
+                        </button>
 
                     </form>
-                </div>  
-            </div>
-            
-            <div
-                [style.background-image]="'url(authImages/discordimage.jpg)'"
-                [style.background-position]="'center'"
-                [style.background-size]="'cover'"   
-                class="grow-6"
-            >
+                </div>
             </div>
         </section>
-    `
+	`
 })
-export class RegisterComponent {
-    loading$: Observable<boolean>;
-    error$: Observable<any>;
+export class ProfileComponent implements OnInit {
+	loading$: Observable<boolean>;
+	error$: Observable<any>;
 
-    myForm = new FormGroup({
-        firstName: new FormControl('', [Validators.required, Validators.minLength(3)]),
-        lastName: new FormControl('', [Validators.required, Validators.minLength(3)]),
-        email: new FormControl('', [Validators.required, Validators.email]),
-        password: new FormControl('', [Validators.required, Validators.minLength(8)]),
-        displayName: new FormControl('', [Validators.required, Validators.minLength(3)]),
-        phone: new FormControl('', [Validators.required, Validators.minLength(10)]),
-        bio: new FormControl('', []),
-    })
+	authUser$
+	authUserLoading$
+	authUserError$
+	userId!:number
 
-    constructor(private store: Store) {
-        this.loading$ = this.store.select(selectRegisterLoading)
-        this.error$ = this.store.select(selectRegisterError)
-    }
+	myForm = new FormGroup({
+		firstName: new FormControl('', [Validators.required, Validators.minLength(3)]),
+		lastName: new FormControl('', [Validators.required, Validators.minLength(3)]),
+		email: new FormControl('', [Validators.required, Validators.email]),
+		password: new FormControl('', [Validators.required, Validators.minLength(8)]),
+		displayName: new FormControl('', [Validators.required, Validators.minLength(3)]),
+		phone: new FormControl('', [Validators.required, Validators.minLength(10)]),
+		bio: new FormControl('', []),
+	});
 
-    onSubmit() {
-        if(this.myForm.valid) {
-            const request: RegisterRequest = this.myForm.value as RegisterRequest
-            this.store.dispatch(register({request}))
-        }
-    }
+
+	constructor(private store: Store) {
+		this.loading$ = this.store.select(selectRegisterLoading)
+		this.error$ = this.store.select(selectRegisterError)
+
+		this.authUser$ = this.store.select(selectUserProfile)
+		this.authUserLoading$ = this.store.select(selectUserProfileLoading)
+		this.authUserError$ = this.store.select(selectUserProfileError)
+
+	}
+
+	onSubmit() {
+		if(this.myForm.valid) {
+			const request: RegisterRequest = this.myForm.value as RegisterRequest
+			this.store.dispatch(update({request: request, userId: this.userId}))
+		}
+	}
+
+	ngOnInit(): void {
+		this.authUser$.subscribe(user => {
+			if(user) {
+				this.userId = user.id;
+				this.myForm.patchValue({
+					firstName: user.firstName,
+					lastName: user.lastName,
+					email: user.email,
+					password: user.password,
+					displayName: user.displayName,
+					phone: user.phone,
+					bio: user.bio,
+				});
+			}
+		});
+	}
 }

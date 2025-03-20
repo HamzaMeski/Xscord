@@ -22,7 +22,7 @@ import {
 import {getServerGroups} from "../../../ngrx/actions/group/group.actions";
 import {CommonModule} from "@angular/common";
 import {openAddPersonModal} from "../../../ngrx/actions/modal/addPerson.actions";
-import {selectUserProfile} from "../../../ngrx/selectors/userProfile/userProfile.selectors";
+import {selectUserProfile, selectUserProfileLoading} from "../../../ngrx/selectors/userProfile/userProfile.selectors";
 
 @Component({
 	standalone: true,
@@ -93,13 +93,16 @@ import {selectUserProfile} from "../../../ngrx/selectors/userProfile/userProfile
                             <div
                                 class="absolute bottom-0 right-0 w-2.5 h-2.5 bg-[#23A559] rounded-full border-2 border-[#232428]"></div>
                         </div>
-	                   <!-- <div *ngIf="authUser$ | async as authUser">
-                            <span class="text-sm font-medium text-white">{{authUser.displayName}}</span>
-                        </div>-->
+	                    <div *ngIf="!(authUserLoading$ | async)">
+                            <div *ngIf="authUser$ | async as authUser">
+                                <span class="text-sm font-medium text-white">{{authUser.displayName}}</span>
+                            </div>
+	                    </div>
+	                   
                     </div>
                     <div class="flex items-center gap-2">
                         <button class="text-[#949BA4] hover:text-white transition-colors">
-                            <fa-icon [icon]="faGear" class="w-4 h-4"></fa-icon>
+                            <fa-icon [icon]="faGear" class="w-4 h-4" [routerLink]="['/individual/profile']" ></fa-icon>
                         </button>
                     </div>
                 </div>
@@ -122,6 +125,7 @@ export class ServerComponent implements OnInit{
 	serverGroupsFailure$
 
 	authUser$
+	authUserLoading$
 
 	constructor(
 		private route: ActivatedRoute,
@@ -133,6 +137,7 @@ export class ServerComponent implements OnInit{
 		this.serverGroupsFailure$ = this.store.select(selectServerGroupsFailure)
 
 		this.authUser$ = this.store.select(selectUserProfile)
+		this.authUserLoading$ = this.store.select(selectUserProfileLoading)
 	}
 
 	ngOnInit(): void{

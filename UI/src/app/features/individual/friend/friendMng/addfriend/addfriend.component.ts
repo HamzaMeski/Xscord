@@ -6,7 +6,7 @@ import {AsyncPipe, CommonModule} from "@angular/common";
 import {friendShipDemand} from "../../../../../ngrx/actions/friends/friends.actions";
 import {
 	selectFriendShipDemandError,
-	selectFriendShipDemandLoading
+	selectFriendShipDemandLoading, selectFriendShipDemandResponse
 } from "../../../../../ngrx/selectors/friends/friends.selectors";
 import {FormControl, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
 
@@ -55,7 +55,13 @@ import {FormControl, FormGroup, ReactiveFormsModule, Validators} from "@angular/
                         <small *ngIf="myForm.get('individualId')?.errors?.['required']" class="text-red-500 text-[12px]">Individual ID is required</small>
                         <small *ngIf="myForm.get('individualId')?.errors?.['pattern']" class="text-red-500 text-[12px]">Individual ID should be a number</small>
                     </div>
-                    <div *ngIf="friendShipDemandError$ | async as error" class="mt-2 text-red-500 text-[12px]">
+	                <div *ngIf="friendShipDemandResponse$ | async">
+                        <div *ngIf="requestSend" class="mt-2 text-green-500 text-[18px]">
+                            Request Send Successfully
+                        </div>
+	                </div>
+	                
+                    <div *ngIf="friendShipDemandError$ | async as error" class="mt-2 text-red-500 text-[18px]">
                         Server validation error: {{error}}
                     </div>
                 </div>
@@ -85,8 +91,10 @@ import {FormControl, FormGroup, ReactiveFormsModule, Validators} from "@angular/
 })
 export class AddfriendComponent {
 	authUser$:Observable<any>
-	friendShipDemandLoading$:Observable<any>
-	friendShipDemandError$:Observable<any>
+	friendShipDemandResponse$
+	friendShipDemandLoading$
+	friendShipDemandError$
+    requestSend: boolean = false
 
 	myForm = new FormGroup({
 		individualId: new FormControl('', [Validators.required, Validators.pattern('^[0-9]+$')])
@@ -94,6 +102,7 @@ export class AddfriendComponent {
 
 	constructor(private store:Store) {
 		this.authUser$ = this.store.select(selectUserProfile)
+		this.friendShipDemandResponse$ = this.store.select(selectFriendShipDemandResponse)
 		this.friendShipDemandLoading$ = this.store.select(selectFriendShipDemandLoading)
 		this.friendShipDemandError$ = this.store.select(selectFriendShipDemandError)
 	}
@@ -102,6 +111,7 @@ export class AddfriendComponent {
 		if(this.myForm.valid) {
 			const receiverId: number  = Number(this.myForm.value.individualId)
 			this.store.dispatch(friendShipDemand({receiverId}))
+			this.requestSend = true
 		}
 	}
 }
