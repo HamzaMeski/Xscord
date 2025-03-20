@@ -110,7 +110,6 @@ import {getServer} from "../../../../ngrx/actions/server/server.actions";
                                 </div>
                             </div>
                         </div>
-	                    
                     </div>
 
                     <!-- Error States -->

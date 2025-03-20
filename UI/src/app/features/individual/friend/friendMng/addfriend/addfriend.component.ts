@@ -56,12 +56,12 @@ import {FormControl, FormGroup, ReactiveFormsModule, Validators} from "@angular/
                         <small *ngIf="myForm.get('individualId')?.errors?.['pattern']" class="text-red-500 text-[12px]">Individual ID should be a number</small>
                     </div>
 	                <div *ngIf="friendShipDemandResponse$ | async">
-                        <div *ngIf="requestSend" class="mt-2 text-green-500 text-[20px]">
+                        <div *ngIf="requestSend" class="mt-2 text-green-500 text-[18px]">
                             Request Send Successfully
                         </div>
 	                </div>
 	                
-                    <div *ngIf="friendShipDemandError$ | async as error" class="mt-2 text-red-500 text-[20px]">
+                    <div *ngIf="friendShipDemandError$ | async as error" class="mt-2 text-red-500 text-[18px]">
                         Server validation error: {{error}}
                     </div>
                 </div>
