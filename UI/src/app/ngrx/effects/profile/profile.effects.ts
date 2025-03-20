@@ -1,13 +1,13 @@
 import {Injectable} from "@angular/core";
 import {Actions, createEffect, ofType} from "@ngrx/effects";
 import {registerFailure} from "../../actions/auth/register.actions";
-import {catchError, map, mergeMap, of} from "rxjs";
+import {catchError, map, mergeMap, of, tap} from "rxjs";
 import {update, updateSuccess} from "../../actions/profile/profile.actions";
 import {IndividualsService} from "../../../core/services/restfull/backend/individuals.service";
 
 
 @Injectable()
-export class UpdateEffects {
+export class UpdateProfileEffects {
 	update$
 
 	constructor(
@@ -32,5 +32,14 @@ export class UpdateEffects {
 				})
 			)
 		)
+
+/*
+		this.registerSuccess$ = createEffect(() =>
+				this.actions$.pipe(
+					ofType(registerSuccess),
+					tap(() => )
+				),
+			{dispatch: false}
+		)*/
 	}
 }

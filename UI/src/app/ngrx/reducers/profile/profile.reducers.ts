@@ -3,7 +3,7 @@ import {initialUpdateState} from "../../state/profile/profile.state";
 import {update, updateFailure, updateSuccess} from "../../actions/profile/profile.actions";
 
 
-export const updateReducers = createReducer(
+export const updateReducer = createReducer(
 	initialUpdateState,
 
 	on(update, (state) => {

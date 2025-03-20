@@ -1,15 +1,11 @@
 import {Component, OnInit} from "@angular/core";
-import {RouterLink, RouterOutlet} from "@angular/router";
 import {FontAwesomeModule} from "@fortawesome/angular-fontawesome";
 import {CommonModule} from "@angular/common";
-import {ServerContainerModal} from "../addServerModal/serverContainerModal";
-import {addPersonComponent} from "../server/addPerson/addPerson.component";
 import {FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators} from "@angular/forms";
 import {Observable} from "rxjs";
 import {Store} from "@ngrx/store";
 import {selectRegisterError, selectRegisterLoading} from "../../../ngrx/selectors/auth/register.selectors";
 import {RegisterRequest} from "../../../core/types/auth/register.types";
-import {register} from "../../../ngrx/actions/auth/register.actions";
 import {
 	selectUserProfile,
 	selectUserProfileError,
@@ -22,12 +18,8 @@ import {update} from "../../../ngrx/actions/profile/profile.actions";
 	standalone: true,
 	selector: 'profile',
 	imports: [
-		RouterOutlet,
 		FontAwesomeModule,
-		RouterLink,
 		CommonModule,
-		ServerContainerModal,
-		addPersonComponent,
 		FormsModule,
 		ReactiveFormsModule,
 	],
@@ -127,7 +119,16 @@ export class ProfileComponent implements OnInit {
 	authUserError$
 	userId!:number
 
-	myForm!: any
+	myForm = new FormGroup({
+		firstName: new FormControl('', [Validators.required, Validators.minLength(3)]),
+		lastName: new FormControl('', [Validators.required, Validators.minLength(3)]),
+		email: new FormControl('', [Validators.required, Validators.email]),
+		password: new FormControl('', [Validators.required, Validators.minLength(8)]),
+		displayName: new FormControl('', [Validators.required, Validators.minLength(3)]),
+		phone: new FormControl('', [Validators.required, Validators.minLength(10)]),
+		bio: new FormControl('', []),
+	});
+
 
 	constructor(private store: Store) {
 		this.loading$ = this.store.select(selectRegisterLoading)
@@ -149,17 +150,17 @@ export class ProfileComponent implements OnInit {
 	ngOnInit(): void {
 		this.authUser$.subscribe(user => {
 			if(user) {
-				this.userId = user.id
-				this.myForm = new FormGroup({
-					firstName: new FormControl(user.firstName, [Validators.required, Validators.minLength(3)]),
-					lastName: new FormControl(user.lastName, [Validators.required, Validators.minLength(3)]),
-					email: new FormControl(user.email, [Validators.required, Validators.email]),
-					password: new FormControl(user.password, [Validators.required, Validators.minLength(8)]),
-					displayName: new FormControl(user.displayName, [Validators.required, Validators.minLength(3)]),
-					phone: new FormControl(user.phone, [Validators.required, Validators.minLength(10)]),
-					bio: new FormControl(user.bio, []),
-				})
+				this.userId = user.id;
+				this.myForm.patchValue({
+					firstName: user.firstName,
+					lastName: user.lastName,
+					email: user.email,
+					password: user.password,
+					displayName: user.displayName,
+					phone: user.phone,
+					bio: user.bio,
+				});
 			}
-		})
+		});
 	}
 }

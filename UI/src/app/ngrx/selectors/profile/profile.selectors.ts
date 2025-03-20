@@ -1,7 +1,7 @@
 import {createFeatureSelector, createSelector} from "@ngrx/store";
 import {UpdateState} from "../../state/profile/profile.state";
 
-export const selectUpdateState = createFeatureSelector<UpdateState>('update')
+export const selectUpdateState = createFeatureSelector<UpdateState>('updateProfile')
 
 export const selectUpdateUser = createSelector(
 	selectUpdateState,
