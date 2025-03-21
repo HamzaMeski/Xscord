@@ -82,7 +82,7 @@ import {Subscription} from "rxjs";
 		                      <div *ngIf="(messagesLoading$ | async)">
 									messages loading...
 		                      </div>
-                              <div *ngIf="!(messagesLoading$ | async)">
+                              <div *ngIf="!(messagesLoading$ | async)" class="px-2">
 	                              <div *ngIf="authUser$ | async as authUser">
                                       <div *ngIf="messages$ | async as messages">
                                           <div *ngFor="let message of messages">
@@ -98,7 +98,7 @@ import {Subscription} from "rxjs";
                                                       <div class="flex-1 min-w-0">
                                                           <div class="flex items-center gap-2 mb-1">
                                                               <span class="font-medium text-white">{{ message.sender.displayName }}</span>
-                                                              <span class="text-xs text-[#949BA4]">{{ message.createdAt }}</span>
+                                                              <span class="text-xs text-[#949BA4]">{{ message.createdAt | date:'medium'}}</span>
                                                           </div>
                                                           <p  class="text-[#DBDEE1] break-words">{{ message.content }}</p>
                                                       </div>
@@ -115,7 +115,7 @@ import {Subscription} from "rxjs";
                                                       <div class="flex-1 min-w-0">
                                                           <div class="flex items-center gap-2 mb-1">
                                                               <span class="font-medium text-white">{{ message.sender.displayName }}</span>
-                                                              <span class="text-xs text-[#949BA4]">{{ message.createdAt }}</span>
+                                                              <span class="text-xs text-[#949BA4]">{{ message.createdAt | date:'medium' }}</span>
                                                           </div>
                                                           <p  class="text-[#DBDEE1] break-words">{{ message.content }}</p>
                                                       </div>

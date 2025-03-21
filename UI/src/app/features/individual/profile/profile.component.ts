@@ -60,15 +60,7 @@ import {update} from "../../../ngrx/actions/profile/profile.actions";
                                 <small *ngIf="myForm.get('email')?.errors?.['email']" class="text-red-500">Set a valid email</small>
                             </div>
                         </div>
-
-                        <div class="flex flex-col">
-                            <label for="">password:</label>
-                            <input  formControlName="password" class="bg-gray-200 text-black p-1 rounded-md">
-                            <div *ngIf="myForm.get('password')?.invalid && myForm.get('password')?.touched">
-                                <small *ngIf="myForm.get('password')?.errors?.['required']" class="text-red-500">password is required</small>
-                                <small *ngIf="myForm.get('password')?.errors?.['minlength']" class="text-red-500">min length is 3</small>
-                            </div>
-                        </div>
+	                    
 
                         <div class="flex flex-col">
                             <label for="">display name:</label>

@@ -1,14 +1,12 @@
-import {ChangeDetectorRef, Component, OnInit} from "@angular/core";
+import {Component, OnInit} from "@angular/core";
 import {FaIconComponent} from "@fortawesome/angular-fontawesome";
 import {ReactiveFormsModule} from "@angular/forms";
 import {faDiscord} from "@fortawesome/free-brands-svg-icons";
 import {
-	faCalendar,
+	faArrowRightFromBracket,
 	faChevronDown,
 	faCirclePlus,
 	faGear,
-	faMicrophone,
-	faUser,
 	faUserPlus
 } from "@fortawesome/free-solid-svg-icons";
 
@@ -23,6 +21,7 @@ import {getServerGroups} from "../../../ngrx/actions/group/group.actions";
 import {CommonModule} from "@angular/common";
 import {openAddPersonModal} from "../../../ngrx/actions/modal/addPerson.actions";
 import {selectUserProfile, selectUserProfileLoading} from "../../../ngrx/selectors/userProfile/userProfile.selectors";
+import {LogoutService} from "../../../core/services/helpers/logout.service";
 
 @Component({
 	standalone: true,
@@ -101,8 +100,9 @@ import {selectUserProfile, selectUserProfileLoading} from "../../../ngrx/selecto
 	                   
                     </div>
                     <div class="flex items-center gap-2">
-                        <button class="text-[#949BA4] hover:text-white transition-colors">
-                            <fa-icon [icon]="faGear" class="w-4 h-4" [routerLink]="['/individual/profile']" ></fa-icon>
+                        <button class="text-[#949BA4]  transition-colors">
+                            <fa-icon [icon]="faArrowRightFromBracket" (click)="logout()" class="w-4 h-4 mr-2 hover:text-white"></fa-icon>
+                            <fa-icon [icon]="faGear" class="w-4 h-4 hover:text-white" [routerLink]="['/individual/profile']" ></fa-icon>
                         </button>
                     </div>
                 </div>
@@ -119,6 +119,8 @@ export class ServerComponent implements OnInit{
 	faGear = faGear
 	faUserPlus = faUserPlus
 	faChevronDown = faChevronDown
+	faArrowRightFromBracket = faArrowRightFromBracket
+
 
 	serverGroups$
 	serverGroupsLoading$
@@ -130,7 +132,8 @@ export class ServerComponent implements OnInit{
 	constructor(
 		private route: ActivatedRoute,
 		private store: Store,
-		private router: Router
+		private router: Router,
+		private logoutService: LogoutService
 	) {
 		this.serverGroups$ = this.store.select(selectServerGroupsResponse)
 		this.serverGroupsLoading$ = this.store.select(selectServerGroupsLoading)
@@ -159,5 +162,9 @@ export class ServerComponent implements OnInit{
 
 	setShowAddPersonModalToTrue() {
 		this.store.dispatch(openAddPersonModal())
+	}
+
+	logout() {
+		this.logoutService.logout()
 	}
 }

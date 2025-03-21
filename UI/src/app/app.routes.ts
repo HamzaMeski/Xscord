@@ -2,7 +2,6 @@ import { Routes } from '@angular/router';
 import {GuestPageComponent} from "./features/guestPage/guestPage.component";
 import {AuthGuard} from "./core/guards/canActivate/auth.guard";
 import {ForbiddenComponent} from "./features/forbidden/forbidden.component";
-import {ProfileComponent} from "./features/individual/profile/profile.component";
 
 
 export const routes: Routes = [
