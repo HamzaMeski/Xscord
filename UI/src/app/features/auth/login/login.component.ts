@@ -48,6 +48,14 @@ import {selectLoginError, selectLoginLoading} from "../../../ngrx/selectors/auth
                             </div>
                         </div>
                         <div class="flex flex-col gap-4 items-center mt-6">
+                            <button
+                                type="submit"
+                                class="rounded-full py-2 px-10 text-white shadow-md transition-all duration-300 disabled:cursor-not-allowed"
+                                [disabled]="myForm.invalid"
+                                [ngClass]="myForm.invalid ? 'bg-blue-300 text-gray-600' : 'bg-blue-500 hover:bg-blue-600 cursor-pointer'"
+                            >
+                                Submit
+                            </button>
                             <a
                                 routerLink="/auth/register"
                                 class="text-blue-500 hover:underline hover:text-blue-700 transition"
@@ -60,14 +68,6 @@ import {selectLoginError, selectLoginLoading} from "../../../ngrx/selectors/auth
                             >
                                 Back home
                             </a>
-                            <button
-                                type="submit"
-                                class="rounded-full py-2 px-10 text-white shadow-md transition-all duration-300 disabled:cursor-not-allowed"
-                                [disabled]="myForm.invalid"
-                                [ngClass]="myForm.invalid ? 'bg-blue-300 text-gray-600' : 'bg-blue-500 hover:bg-blue-600 cursor-pointer'"
-                            >
-                                Submit
-                            </button>
                         </div>
 
                     </form>

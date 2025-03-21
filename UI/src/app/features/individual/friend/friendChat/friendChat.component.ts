@@ -206,7 +206,7 @@ import {
                                                     <div class="flex-1 min-w-0">
                                                         <div class="flex items-center gap-2 mb-1">
                                                             <span class="font-medium text-white">{{ message.sender.displayName }}</span>
-                                                            <span class="text-xs text-[#949BA4]">{{ message.createdAt }}</span>
+                                                            <span class="text-xs text-[#949BA4]">{{ message.createdAt | date:'medium' }}</span>
                                                         </div>
                                                         <p  class="text-[#DBDEE1] break-words">{{ message.content }}</p>
                                                     </div>
@@ -223,7 +223,7 @@ import {
                                                     <div class="flex-1 min-w-0">
                                                         <div class="flex items-center gap-2 mb-1">
                                                             <span class="font-medium text-white">{{ message.sender.displayName }}</span>
-                                                            <span class="text-xs text-[#949BA4]">{{ message.createdAt }}</span>
+                                                            <span class="text-xs text-[#949BA4]">{{ message.createdAt | date:'medium' }}</span>
                                                         </div>
                                                         <p *ngIf="!message.content.startsWith('https://discord.gg')" class="text-[#DBDEE1] break-words">{{ message.content }}</p>
                                                         <div *ngIf="message.content.startsWith('https://discord.gg')">
