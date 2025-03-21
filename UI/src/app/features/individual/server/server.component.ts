@@ -113,7 +113,7 @@ import {LogoutService} from "../../../core/services/helpers/logout.service";
         </section>
   	`
 })
-export class ServerComponent implements OnInit{
+export class ServerComponent{
 	faDiscord = faDiscord
 	faCirclePlus = faCirclePlus
 	faGear = faGear
@@ -141,23 +141,6 @@ export class ServerComponent implements OnInit{
 
 		this.authUser$ = this.store.select(selectUserProfile)
 		this.authUserLoading$ = this.store.select(selectUserProfileLoading)
-	}
-
-	ngOnInit(): void{
-		/*this.route.params.subscribe(params => {
-			const serverId = Number(params['serverId'])
-			this.store.dispatch(getServerGroups({serverId}))
-		})
-
-		this.serverGroups$.subscribe(groups=> {
-			if(groups){
-				const firstGroup = groups[0]
-				const serverId  = firstGroup.serverId
-				const firstGroupId = firstGroup.id
-
-				this.router.navigate([`/individual/server/${serverId}/chat/${firstGroupId}`])
-			}
-		})*/
 	}
 
 	setShowAddPersonModalToTrue() {

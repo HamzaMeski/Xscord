@@ -118,10 +118,6 @@ export class CreateServerComponent implements OnInit{
 		this.createServerResponse$ = this.store.select(selectCreateServerResponse)
 		this.createServerLoading$ = this.store.select(selectCreateServerLoading)
 		this.createServerFailure$ = this.store.select(selectCreateServerError)
-
-		this.createServerResponse$.subscribe(value => {
-			if(value) this.closeModal()
-		})
 	}
 
 	ngOnInit(): void {
@@ -149,6 +145,7 @@ export class CreateServerComponent implements OnInit{
 		if(this.myForm.valid) {
 			const request: ServerRequest = this.myForm.value as ServerRequest
 			this.store.dispatch(createServer({request}))
+			this.closeModal()
 		}
 	}
 }
