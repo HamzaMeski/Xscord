@@ -144,7 +144,7 @@ export class ServerComponent implements OnInit{
 	}
 
 	ngOnInit(): void{
-		this.route.params.subscribe(params => {
+		/*this.route.params.subscribe(params => {
 			const serverId = Number(params['serverId'])
 			this.store.dispatch(getServerGroups({serverId}))
 		})
@@ -157,7 +157,7 @@ export class ServerComponent implements OnInit{
 
 				this.router.navigate([`/individual/server/${serverId}/chat/${firstGroupId}`])
 			}
-		})
+		})*/
 	}
 
 	setShowAddPersonModalToTrue() {
