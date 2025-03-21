@@ -28,6 +28,8 @@ import {
 } from "../../ngrx/selectors/server/serverInvitation.selectors";
 import {getMemberJoinedServers} from "../../ngrx/actions/server/serverInvitation.actions";
 import {ServerResponse} from "../../core/types/server/server.types";
+import {selectServerGroupsResponse} from "../../ngrx/selectors/group/group.selectors";
+import {getServerGroups} from "../../ngrx/actions/group/group.actions";
 
 @Component({
 	standalone: true,
@@ -65,12 +67,12 @@ import {ServerResponse} from "../../core/types/server/server.types";
                     <div *ngIf="!(isLoading$ | async)">
                         <div *ngIf="allServers$ | async as servers" class="flex flex-col gap-2">
                             <div *ngFor="let server of servers.individualServers" >
-                                <a [routerLink]="['/individual/server', server.id]" class="w-14 h-14 bg-[#313338] rounded-full flex items-center justify-center">
+                                <a (click)="navigateToChat(server.id)" class="w-14 h-14 cursor-pointer bg-[#313338] rounded-full flex items-center justify-center">
                                     {{ server.name.substring(0,4) }}
                                 </a>
                             </div>
                             <div *ngFor="let server of servers.joinedServers" >
-                                <a [routerLink]="['/individual/server', server.id]" class="w-14 h-14 bg-[#313338] rounded-full flex items-center justify-center">
+                                <a (click)="navigateToChat(server.id)" class="w-14 h-14 cursor-pointer bg-[#313338] rounded-full flex items-center justify-center">
                                     {{ server.name.substring(0,4) }}
                                 </a>
                             </div>
@@ -113,6 +115,8 @@ export class IndividualComponent implements OnInit, OnDestroy {
 	memberJoinedServersLoading$:Observable<boolean>
 	memberJoinedServersError$:Observable<string | null>
 
+	serverGroups$
+
 	isLoading$!:Observable<boolean>
 	allServers$!:Observable<{
 		individualServers: ServerResponse[] | null,
@@ -148,6 +152,8 @@ export class IndividualComponent implements OnInit, OnDestroy {
 
 		this.showAddPersonModal$ = this.store.select(selectOpenAddPersonModal)
 
+		this.serverGroups$ = this.store.select(selectServerGroupsResponse)
+
 		this.isLoading$ = combineLatest([
 			this.individualServersLoading$,
 			this.memberJoinedServersLoading$
@@ -176,6 +182,19 @@ export class IndividualComponent implements OnInit, OnDestroy {
 
 	handleCloseServerModal(close: boolean) {
 		this.showServerModal = !close;
+	}
+
+	navigateToChat(serverId: number) {
+		this.store.dispatch(getServerGroups({serverId}))
+		this.serverGroups$.subscribe(groups=> {
+			if(groups){
+				const firstGroup = groups[0]
+				const serverId  = firstGroup.serverId
+				const firstGroupId = firstGroup.id
+
+				this.router.navigate([`/individual/server/${serverId}/chat/${firstGroupId}`])
+			}
+		})
 	}
 
 	ngOnDestroy() {
