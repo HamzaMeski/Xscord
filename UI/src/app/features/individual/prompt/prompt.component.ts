@@ -6,9 +6,6 @@ import {FormsModule} from "@angular/forms";
 import {faCirclePlus} from "@fortawesome/free-solid-svg-icons";
 import {ModelService} from "../../../core/services/restfull/external/model.service";
 import {finalize} from "rxjs";
-import {Store} from "@ngrx/store";
-import {loadUserProfile} from "../../../ngrx/actions/userProfile/userProfile.actions";
-import {selectUserProfile} from "../../../ngrx/selectors/userProfile/userProfile.selectors";
 
 
 @Component({
@@ -92,7 +89,7 @@ import {selectUserProfile} from "../../../ngrx/selectors/userProfile/userProfile
         </section>
 	`
 })
-export class PromptComponent implements OnInit, AfterViewChecked {
+export class PromptComponent implements AfterViewChecked {
 	faDiscord = faDiscord
 	faCirclePlus = faCirclePlus
 
@@ -108,7 +105,6 @@ export class PromptComponent implements OnInit, AfterViewChecked {
 
 	constructor(
 		private modelService : ModelService,
-		private store: Store
 	) {}
 
 	sendMessage() {
@@ -132,7 +128,6 @@ export class PromptComponent implements OnInit, AfterViewChecked {
 					content: aiResponse,
 					isUser: false
 				})
-
 			},
 			error: (error) => {
 				this.messages.push({
@@ -141,9 +136,6 @@ export class PromptComponent implements OnInit, AfterViewChecked {
 				})
 			}
 		})
-	}
-
-	ngOnInit() {
 	}
 
 	ngAfterViewChecked(): void {
