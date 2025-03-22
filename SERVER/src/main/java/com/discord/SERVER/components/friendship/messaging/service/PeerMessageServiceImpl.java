@@ -25,8 +25,6 @@ public class PeerMessageServiceImpl implements PeerMessageService{
 
     @Override
     public PeerMessageResponseDTO sendMessage(Long senderId, PeerMessageRequestDTO requestDTO) {
-        log.info("start sending...");
-        log.info("senderId {}", senderId);
         Individual sender = individualRepository.findById(senderId)
                 .orElseThrow();
 
