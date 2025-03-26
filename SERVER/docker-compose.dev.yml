@@ -1,0 +1,45 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:15-alpine
+    container_name: discord-db-container
+    environment:
+      - POSTGRES_DB=discord_db
+      - POSTGRES_USER=hamza
+      - POSTGRES_PASSWORD=hamza
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - discord-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U hamza -d discord_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  app:
+    build: .
+    container_name: discord-backend-container
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/discord_db
+      - SPRING_DATASOURCE_USERNAME=hamza
+      - SPRING_DATASOURCE_PASSWORD=hamza
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+      - SPRING_JPA_SHOW_SQL=true
+    ports:
+      - "8080:8080"
+    networks:
+      - discord-network
+
+networks:
+  discord-network:
+    driver: bridge
+
+volumes:
+  postgres_data:
