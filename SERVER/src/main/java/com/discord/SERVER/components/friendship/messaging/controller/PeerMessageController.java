@@ -36,6 +36,8 @@ public class PeerMessageController {
         StompHeaderAccessor accessor = MessageHeaderAccessor.getAccessor(message, StompHeaderAccessor.class);
         log.info("accessor:: {}", accessor);
         UsernamePasswordAuthenticationToken authentication = (UsernamePasswordAuthenticationToken)accessor.getUser();
+        log.info("authentication:: {}", authentication);
+
         UserPrincipal authUser = (UserPrincipal)authentication.getPrincipal();
 
         PeerMessageResponseDTO responseDTO = peerMessageService.sendMessage(authUser.getId(), requestDTO);
