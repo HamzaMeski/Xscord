@@ -20,4 +20,6 @@ public interface IndividualRepository extends JpaRepository<Individual, Long> {
         AND i.id != :id
     """)
     Boolean checkEmailForUpdate(String email, Long id);
+
+
 }

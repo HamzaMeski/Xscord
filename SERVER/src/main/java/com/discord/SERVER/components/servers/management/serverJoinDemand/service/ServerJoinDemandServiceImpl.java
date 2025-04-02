@@ -20,6 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -110,5 +111,14 @@ public class ServerJoinDemandServiceImpl implements ServerJoinDemandService {
                 .orElseThrow(() -> new ResourceNotFoundException("request doesn't exist with id: "+requestId));
 
         serverJoinDemandRepository.delete(serverJoinDemand);
+
+
+        List<Integer> items = Arrays.asList(2, 3, 5, 1);
+
+
+
     }
+
+
+
 }
