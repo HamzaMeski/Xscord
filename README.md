@@ -1,10 +1,5 @@
 
 
-
-====================================================
-   Running the Application Locally
-====================================================
-
 Follow these steps to set up and run both the 
 Spring Boot backend and the Angular frontend 
 on your local machine.
@@ -42,5 +37,3 @@ The Angular app will be accessible at:
 - Ensure Node.js and Angular CLI are installed.
 - Ensure Java 17+ and Maven are properly set up.
 - Update any additional configurations if necessary.
-
-====================================================
